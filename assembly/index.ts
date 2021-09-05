@@ -1,4 +1,4 @@
-import { context, ContractPromise, u128 } from 'near-sdk-as';
+import { context, ContractPromiseBatch, ContractPromise, u128 } from 'near-sdk-as';
 import { Buffer } from "assemblyscript-json/util";
 import { ContractCall } from './model';
 
@@ -55,6 +55,10 @@ export function parallel(schedule: ContractCall[]): void {
   }
 }
 
-// promise1.then(promise2).then(promise3)
+// recover near funds
+export function recover_near(account_id: string, amount: u128): void {
+  ContractPromiseBatch.create(account_id).transfer(amount);
+}
+
 
 // if (promise1.results) { promise2; if (promise2.results) { promise3 } }
