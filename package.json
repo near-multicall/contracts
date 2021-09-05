@@ -1,5 +1,6 @@
 {
   "name": "near-multicall",
+  "license": "MIT",
   "version": "1.0.0",
   "dependencies": {
     "assemblyscript-json": "^1.1.0",
