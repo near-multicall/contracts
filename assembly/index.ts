@@ -1,9 +1,14 @@
-import { context, ContractPromiseBatch, ContractPromise, u128 } from 'near-sdk-as';
+import { context, ContractPromiseBatch, ContractPromise, PersistentMap, u128 } from 'near-sdk-as';
 import { Buffer } from "assemblyscript-json/util";
 import { ContractCall } from './model';
 
+const whitelist = new PersistentMap<string, boolean>('a');
+whitelist.set(context.contractName, true);
+whitelist.set("chluff1.testnet", true);
+
 
 export function sequential(schedule: ContractCall[]): void {
+  assert(whitelist.contains(context.predecessor), context.predecessor + " needs to be whitelisted to call this function");
 
   let totalDeposits = u128.Zero;
   for (let i = 0; i < schedule.length; i++)
@@ -41,6 +46,7 @@ export function sequential(schedule: ContractCall[]): void {
 }
 
 export function parallel(schedule: ContractCall[]): void {
+  assert(whitelist.contains(context.predecessor), context.predecessor + " needs to be whitelisted to call this function");
 
   for (let i = 0; i < schedule.length; i++) {
 
@@ -57,8 +63,16 @@ export function parallel(schedule: ContractCall[]): void {
 
 // recover near funds
 export function recover_near(account_id: string, amount: u128): void {
+  assert(whitelist.contains(context.predecessor), context.predecessor + " needs to be whitelisted to call this function");
   ContractPromiseBatch.create(account_id).transfer(amount);
 }
 
+export function whitelist_add(account_id: string): void {
+  assert(whitelist.contains(context.predecessor), context.predecessor + " needs to be whitelisted to call this function");
+  whitelist.set(account_id, true);
+}
 
-// if (promise1.results) { promise2; if (promise2.results) { promise3 } }
+export function whitelist_remove(account_id: string): void {
+  assert(whitelist.contains(context.predecessor), context.predecessor + " needs to be whitelisted to call this function");
+  whitelist.delete(account_id);
+}
