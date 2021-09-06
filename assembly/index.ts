@@ -1,10 +1,9 @@
-import { context, ContractPromiseBatch, ContractPromise, PersistentMap, u128 } from 'near-sdk-as';
+import { context, ContractPromiseBatch, ContractPromise, storage, PersistentMap, u128 } from 'near-sdk-as';
 import { Buffer } from "assemblyscript-json/util";
 import { ContractCall } from './model';
 
 const whitelist = new PersistentMap<string, boolean>('a');
 whitelist.set(context.contractName, true);
-whitelist.set("chluff1.testnet", true);
 
 
 export function sequential(schedule: ContractCall[]): void {
@@ -71,12 +70,22 @@ export function recover_near(account_id: string, amount: u128): void {
   ContractPromiseBatch.create(account_id).transfer(amount);
 }
 
-export function whitelist_add(account_id: string): void {
+export function whitelist_add(account_ids: string[]): void {
   assert(whitelist.contains(context.predecessor), context.predecessor + " needs to be whitelisted to call this function");
-  whitelist.set(account_id, true);
+  for (let i = 0; i < account_ids.length; i++)
+    whitelist.set(account_ids[i], true);
 }
 
-export function whitelist_remove(account_id: string): void {
+export function whitelist_remove(account_ids: string[]): void {
   assert(whitelist.contains(context.predecessor), context.predecessor + " needs to be whitelisted to call this function");
-  whitelist.delete(account_id);
+  for (let i = 0; i < account_ids.length; i++)
+    whitelist.delete(account_ids[i]);
+}
+
+export function init(account_ids: string[]): void {
+  assert(storage.get<string>("init") == null, "Already initialized");
+  for (let i = 0; i < account_ids.length; i++) {
+    whitelist.set(account_ids[i], true);
+  }
+  storage.set("init", "done");
 }
