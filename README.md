@@ -24,18 +24,18 @@ where
 
 This project consists of three main features:
 
-1. The main two methods in this contract are:
+1. The **two main methods** in this contract are:
 `sequential(schedule: ContractCalls[])`
 `parallel(schedule: ContractCalls[])`
 both take an array as parameter. Each of its elements represents information for making a cross-contract calls. The main difference between both methods, is that `sequential` executes contract calls one-after-the-other, as a promise chain. `parallel` will fire all of them in parallel, in the same block.
 
-2. Permissioned interactions with the contract through whitelisting of addresses:
-Due to the async nature of Near, funds can sit in the contract during multiple blocks waiting the execution of cross-contract calls. To prevent stealing of these funds, we require an address to be whitelisted first before calling one of the contract's methods.
+2. <p align="justify-right">**Permissioned interactions** with the contract through whitelisting of addresses:
+Due to the async nature of Near, funds can sit in the contract during multiple blocks waiting for the execution of cross-contract calls. To prevent stealing of these funds, we require an address to be whitelisted first before calling one of the contract's methods.
 Whitelisted addresses can add or remove others from the whitelist.
-The contract's address is whitelisted by default, as that allows for nesting and combinating the 2 main methods to get precise control over the transaction's execution flow.
+The contract's address is whitelisted by default, as that allows for nesting and combinating the 2 main methods to get precise control over the transaction's execution flow.</p>
     
 
-3. helper functions:
+3. **Helper functions**:
 Commonly needed combinations of cross-contract calls can be added to this contract as helper functions. Especially when promises are conditionally added to the promise chain depending on previous return values.
 Currently we have `withdraw_from_ref()` that makes withdrawing multiple tokens from ref-finance to some destination address possible with one function call (of course it triggers other calls under the hood)
 
