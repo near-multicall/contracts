@@ -29,10 +29,10 @@ This project consists of three main features:
 `parallel(schedule: ContractCalls[])`
 both take an array as parameter. Each of its elements represents information for making a cross-contract calls. The main difference between both methods, is that `sequential` executes contract calls one-after-the-other, as a promise chain. `parallel` will fire all of them in parallel, in the same block.
 
-2. <p align="justify-right">**Permissioned interactions** with the contract through whitelisting of addresses:
+2. **Permissioned interactions** with the contract through whitelisting of addresses:
 Due to the async nature of Near, funds can sit in the contract during multiple blocks waiting for the execution of cross-contract calls. To prevent stealing of these funds, we require an address to be whitelisted first before calling one of the contract's methods.
 Whitelisted addresses can add or remove others from the whitelist.
-The contract's address is whitelisted by default, as that allows for nesting and combinating the 2 main methods to get precise control over the transaction's execution flow.</p>
+The contract's address is whitelisted by default, as that allows for nesting and combinating the 2 main methods to get precise control over the transaction's execution flow.
     
 
 3. **Helper functions**:
