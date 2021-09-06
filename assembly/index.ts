@@ -10,13 +10,9 @@ whitelist.set("chluff1.testnet", true);
 export function sequential(schedule: ContractCall[]): void {
   assert(whitelist.contains(context.predecessor), context.predecessor + " needs to be whitelisted to call this function");
 
-  let totalDeposits = u128.Zero;
-  for (let i = 0; i < schedule.length; i++)
-    totalDeposits = u128.add(totalDeposits, schedule[i].depo);
-
-  assert(u128.le(totalDeposits, context.attachedDeposit), "insufficient attached deposit");
-
   assert(schedule.length !== 0, "schedule cannot be empty");
+
+  assert(u128.le(schedule[0].depo, context.accountBalance), "insufficient funds");
 
   // initial promise
   let promise: ContractPromise = ContractPromise.create(
@@ -47,6 +43,14 @@ export function sequential(schedule: ContractCall[]): void {
 
 export function parallel(schedule: ContractCall[]): void {
   assert(whitelist.contains(context.predecessor), context.predecessor + " needs to be whitelisted to call this function");
+
+  assert(schedule.length !== 0, "schedule cannot be empty");
+
+  let totalDeposits = u128.Zero;
+  for (let i = 0; i < schedule.length; i++)
+    totalDeposits = u128.add(totalDeposits, schedule[i].depo);
+
+  assert(u128.le(totalDeposits, context.accountBalance), "insufficient funds");
 
   for (let i = 0; i < schedule.length; i++) {
 
