@@ -93,7 +93,7 @@ export function init(account_ids: string[]): void {
 
 
 // helper to withdraw from Ref and transfer to DAO
-export function withdraw_from_ref(tokens: string[], receiver_id: string, withdrawal_gas: u64, token_transfer_gas: u64): void {
+export function withdraw_from_ref(ref_address: string, tokens: string[], receiver_id: string, withdrawal_gas: u64, token_transfer_gas: u64): void {
   _is_whitelisted();
 
   // Get all results
@@ -112,7 +112,7 @@ export function withdraw_from_ref(tokens: string[], receiver_id: string, withdra
 
         if (u128.gt(amount, u128.Zero)) {
           ContractPromise.create(
-            "ref-finance-101.testnet",
+            ref_address,
             "withdraw",
             Buffer.fromString(`{"token_id":"${tokens[i]}","amount":"${amount}"}`),
             withdrawal_gas,
