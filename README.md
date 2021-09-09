@@ -36,8 +36,18 @@ The contract's address is whitelisted by default, as that allows for nesting and
     
 
 3. **Helper functions**:  
-Commonly needed combinations of cross-contract calls can be added to this contract as helper functions. Especially when promises are conditionally added to the promise chain depending on previous return values.
-Currently we have `withdraw_from_ref()` that makes withdrawing multiple tokens from ref-finance to some destination address possible with one function call (of course it triggers other calls under the hood).
+Commonly needed combinations of cross-contract calls can be added to this contract as helper functions. Especially when promises are conditionally added to the promise chain depending on previous return values.  
+Currently we have:  
+    * `withdraw_from_ref()`: It makes withdrawing multiple tokens from ref-finance to some destination address possible with one function call (of course it triggers other calls under the hood).  
+    The method expects its predecessor in the promise chain to return a map of key-value pairs:  
+        ```json
+        {
+            "$TOKEN_1_ADDR":"$BALANCE_1_TO_WITHDRAW",
+            "$TOKEN_2_ADDR":"$BALANCE_2_TO_WITHDRAW",
+            ...
+        }
+        ```  
+        Ref-finance's `get_deposits()` is a good example for such a predecessor, since it returns token balances deposited on Ref for a given user.  
 
 
 ## Example Calls
@@ -128,4 +138,4 @@ A [DAO proposal](https://testnet-v2.sputnik.fund/#/voyager.sputnikv2.testnet/6) 
 }
 ```
 
-***Hint:*** we recommend making the add_proposal transaction using near-cli, as the SputnikDAO UI only allocates 150 TeraGas per default to the custom function call. This might not be sufficient.
+***Hint:*** we recommend making the `add_proposal` transaction using near-cli, as the SputnikDAO UI only allocates 150 TeraGas per default to the custom function call. This might not be sufficient.   
