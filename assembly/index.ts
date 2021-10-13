@@ -12,11 +12,10 @@ export function universal(schedules: ContractCall[][]): void {
 
   assert(schedules.length !== 0, "schedules cannot be empty");
 
-  // check for sufficient funds
+  // check for sufficient funds (Sum of all first sequential calls <= account balance)
   let totalDeposits = u128.Zero;
   for (let i = 0; i < schedules.length; i++)
-    for (let j = 0; j < schedules.length; j++)
-      totalDeposits = u128.add(totalDeposits, schedules[i][j].depo);
+    totalDeposits = u128.add(totalDeposits, schedules[i][0].depo);
 
   assert(u128.le(totalDeposits, context.accountBalance), "insufficient funds");
 
@@ -50,7 +49,7 @@ export function universal(schedules: ContractCall[][]): void {
         schedules[i][j].depo
 
       );
-      
+
     }
 
   }
