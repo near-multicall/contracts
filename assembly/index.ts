@@ -7,6 +7,56 @@ const whitelist = new PersistentMap<string, boolean>('a');
 whitelist.set(context.contractName, true);
 
 
+export function universal(schedules: ContractCall[][]): void {
+  _is_whitelisted();
+
+  assert(schedules.length !== 0, "schedules cannot be empty");
+
+  // check for sufficient funds
+  let totalDeposits = u128.Zero;
+  for (let i = 0; i < schedules.length; i++)
+    for (let j = 0; j < schedules.length; j++)
+      totalDeposits = u128.add(totalDeposits, schedules[i][j].depo);
+
+  assert(u128.le(totalDeposits, context.accountBalance), "insufficient funds");
+
+  // outer loop is parallel
+  for (let i = 0; i < schedules.length; i++) {
+
+    assert(schedules[i].length !== 0, "schedules[i] cannot be empty");
+
+    // inner loop is sequential
+
+    // initial promise
+    let promise: ContractPromise = ContractPromise.create(
+
+      schedules[i][0].addr,
+      schedules[i][0].func,
+      Buffer.fromString(schedules[i][0].args),
+      schedules[i][0].gas,
+      schedules[i][0].depo
+
+    );
+
+    // iterativly add then clause
+    for (let j = 1; j < schedules[i].length; j++) {
+
+      promise = promise.then(
+
+        schedules[i][j].addr,
+        schedules[i][j].func,
+        Buffer.fromString(schedules[i][j].args.replaceAll("\\\"", "\"").replaceAll("\\\\","\\")),
+        schedules[i][j].gas,
+        schedules[i][j].depo
+
+      );
+      
+    }
+
+  }
+
+}
+
 export function sequential(schedule: ContractCall[]): void {
   _is_whitelisted();
 
