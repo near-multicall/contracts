@@ -2,9 +2,10 @@ import { context, ContractPromiseBatch, ContractPromise, storage, PersistentMap,
 import { JSON } from 'assemblyscript-json';
 import { Buffer } from 'assemblyscript-json/util';
 import { ContractCall } from './model';
+import { StorageCostUtils } from './utils';
 
 const whitelist = new PersistentMap<string, boolean>('a');
-whitelist.set(context.contractName, true);
+const storageCosts = new StorageCostUtils();
 
 
 export function universal(schedules: ContractCall[][]): void {
@@ -114,10 +115,21 @@ export function parallel(schedule: ContractCall[]): void {
   }
 }
 
-// recover near funds
-export function recover_near(account_id: string, amount: u128): void {
+// recover near funds. If amount is 0 then empty all contract funds
+export function recover_near(account_id: string, amount: u128 = u128.Zero): void {
   _is_whitelisted();
+  if (amount == u128.Zero) {
+    // calculate amount reserved for storage
+    const minStorageAmt: u128 = get_min_storage_balance();
+    amount = u128.sub(context.accountBalance, minStorageAmt);
+  }
   ContractPromiseBatch.create(account_id).transfer(amount);
+}
+
+export function get_min_storage_balance () : u128 {
+  // calculate amount reserved for storage
+  const storageLockedAmt: u128 = u128.mul(storageCosts.storage_byte_cost() , u128.fromU64(context.storageUsage));
+  return storageLockedAmt;
 }
 
 export function whitelist_add(account_ids: string[]): void {
@@ -134,6 +146,8 @@ export function whitelist_remove(account_ids: string[]): void {
 
 export function init(account_ids: string[]): void {
   assert(storage.get<string>("init") == null, "Already initialized");
+  // whitelist contract address to allow nested calls
+  whitelist.set(context.contractName, true);
   for (let i = 0; i < account_ids.length; i++) {
     whitelist.set(account_ids[i], true);
   }
