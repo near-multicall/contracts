@@ -8,49 +8,90 @@ const whitelist = new PersistentMap<string, boolean>('a');
 const storageCosts = new StorageCostUtils();
 
 
-export function universal(schedules: ContractCall[][]): void {
+export function parallel(schedules: ContractCall[][]): void {
   _is_whitelisted();
 
-  assert(schedules.length !== 0, "schedules cannot be empty");
+  assert(schedules.length != 0, "schedules cannot be empty");
 
-  // check for sufficient funds (Sum of all first sequential calls <= account balance)
+  // group 1-element schedules with same target address into batch calls for gas efficiency
+  const batches = new Map<string, ContractCall[]>();
+
+  // check for sufficient funds (Sum of all first sequential calls <= account balance minus funds reserved for storage)
   let totalDeposits = u128.Zero;
-  for (let i = 0; i < schedules.length; i++)
+  for (let i = schedules.length - 1; i >= 0; i--) {
+    // cannot have empty schedule
+    assert(schedules[i].length != 0, `schedules[${i}] cannot be empty`);
     totalDeposits = u128.add(totalDeposits, schedules[i][0].depo);
 
-  assert(u128.le(totalDeposits, context.accountBalance), "insufficient funds");
+    if (schedules[i].length == 1) {
+      const curr_call: ContractCall = schedules[i][0];
+      if (batches.has(curr_call.addr)) {
+        const curr_batch: ContractCall[] = batches.get(curr_call.addr);
+        curr_batch.push(curr_call);
+        batches.set(curr_call.addr, curr_batch);
+      } else {
+        batches.set(curr_call.addr, [curr_call])
+      }
+      // do not execute batches with regular schedules
+      schedules.splice(i, 1);
+    }
+  }
+
+  assert(u128.le(totalDeposits, u128.sub(context.accountBalance, get_min_storage_balance())), "insufficient funds");
+
+  const batchGroups: ContractCall[][] = batches.values();
+
+  // execute batches
+  for (let i = 0; i < batches.size; i++) {
+
+    if (batchGroups[i].length <= 1) {
+      schedules.push(batchGroups[i]);
+      continue;
+    }
+
+    // initial promise
+    const last: i32 = batchGroups[i].length - 1;
+    let promise: ContractPromiseBatch = ContractPromiseBatch.create(batchGroups[i][last].addr).function_call(
+      batchGroups[i][last].func,
+      Buffer.fromString(batchGroups[i][last].args),
+      batchGroups[i][last].depo,
+      batchGroups[i][last].gas
+    );
+
+    // iterativly add function calls to the batch
+    for (let j = last - 1; j >= 0; j--) {
+      promise = promise.function_call(
+        batchGroups[i][j].func,
+        Buffer.fromString(batchGroups[i][j].args.replaceAll("\\\"", "\"").replaceAll("\\\\","\\")),
+        batchGroups[i][j].depo,
+        batchGroups[i][j].gas
+      );
+    }
+  }
 
   // outer loop is parallel
   for (let i = 0; i < schedules.length; i++) {
 
-    assert(schedules[i].length !== 0, "schedules[i] cannot be empty");
-
     // inner loop is sequential
-
     // initial promise
     let promise: ContractPromise = ContractPromise.create(
-
       schedules[i][0].addr,
       schedules[i][0].func,
       Buffer.fromString(schedules[i][0].args),
       schedules[i][0].gas,
       schedules[i][0].depo
-
     );
 
     // iterativly add then clause
     for (let j = 1; j < schedules[i].length; j++) {
 
       promise = promise.then(
-
         schedules[i][j].addr,
         schedules[i][j].func,
         Buffer.fromString(schedules[i][j].args.replaceAll("\\\"", "\"").replaceAll("\\\\","\\")),
         schedules[i][j].gas,
         schedules[i][j].depo
-
       );
-
     }
 
   }
@@ -60,7 +101,7 @@ export function universal(schedules: ContractCall[][]): void {
 export function sequential(schedule: ContractCall[]): void {
   _is_whitelisted();
 
-  assert(schedule.length !== 0, "schedule cannot be empty");
+  assert(schedule.length != 0, "schedule cannot be empty");
 
   assert(u128.le(schedule[0].depo, context.accountBalance), "insufficient funds");
 
@@ -89,30 +130,6 @@ export function sequential(schedule: ContractCall[]): void {
     );
   }
 
-}
-
-export function parallel(schedule: ContractCall[]): void {
-  _is_whitelisted();
-
-  assert(schedule.length !== 0, "schedule cannot be empty");
-
-  let totalDeposits = u128.Zero;
-  for (let i = 0; i < schedule.length; i++)
-    totalDeposits = u128.add(totalDeposits, schedule[i].depo);
-
-  assert(u128.le(totalDeposits, context.accountBalance), "insufficient funds");
-
-  for (let i = 0; i < schedule.length; i++) {
-
-    ContractPromise.create(
-      schedule[i].addr,
-      schedule[i].func,
-      Buffer.fromString(schedule[i].args.replaceAll("\\\"", "\"").replaceAll("\\\\","\\")),
-      schedule[i].gas,
-      schedule[i].depo
-    );
-
-  }
 }
 
 // recover near funds. If amount is 0 then empty all contract funds
