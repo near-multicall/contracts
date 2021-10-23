@@ -73,26 +73,7 @@ export function parallel(schedules: ContractCall[][]): void {
   for (let i = 0; i < schedules.length; i++) {
 
     // inner loop is sequential
-    // initial promise
-    let promise: ContractPromise = ContractPromise.create(
-      schedules[i][0].addr,
-      schedules[i][0].func,
-      Buffer.fromString(schedules[i][0].args),
-      schedules[i][0].gas,
-      schedules[i][0].depo
-    );
-
-    // iterativly add then clause
-    for (let j = 1; j < schedules[i].length; j++) {
-
-      promise = promise.then(
-        schedules[i][j].addr,
-        schedules[i][j].func,
-        Buffer.fromString(schedules[i][j].args.replaceAll("\\\"", "\"").replaceAll("\\\\","\\")),
-        schedules[i][j].gas,
-        schedules[i][j].depo
-      );
-    }
+    _internal_sequential(schedules[i]);
 
   }
 
@@ -102,8 +83,13 @@ export function sequential(schedule: ContractCall[]): void {
   _is_whitelisted();
 
   assert(schedule.length != 0, "schedule cannot be empty");
-
   assert(u128.le(schedule[0].depo, context.accountBalance), "insufficient funds");
+
+  _internal_sequential(schedule);
+
+}
+
+function _internal_sequential(schedule: ContractCall[]): void {
 
   // initial promise
   let promise: ContractPromise = ContractPromise.create(
@@ -129,7 +115,6 @@ export function sequential(schedule: ContractCall[]): void {
 
     );
   }
-
 }
 
 // recover near funds. If amount is 0 then empty all contract funds
