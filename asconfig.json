@@ -1,8 +1,25 @@
 {
   "extends": "near-sdk-as/asconfig.json",
+  "entries": [
+    "./assembly/index.ts"
+  ],
   "options": {
-    "measure": true,
-    "binaryFile": "./contract.wasm"
+    "measure": true
+  },
+  "targets": {
+    "release": {
+      "optimize": true,
+      "optimizeLevel": 3,
+      "shrinkLevel": 0,
+      "converge": true,
+      "binaryFile": "./build/release/contract.wasm",
+      "textFile": "./build/release/contract.wat"
+    },
+    "debug": {
+      "debug": true,
+      "binaryFile": "./build/debug/contract.wasm",
+      "textFile": "./build/debug/contract.wat"
+    }
   },
   "experimentalDecorators": true
 }
