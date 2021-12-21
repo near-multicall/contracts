@@ -1,141 +1,145 @@
 # multicall.near
 
-A useful tool to bundle multiple cross-contract calls. 
+bundle cross-contract calls for powerful DAO proposals
 
 ## Quick Start
 
 1. Setup [near-cli](https://docs.near.org/docs/tools/near-cli).
 2. Install dependencies: `yarn`
-3. Compile: `yarn asb`
-4. Deploy: 
-    ```json
-    near deploy $CONTRACT_ADDRESS contract.wasm
+3. Compile: `yarn asc --target release`
+4. Deploy:  
+    ```bash
+    near deploy $CONTRACT_ADDRESS build/release/contract.wasm
     ```
 6. Initialize the contract:
-    ```json
-    near call $CONTRACT_ADDRESS init '{"account_ids":["$YOUR_ACCOUNT"]}' --amount 0.01 --accountId $YOUR_ADDRESS
+    ```bash
+    near call $CONTRACT_ADDRESS init '{"account_ids":["$YOUR_ACCOUNT"],"croncat_manager":"$CRONCAT_MANAGER","job_bond":"100000000000000000000000"}' --amount 0.1 --accountId $YOUR_ADDRESS
     ```
 
 where 
 * `$YOUR_ACCOUNT` is the account you're using to interact with the contract 
-* `$CONTRACT_ADDRESS` is the address you want to deploy the contract at
+* `$CONTRACT_ADDRESS` is the address you want to deploy the contract at 
+* `$CRONCAT_MANAGER` is the address for croncat's manager contract, can be found [here](https://docs.cron.cat/docs/deployed-contracts/#manager).
 
 ## Architecture
 
 This project consists of three main features:
 
-1. The **two main methods** in this contract are:  
-`sequential(schedule: ContractCalls[])`  
-`parallel(schedule: ContractCalls[])`  
-both take an array as parameter. Each of its elements represents information for making a cross-contract calls. The main difference between both methods, is that `sequential` executes contract calls one-after-the-other, as a promise chain. `parallel` will fire all of them in parallel, in the same block.
+1. The **main method** in this contract is:  
+`multicall ( schedules: ContractCall[][] )`  
+It executes a bunch of `ContractCall` arrays.  
+Each `ContractCall` has information for making a cross-contract call: the target address, function name, arguments encoded in base64, gas to use (u64 encoded as string) and amount of yoctoNEAR attached deposit (u128 encoded as string).  
+Contract calls inside one array run one after another, as a promise chain.  
+Different arrays of contract calls run in parallel.  
+Example: `TX_12` waits for `TX_11` and `TX_13` waits for `TX_12`. `TX_22` waits for `TX_21`. The two arrays start executing in the same block.
+    ```
+    schedules = {
+        [
+            [ TX_11, TX_12, TX_13 ],
+            [ TX_21, TX_22]
+        ]
+    }
+    ```  
+
 
 2. **Permissioned interactions** with the contract through whitelisting of addresses:  
-Due to the async nature of Near, funds can sit in the contract during multiple blocks waiting for the execution of cross-contract calls. To prevent stealing of these funds, we require an address to be whitelisted first before calling one of the contract's methods.
-Whitelisted addresses can add or remove others from the whitelist.
-The contract's address is whitelisted by default, as that allows for nesting and combinating the 2 main methods to get precise control over the transaction's execution flow.
-    
+Due to the async nature of Near, funds can sit in the contract during multiple blocks awaiting the execution of cross-contract calls. To prevent stealing of funds, we require an address to be whitelisted before calling one of the contract's critical methods.
+there are two main whitelists:  
+`admins whitelist` holds addresses that can interact with the contract, they can add or remove others from the whitelist.  
+`tokens whitelist` holds token addresses that can be attached to function calls, as the contract implements ft_on_transfer.  
+The contract's address is whitelisted by default, this allows nesting multiple contract methods for convenience.  
 
-3. **Helper functions**:  
-Commonly needed combinations of cross-contract calls can be added to this contract as helper functions. Especially when promises are conditionally added to the promise chain depending on previous return values.  
-Currently we have:  
-    * `withdraw_from_ref()`: It makes withdrawing multiple tokens from ref-finance to some destination address possible with one function call (of course it triggers other calls under the hood).  
-    The method expects its predecessor in the promise chain to return a map of key-value pairs:  
-        ```json
-        {
-            "$TOKEN_1_ADDR":"$BALANCE_1_TO_WITHDRAW",
-            "$TOKEN_2_ADDR":"$BALANCE_2_TO_WITHDRAW",
-            ...
-        }
-        ```  
-        Ref-finance's `get_deposits()` is a good example for such a predecessor, since it returns token balances deposited on Ref for a given user.  
-
+3. **Jobs**:  
+Multicall executions can be scheduled to run in recurring fashion, made possible by integrating [croncat](https://cron.cat/). Anyone can register a job on the multicall contract, but an admin has to approve it. Admins can pause/resume job executions and also edit a job's multicall arguments.  
+The following must be specified when creating a job:
+    ```ts
+    function job_add (
+        job_schedules: ContractCall[][], // multicall arguments
+        job_cadence: string, // cron expression
+        job_trigger_gas: u64,
+        job_trigger_deposit: u128,
+        job_total_budget: u128,
+        job_runs_max: u64,
+        job_start_at: u64 = context.blockTimestamp
+    ): i32 
+    ```
 
 ## Example Calls
 
 ### Call structure
-The `schedule` argument in the `sequential` as well as `parallel` function is of type `ContractCall[]`. The structure of a `ContractCall` is just like in the following example:
-```json
+example multicall arguments:
+```json=
 {
-    "addr":"hello.lennczar.testnet",
-    "func":"hello",
-    "args":"{\"thing\":\"World\"}",
-    "gas":"10000000000000",
-    "depo":"0"
+    "schedules": [
+        [ 
+            {
+                "addr": "hello.lennczar.testnet",
+                "func": "hello",
+                "args": "eyJ0aGluZyI6IldvcmxkIn0=", // base64 encoding for {"thing":"World"}
+                "gas": "10000000000000",
+                "depo": "0"
+            }
+        ]
+    ]
 }
 ```
 This example calls the function `hello(thing: string): string` in the contract `hello.lennczar.testnet`.
 
-### Sequential call
-```json=
-near call $CONTRACT_ADRESS sequential '{
-    "schedule":[
-        {"addr":"hello.lennczar.testnet","func":"when_am_I","args":"{}","gas":"10000000000000","depo":"0"},
-        {"addr":"hello.lennczar.testnet","func":"when_am_I","args":"{}","gas":"10000000000000","depo":"0"}
-    ]
-}' --amount 0.1 --accountId $YOUR_ACCOUNT --gas 50000000000000
-```
-As it can be seen [here](https://explorer.testnet.near.org/transactions/2qsCvUNyih6sEZWJUoU1cCZdeSUT76G3PRmFYnTuk4ps), the cross contract calls to `hello.lennczar.near` are happening one after the other.
-### Parallel call
-```json=
-near call $CONTRACT_ADRESS parallel '{
-    "schedule":[
-        {"addr":"hello.lennczar.testnet","func":"when_am_I","args":"{}","gas":"10000000000000","depo":"0"},
-        {"addr":"hello.lennczar.testnet","func":"when_am_I","args":"{}","gas":"10000000000000","depo":"0"}
-    ]
-}' --amount 0.1 --accountId $YOUR_ACCOUNT --gas 300000000000000
-```
-In contrast to what happend in the sequential call, the cross contract calls to `hello.lennczar.near` are now happening simultaneously, as it can be seen [here](https://explorer.testnet.near.org/transactions/HkHCcz42n3r31GtFTv2UYt1m6GdSPfPbrXa2GF5Gpj5S).
+
 ### Use case: SputnikDAO custom function proposals  
-The following is an example sequential call created as part of [a Near Metabuidl Challenge](https://airtable.com/shrdNEynK25TGJ91h/tblTtriXzrEiCfpoy/viwGhGQTKiJ4L5JSG/recUH7SubilpUKeNm).
-A [DAO proposal](https://testnet-v2.sputnik.fund/#/voyager.sputnikv2.testnet/6) was created with the JSON below. The resulting transaction can be seen [here](https://explorer.testnet.near.org/transactions/ELhBMPALasHNuugPNRoiWU4GYFDkyS4AHRCK35k11xMF
-).
+The following is an example created as part of [a Near Metabuidl Challenge](https://airtable.com/shrdNEynK25TGJ91h/tblTtriXzrEiCfpoy/viwGhGQTKiJ4L5JSG/recUH7SubilpUKeNm).
+A [DAO proposal](https://testnet-v2.sputnik.fund/#/voyager.sputnikv2.testnet/6) was created with the JSON below.   
+The resulting transaction can be seen [here](https://explorer.testnet.near.org/transactions/ELhBMPALasHNuugPNRoiWU4GYFDkyS4AHRCK35k11xMF
+) <sub>(link uses outdated code)</sub>. 
 ```json=
 {
-   "schedule":[
-      {
-         "addr":"ref-finance-101.testnet",
-         "func":"storage_deposit",
-         "args":"{\"account_id\":\"multicall.chluff1.testnet\"}",
-         "gas":"6000000000000",
-         "depo":"1250000000000000000000"
-      },
-      {
-         "addr":"wrap.testnet",
-         "func":"near_deposit",
-         "args":"{}",
-         "gas":"4000000000000",
-         "depo":"100000000000000000000000"
-      },
-      {
-         "addr":"wrap.testnet",
-         "func":"ft_transfer_call",
-         "args":"{\"receiver_id\":\"ref-finance-101.testnet\",\"amount\":\"100000000000000000000000\", \"msg\":\"\"}",
-         "gas":"40000000000000",
-         "depo":"1"
-      },
-      {
-         "addr":"ref-finance-101.testnet",
-         "func":"swap",
-         "args":"{\"actions\":[{\"pool_id\":6,\"token_in\":\"wrap.testnet\",\"amount_in\":\"100000000000000000000000\",\"token_out\":\"nusdc.ft-fin.testnet\",\"min_amount_out\":\"1\"}]}",
-         "gas":"20000000000000",
-         "depo":"1"
-      },
-      {
-         "addr":"ref-finance-101.testnet",
-         "func":"get_deposits",
-         "args":"{\"account_id\":\"multicall.chluff1.testnet\"}",
-         "gas":"5000000000000",
-         "depo":"0"
-      },
-      {
-         "addr":"multicall.chluff1.testnet",
-         "func":"withdraw_from_ref",
-         "args":"{\"ref_address\":\"ref-finance-101.testnet\",\"tokens\":[\"nusdc.ft-fin.testnet\"],\"receiver_id\":\"voyager.sputnikv2.testnet\",\"withdrawal_gas\":\"55000000000000\",\"token_transfer_gas\":\"4000000000000\",\"deposit\":\"1\"}",
-         "gas":"95000000000000",
-         "depo":"0"
-      }
+   "schedules": [
+      [
+          {
+             "addr": "ref-finance-101.testnet",
+             "func": "storage_deposit",
+             "args": "eyJhY2NvdW50X2lkIjoibXVsdGljYWxsLmNobHVmZjEudGVzdG5ldCJ9", // base64 for {"account_id":"multicall.chluff1.testnet"}
+             "gas": "6000000000000",
+             "depo": "1250000000000000000000"
+          },
+          {
+             "addr": "wrap.testnet",
+             "func": "near_deposit",
+             "args": "e30=", // base64 for {}
+             "gas": "4000000000000",
+             "depo": "100000000000000000000000"
+          },
+          {
+             "addr": "wrap.testnet",
+             "func": "ft_transfer_call",
+             "args": "eyJyZWNlaXZlcl9pZCI6InJlZi1maW5hbmNlLTEwMS50ZXN0bmV0IiwiYW1vdW50IjoiMTAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwIiwgIm1zZyI6IiJ9", // base64 for {"receiver_id":"ref-finance-101.testnet","amount":"100000000000000000000000", "msg":""}
+             "gas": "40000000000000",
+             "depo": "1"
+          },
+          {
+             "addr": "ref-finance-101.testnet",
+             "func": "swap",
+             "args": "eyJhY3Rpb25zIjpbeyJwb29sX2lkIjo2LCJ0b2tlbl9pbiI6IndyYXAudGVzdG5ldCIsImFtb3VudF9pbiI6IjEwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMCIsInRva2VuX291dCI6Im51c2RjLmZ0LWZpbi50ZXN0bmV0IiwibWluX2Ftb3VudF9vdXQiOiIxIn1dfQ==" // base64 for {"actions":[{"pool_id":6,"token_in":"wrap.testnet","amount_in":"100000000000000000000000","token_out":"nusdc.ft-fin.testnet","min_amount_out":"1"}]},
+             "gas": "20000000000000",
+             "depo": "1"
+          },
+          {
+             "addr": "ref-finance-101.testnet",
+             "func": "get_deposits",
+             "args": "eyJhY2NvdW50X2lkIjoibXVsdGljYWxsLmNobHVmZjEudGVzdG5ldCJ9" // base64 for {"account_id":"multicall.chluff1.testnet"},
+             "gas": "5000000000000",
+             "depo": "0"
+          },
+          {
+             "addr": "multicall.chluff1.testnet",
+             "func": "withdraw_from_ref",
+             "args": "eyJyZWZfYWRkcmVzcyI6InJlZi1maW5hbmNlLTEwMS50ZXN0bmV0IiwidG9rZW5zIjpbIm51c2RjLmZ0LWZpbi50ZXN0bmV0Il0sInJlY2VpdmVyX2lkIjoidm95YWdlci5zcHV0bmlrdjIudGVzdG5ldCIsIndpdGhkcmF3YWxfZ2FzIjoiNTUwMDAwMDAwMDAwMDAiLCJ0b2tlbl90cmFuc2Zlcl9nYXMiOiI0MDAwMDAwMDAwMDAwIiwiZGVwb3NpdCI6IjEifQ==", // base64 for {"ref_address":"ref-finance-101.testnet","tokens":["nusdc.ft-fin.testnet"],"receiver_id":"voyager.sputnikv2.testnet","withdrawal_gas":"55000000000000","token_transfer_gas":"4000000000000","deposit":"1"}
+             "gas": "95000000000000",
+             "depo": "0"
+          }
+      ]
    ]
 }
 ```
 
-***Hint:*** we recommend making the `add_proposal` transaction using near-cli, as the SputnikDAO UI only allocates 150 TeraGas per default to the custom function call. This might not be sufficient.   
+***Note:*** we recommend making the `add_proposal` transaction using near-cli, as the SputnikDAO UI only allocates 150 TeraGas per default to the custom function call. This might not be sufficient.   
