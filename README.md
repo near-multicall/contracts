@@ -33,12 +33,10 @@ Contract calls inside one array run one after another, as a promise chain.
 Different arrays of contract calls run in parallel.  
 Example: `TX_12` waits for `TX_11` and `TX_13` waits for `TX_12`. `TX_22` waits for `TX_21`. The two arrays start executing in the same block.
     ```
-    schedules = {
-        [
-            [ TX_11, TX_12, TX_13 ],
-            [ TX_21, TX_22]
-        ]
-    }
+    schedules = [
+        [ TX_11, TX_12, TX_13 ],
+        [ TX_21, TX_22]
+    ]
     ```  
 
 
