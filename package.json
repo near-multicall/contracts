@@ -2,8 +2,16 @@
   "name": "near-multicall",
   "license": "MIT",
   "version": "1.0.0",
+  "scripts": {
+    "test": "near-workspaces-ava",
+    "test:testnet": "near-workspaces-ava --config ./ava.testnet.config.cjs"
+  },
   "dependencies": {
     "assemblyscript-json": "^1.1.0",
     "near-sdk-as": "^3.2.3"
+  },
+  "devDependencies": {
+    "near-workspaces-ava": "^1.0.0",
+    "ts-node": "^10.4.0"
   }
 }
