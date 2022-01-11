@@ -1,7 +1,12 @@
 #!/bin/bash
 set -e
 
-echo "compiling multicall contract"
-yarn asc --target releae
+for contract in "multicall" "factory"
+do 
+  entry="assembly/${contract}/index.ts"
+  binary="build/${contract}/$@/contract.wasm"
+  text="build/${contract}/$@/contract.wat"
 
-# TODO: compile factory
+  # compile the contract
+  yarn asc $entry -b $binary -t $text --target $@
+done

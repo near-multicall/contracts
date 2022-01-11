@@ -12,27 +12,20 @@ export function tests(workspace: Workspace) {
    * call multicall
    */
   workspace.test('multicall by non-admin', async (test, {alice, bob, multicall, root}) => {
-    // spoon hello contract from testnet
-    const hello = await root.createAccountFrom({
-
-    });
-    root.exists
-
     // bob isn't admin so he can't call multicall
+    let callError;
     try {
       // try catch bacause contract should panick
       await bob.call(
         multicall.accountId,
         'multicall',
-        {
-          schedules: [
-            [],
-            [],
-            []
-          ]
-        }
+        {schedules: [ [] ]}
       );
-    } catch (error) {}
+    } catch (error) { callError = error}
+    test.true(
+      callError.type === "FunctionCallError"
+    );
+    test.log(`type: "${callError.type}"`);
   });
 
 }

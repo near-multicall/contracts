@@ -3,11 +3,12 @@
   "license": "MIT",
   "version": "1.0.0",
   "scripts": {
+    "build:release": "./build.sh release",
+    "build:debug": "./build.sh debug",
     "test": "near-workspaces-ava",
     "test:testnet": "near-workspaces-ava --config ./ava.testnet.config.cjs"
   },
   "dependencies": {
-    "assemblyscript-json": "^1.1.0",
     "near-sdk-as": "^3.2.3"
   },
   "devDependencies": {

@@ -20,7 +20,7 @@ const workspace = Workspace.init(async ({root}) => {
   // deploy multicall instance with alice admin
   const multicall = await root.createAndDeploy(
     'multicall',
-    'build/release/contract.wasm',
+    'build/multicall/release/contract.wasm',
     {
       method: 'init',
       args: {
@@ -47,4 +47,4 @@ const workspace = Workspace.init(async ({root}) => {
 adminsTests(workspace);
 tokensTests(workspace);
 nearAPITests(workspace);
-//multicallTests(workspace);
+multicallTests(workspace);

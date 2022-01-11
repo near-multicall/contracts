@@ -1,18 +1,17 @@
-import { context, ContractPromiseBatch, ContractPromise, storage, PersistentUnorderedMap, logging, u128, base64, util } from 'near-sdk-as';
-import { JSON } from 'assemblyscript-json';
+import { context, ContractPromiseBatch, ContractPromise, storage, PersistentUnorderedMap, PersistentSet, logging, u128, base64, util } from 'near-sdk-as';
 import { ContractCall, Job, FtOnTransferArgs, MulticallArgs, JobActivateArgs } from './model';
 import { StorageCostUtils } from './utils';
 
 // TODO: use enums for storage keys. See:  https://github.com/near/near-sdk-rs/blob/master/HELP.md
-const admins = new PersistentUnorderedMap<string, boolean>('a');
-const tokens = new PersistentUnorderedMap<string, boolean>('b');
+const admins = new PersistentSet<string>('a');
+const tokens = new PersistentSet<string>('b');
 const jobs = new PersistentUnorderedMap<i32,Job>('c');
 const KEY_INIT: string = "d";
 const KEY_JOB_BOND: string = "e";
 const KEY_JOB_COUNT: string = "f";
 const KEY_CRONCAT_MANAGER_ADDRESS: string = "g";
 const storageCosts = new StorageCostUtils();
-const ONE_TGAS: u64 = 1000000000000;
+const ONE_TGAS: u64 = 1_000_000_000_000;
 
 
 // contract initialization steps:
@@ -136,7 +135,7 @@ function _sequential(schedule: ContractCall[]): void {
  * @returns 
  */
 export function ft_on_transfer(sender_id: string, amount: u128, msg: string): u128 {
-  assert(tokens.contains(context.predecessor), `${context.predecessor} not on token whitelist`);
+  assert(tokens.has(context.predecessor), `${context.predecessor} not on token whitelist`);
   _is_admin(sender_id);
 
   const methodAndArgs: FtOnTransferArgs = util.parseFromString<FtOnTransferArgs>(msg);
@@ -180,7 +179,7 @@ export function near_transfer(account_id: string, amount: u128 = u128.Max): void
 export function admins_add(account_ids: string[]): void {
   _is_admin(context.predecessor);
   for (let i = 0; i < account_ids.length; i++)
-    admins.set(account_ids[i], true);
+    admins.add(account_ids[i]);
 }
 
 export function admins_remove(account_ids: string[]): void {
@@ -189,14 +188,14 @@ export function admins_remove(account_ids: string[]): void {
     admins.delete(account_ids[i]);
 }
 
-export function get_admins(start: i32 = 0, end: i32 = admins.length): string[] {
-  return admins.keys(start, end);
+export function get_admins(start: i32 = 0, end: i32 = i32.MAX_VALUE): string[] {
+  return admins.values().slice(start, end);
 }
 
 export function tokens_add(addresses: string[]): void {
   _is_admin(context.predecessor);
   for (let i = 0; i < addresses.length; i++)
-    tokens.set(addresses[i], true);
+    tokens.add(addresses[i]);
 }
 
 export function tokens_remove(addresses: string[]): void {
@@ -205,8 +204,8 @@ export function tokens_remove(addresses: string[]): void {
     tokens.delete(addresses[i]);
 }
 
-export function get_tokens(start: i32 = 0, end: i32 = tokens.length): string[] {
-  return tokens.keys(start, end);
+export function get_tokens(start: i32 = 0, end: i32 = i32.MAX_VALUE): string[] {
+  return tokens.values().slice(start, end);
 }
 
 // TODO: only facory contract should have access to init
@@ -214,60 +213,19 @@ export function init(admin_accounts: string[], croncat_manager: string, job_bond
   assert(storage.get<string>(KEY_INIT) == null, "Already initialized");
 
   // add contract address as admin to allow nested calls
-  admins.set(context.contractName, true);
+  admins.add(context.contractName);
   // add rest of admins
   for (let i = 0; i < admin_accounts.length; i++) {
-    admins.set(admin_accounts[i], true);
+    admins.add(admin_accounts[i]);
   }
   // set croncat manager address
   storage.set<string>(KEY_CRONCAT_MANAGER_ADDRESS, croncat_manager);
   // set amount for job bond
-  storage.set<string>(KEY_JOB_BOND, job_bond.toString()); 
+  storage.set<u128>(KEY_JOB_BOND, job_bond); 
 
   storage.set(KEY_INIT, "done");
 }
 
-
-/**
- * helper to withdraw from Ref-finance to a given account
- */
-export function withdraw_from_ref(ref_address: string, tokens: string[], receiver_id: string, withdrawal_gas: u64, token_transfer_gas: u64): void {
-  _is_admin(context.predecessor);
-
-  // Get all results
-  let results = ContractPromise.getResults();
-  let get_deposits_results = results[results.length - 1];
-  // Verifying the remote contract call succeeded.
-  if (get_deposits_results.succeeded) {
-    // Decoding data from the bytes buffer into the local object.
-    let data: JSON.Obj = <JSON.Obj>(JSON.parse(get_deposits_results.buffer));
-
-    for (let i = 0; i < tokens.length; i++) {
-      let amountOrNull: JSON.Str | null = data.getString(tokens[i]); // This will return a JSON.Str or null
-      if (amountOrNull != null) {
-        // use .valueOf() to turn the high level JSON.Str type into a string
-        let amount: u128 =  u128.fromString(<string>amountOrNull.valueOf());
-
-        if (u128.gt(amount, u128.Zero)) {
-          ContractPromise.create(
-            ref_address,
-            "withdraw",
-            util.stringToBytes(`{"token_id":"${tokens[i]}","amount":"${amount}"}`),
-            withdrawal_gas,
-            u128.fromString('1')
-          ).then(
-            tokens[i],
-            "ft_transfer",
-            util.stringToBytes(`{"receiver_id": "${receiver_id}", "amount": "${amount}"}`),
-            token_transfer_gas,
-            u128.fromString('1')
-          );
-        }
-      }
-    }
-  }
-
-}
 
 
 // Job functions
@@ -299,12 +257,11 @@ export function get_croncat_manager (): string {
  */
 export function job_set_bond (amount: u128): void {
   _is_admin(context.predecessor);
-  storage.set<string>(KEY_JOB_BOND, amount.toString());  
+  storage.set<u128>(KEY_JOB_BOND, amount);  
 }
 
-export function job_get_bond (): u128 | null {
-  let jobBondOrNull: string | null = storage.get<string>(KEY_JOB_BOND);
-  return (jobBondOrNull == null) ? null : u128.fromString(<string> jobBondOrNull);
+export function job_get_bond (): u128 {
+  return storage.getSome<u128>(KEY_JOB_BOND);
 }
 
 /**
@@ -467,9 +424,7 @@ export function job_add (
   ): i32 
   {
   // anyone can add jobs if they pay required bond
-  let bondAmountOrNull: string | null = storage.get<string>(KEY_JOB_BOND);
-  assert(bondAmountOrNull != null, "current job bond amount is null");
-  let bondAmount: u128 = u128.fromString(<string> bondAmountOrNull);
+  const bondAmount: u128 = job_get_bond();
 
   assert(u128.ge(context.attachedDeposit, bondAmount), "attached deposit must be greater or equal than the required bond");
   let currentJobId: i32 =  storage.getPrimitive<i32>(KEY_JOB_COUNT, 0);
@@ -611,7 +566,7 @@ export function job_trigger (job_id: i32): void {
  */
 function _is_admin(account_id: string): void {
   assert(
-    admins.contains(account_id),
+    admins.has(account_id),
     `${account_id} must be admin to call this function`
   );
 }

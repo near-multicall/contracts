@@ -6,10 +6,10 @@ bundle cross-contract calls for powerful DAO proposals
 
 1. Setup [near-cli](https://docs.near.org/docs/tools/near-cli).
 2. Install dependencies: `yarn`
-3. Compile: `yarn asc --target release`
+3. Compile: `yarn build:release`
 4. Deploy:  
     ```bash
-    near deploy $CONTRACT_ADDRESS build/release/contract.wasm
+    near deploy $CONTRACT_ADDRESS build/multicall/release/contract.wasm
     ```
 6. Initialize the contract:
     ```bash
