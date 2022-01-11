@@ -1,5 +1,3 @@
-// use PersistentSet for whitelists
-// check if only pushing is enough on multicall map for batches (L45 & L46)
 // TODO: use enums as storage keys, parse string.fromCharCode(97 + "YOUR_ENUM")
 
 import { context, storage, PersistentSet, ContractPromiseBatch, ContractPromise, u128, base64, util } from 'near-sdk-as';

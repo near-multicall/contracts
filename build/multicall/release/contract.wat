@@ -10606,7 +10606,7 @@
    i32.shr_u
    call $~lib/util/string/joinStringArray
    i32.const 8880
-   i32.const 285
+   i32.const 283
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -11910,14 +11910,8 @@
       local.get $2
       i32.load
       call $~lib/map/Map<~lib/string/String,~lib/assemblyscript-json/JSON/Value>#get
-      local.tee $4
       local.get $2
       call $~lib/array/Array<~lib/assemblyscript-json/JSON/Value>#push
-      local.get $5
-      local.get $2
-      i32.load
-      local.get $4
-      call $~lib/map/Map<~lib/string/String,~lib/assemblyscript-json/JSON/Value>#set
      else
       local.get $2
       i32.load
@@ -12060,7 +12054,7 @@
   if
    i32.const 9600
    i32.const 8880
-   i32.const 55
+   i32.const 53
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -12244,61 +12238,61 @@
     local.get $0
     local.get $1
     call $~lib/array/Array<~lib/assemblyscript-json/JSON/Value>#__get
-    local.tee $2
+    local.tee $5
     i32.const 0
     call $~lib/array/Array<~lib/assemblyscript-json/JSON/Value>#__get
     i32.load
-    local.get $2
+    local.get $5
     i32.const 0
     call $~lib/array/Array<~lib/assemblyscript-json/JSON/Value>#__get
     i32.load offset=4
-    local.get $2
+    local.get $5
     i32.const 0
     call $~lib/array/Array<~lib/assemblyscript-json/JSON/Value>#__get
     i32.load offset=8
     call $~lib/near-sdk-core/base64/base64.decode
-    local.get $2
+    local.get $5
     i32.const 0
     call $~lib/array/Array<~lib/assemblyscript-json/JSON/Value>#__get
     i64.load offset=16
-    local.get $2
+    local.get $5
     i32.const 0
     call $~lib/array/Array<~lib/assemblyscript-json/JSON/Value>#__get
     i32.load offset=24
     call $~lib/near-sdk-core/contract/ContractPromise.create<~lib/typedarray/Uint8Array>
-    local.set $5
+    local.set $4
     i32.const 1
     local.set $3
     loop $for-loop|01
      local.get $3
-     local.get $2
+     local.get $5
      i32.load offset=12
      i32.lt_s
      if
+      local.get $4
       local.get $5
-      local.get $2
       local.get $3
       call $~lib/array/Array<~lib/assemblyscript-json/JSON/Value>#__get
       i32.load
-      local.get $2
+      local.get $5
       local.get $3
       call $~lib/array/Array<~lib/assemblyscript-json/JSON/Value>#__get
       i32.load offset=4
-      local.get $2
+      local.get $5
       local.get $3
       call $~lib/array/Array<~lib/assemblyscript-json/JSON/Value>#__get
       i32.load offset=8
       call $~lib/near-sdk-core/base64/base64.decode
-      local.get $2
+      local.get $5
       local.get $3
       call $~lib/array/Array<~lib/assemblyscript-json/JSON/Value>#__get
       i64.load offset=16
-      local.get $2
+      local.get $5
       local.get $3
       call $~lib/array/Array<~lib/assemblyscript-json/JSON/Value>#__get
       i32.load offset=24
       call $~lib/near-sdk-core/contract/ContractPromise#then<~lib/typedarray/Uint8Array>
-      local.set $5
+      local.set $4
       local.get $3
       i32.const 1
       i32.add
@@ -16475,7 +16469,7 @@
    i32.shr_u
    call $~lib/util/string/joinStringArray
    i32.const 8880
-   i32.const 153
+   i32.const 151
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -16485,7 +16479,7 @@
   if
    i32.const 2160
    i32.const 8880
-   i32.const 154
+   i32.const 152
    i32.const 24
    call $~lib/builtins/abort
    unreachable
@@ -16738,7 +16732,7 @@
    if
     i32.const 13328
     i32.const 8880
-    i32.const 168
+    i32.const 166
     i32.const 5
     call $~lib/builtins/abort
     unreachable
@@ -16878,7 +16872,7 @@
    i32.shr_u
    call $~lib/util/string/joinStringArray
    i32.const 8880
-   i32.const 79
+   i32.const 77
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -18128,7 +18122,7 @@
   if
    i32.const 14224
    i32.const 8880
-   i32.const 124
+   i32.const 122
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -18622,7 +18616,7 @@
   if
    i32.const 14368
    i32.const 8880
-   i32.const 291
+   i32.const 289
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -18644,7 +18638,7 @@
    i32.shr_u
    call $~lib/util/string/joinStringArray
    i32.const 8880
-   i32.const 178
+   i32.const 176
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -18654,7 +18648,7 @@
   if
    i32.const 2160
    i32.const 8880
-   i32.const 179
+   i32.const 177
    i32.const 24
    call $~lib/builtins/abort
    unreachable
@@ -19683,7 +19677,7 @@
   if
    i32.const 15136
    i32.const 8880
-   i32.const 223
+   i32.const 221
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -19942,7 +19936,7 @@
    i32.shr_u
    call $~lib/util/string/joinStringArray
    i32.const 8880
-   i32.const 247
+   i32.const 245
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -19952,7 +19946,7 @@
   if
    i32.const 2160
    i32.const 8880
-   i32.const 248
+   i32.const 246
    i32.const 24
    call $~lib/builtins/abort
    unreachable
@@ -20468,7 +20462,7 @@
    i32.shr_u
    call $~lib/util/string/joinStringArray
    i32.const 8880
-   i32.const 288
+   i32.const 286
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -20490,7 +20484,7 @@
    i32.shr_u
    call $~lib/util/string/joinStringArray
    i32.const 8880
-   i32.const 268
+   i32.const 266
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -20500,7 +20494,7 @@
   if
    i32.const 2160
    i32.const 8880
-   i32.const 269
+   i32.const 267
    i32.const 24
    call $~lib/builtins/abort
    unreachable
@@ -20575,7 +20569,7 @@
     i32.shr_u
     call $~lib/util/string/joinStringArray
     i32.const 8880
-    i32.const 277
+    i32.const 275
     i32.const 3
     call $~lib/builtins/abort
     unreachable
@@ -20587,7 +20581,7 @@
    if
     i32.const 16032
     i32.const 8880
-    i32.const 278
+    i32.const 276
     i32.const 3
     call $~lib/builtins/abort
     unreachable

@@ -40,9 +40,7 @@ function _internal_multicall(schedules: ContractCall[][]): void {
     if (schedules[i].length == 1) {
       const curr_call: ContractCall = schedules[i][0];
       if (batches.has(curr_call.addr)) {
-        const curr_batch: ContractCall[] = batches.get(curr_call.addr);
-        curr_batch.push(curr_call);
-        batches.set(curr_call.addr, curr_batch);
+        batches.get(curr_call.addr).push(curr_call);
       } else {
         batches.set(curr_call.addr, [curr_call])
       }

@@ -13201,7 +13201,7 @@
    i32.const 64
    call $~lib/staticarray/StaticArray<~lib/string/String>#join
    i32.const 7856
-   i32.const 285
+   i32.const 283
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -13520,6 +13520,72 @@
   local.get $2
   i32.load offset=4
  )
+ (func $~lib/rt/__newBuffer (param $0 i32) (param $1 i32) (param $2 i32) (result i32)
+  (local $3 i32)
+  local.get $0
+  local.get $1
+  call $~lib/rt/stub/__new
+  local.set $3
+  local.get $2
+  if
+   local.get $3
+   local.get $2
+   local.get $0
+   call $~lib/memory/memory.copy
+  end
+  local.get $3
+ )
+ (func $~lib/rt/__newArray (param $0 i32) (param $1 i32) (param $2 i32) (param $3 i32) (result i32)
+  (local $4 i32)
+  (local $5 i32)
+  (local $6 i32)
+  local.get $0
+  local.get $1
+  i32.shl
+  local.set $4
+  local.get $4
+  i32.const 0
+  local.get $3
+  call $~lib/rt/__newBuffer
+  local.set $5
+  i32.const 16
+  local.get $2
+  call $~lib/rt/stub/__new
+  local.set $6
+  local.get $6
+  local.get $5
+  i32.store
+  local.get $6
+  local.get $5
+  i32.const 0
+  call $~lib/rt/stub/__link
+  local.get $6
+  local.get $5
+  i32.store offset=4
+  local.get $6
+  local.get $4
+  i32.store offset=8
+  local.get $6
+  local.get $0
+  i32.store offset=12
+  local.get $6
+ )
+ (func $~lib/array/Array<assembly/multicall/model/ContractCall>#__uset (param $0 i32) (param $1 i32) (param $2 i32)
+  local.get $0
+  i32.load offset=4
+  local.get $1
+  i32.const 2
+  i32.shl
+  i32.add
+  local.get $2
+  i32.store
+  i32.const 1
+  drop
+  local.get $0
+  local.get $2
+  i32.const 1
+  call $~lib/rt/stub/__link
+ )
  (func $~lib/map/MapEntry<~lib/string/String,~lib/array/Array<assembly/multicall/model/ContractCall>>#set:value (param $0 i32) (param $1 i32)
   local.get $0
   local.get $1
@@ -13770,72 +13836,6 @@
    i32.store
   end
   local.get $0
- )
- (func $~lib/rt/__newBuffer (param $0 i32) (param $1 i32) (param $2 i32) (result i32)
-  (local $3 i32)
-  local.get $0
-  local.get $1
-  call $~lib/rt/stub/__new
-  local.set $3
-  local.get $2
-  if
-   local.get $3
-   local.get $2
-   local.get $0
-   call $~lib/memory/memory.copy
-  end
-  local.get $3
- )
- (func $~lib/rt/__newArray (param $0 i32) (param $1 i32) (param $2 i32) (param $3 i32) (result i32)
-  (local $4 i32)
-  (local $5 i32)
-  (local $6 i32)
-  local.get $0
-  local.get $1
-  i32.shl
-  local.set $4
-  local.get $4
-  i32.const 0
-  local.get $3
-  call $~lib/rt/__newBuffer
-  local.set $5
-  i32.const 16
-  local.get $2
-  call $~lib/rt/stub/__new
-  local.set $6
-  local.get $6
-  local.get $5
-  i32.store
-  local.get $6
-  local.get $5
-  i32.const 0
-  call $~lib/rt/stub/__link
-  local.get $6
-  local.get $5
-  i32.store offset=4
-  local.get $6
-  local.get $4
-  i32.store offset=8
-  local.get $6
-  local.get $0
-  i32.store offset=12
-  local.get $6
- )
- (func $~lib/array/Array<assembly/multicall/model/ContractCall>#__uset (param $0 i32) (param $1 i32) (param $2 i32)
-  local.get $0
-  i32.load offset=4
-  local.get $1
-  i32.const 2
-  i32.shl
-  i32.add
-  local.get $2
-  i32.store
-  i32.const 1
-  drop
-  local.get $0
-  local.get $2
-  i32.const 1
-  call $~lib/rt/stub/__link
  )
  (func $~lib/array/Array<~lib/array/Array<assembly/multicall/model/ContractCall>>#splice (param $0 i32) (param $1 i32) (param $2 i32) (result i32)
   (local $3 i32)
@@ -15652,16 +15652,8 @@
       local.get $5
       i32.load
       call $~lib/map/Map<~lib/string/String,~lib/array/Array<assembly/multicall/model/ContractCall>>#get
-      local.set $6
-      local.get $6
       local.get $5
       call $~lib/array/Array<assembly/multicall/model/ContractCall>#push
-      drop
-      local.get $1
-      local.get $5
-      i32.load
-      local.get $6
-      call $~lib/map/Map<~lib/string/String,~lib/array/Array<assembly/multicall/model/ContractCall>>#set
       drop
      else
       local.get $1
@@ -15735,7 +15727,7 @@
   if
    i32.const 8576
    i32.const 7856
-   i32.const 55
+   i32.const 53
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -20638,7 +20630,7 @@
    i32.const 64
    call $~lib/staticarray/StaticArray<~lib/string/String>#join
    i32.const 7856
-   i32.const 153
+   i32.const 151
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -20650,7 +20642,7 @@
   else
    i32.const 1136
    i32.const 7856
-   i32.const 154
+   i32.const 152
    i32.const 24
    call $~lib/builtins/abort
    unreachable
@@ -20880,7 +20872,7 @@
    if
     i32.const 12304
     i32.const 7856
-    i32.const 168
+    i32.const 166
     i32.const 5
     call $~lib/builtins/abort
     unreachable
@@ -20923,7 +20915,7 @@
    i32.const 64
    call $~lib/staticarray/StaticArray<~lib/string/String>#join
    i32.const 7856
-   i32.const 79
+   i32.const 77
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -22626,7 +22618,7 @@
   if
    i32.const 13200
    i32.const 7856
-   i32.const 124
+   i32.const 122
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -23117,7 +23109,7 @@
   if
    i32.const 13344
    i32.const 7856
-   i32.const 291
+   i32.const 289
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -23646,7 +23638,7 @@
    i32.const 64
    call $~lib/staticarray/StaticArray<~lib/string/String>#join
    i32.const 7856
-   i32.const 178
+   i32.const 176
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -23658,7 +23650,7 @@
   else
    i32.const 1136
    i32.const 7856
-   i32.const 179
+   i32.const 177
    i32.const 24
    call $~lib/builtins/abort
    unreachable
@@ -24543,7 +24535,7 @@
   if
    i32.const 14112
    i32.const 7856
-   i32.const 223
+   i32.const 221
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -24807,7 +24799,7 @@
    i32.const 64
    call $~lib/staticarray/StaticArray<~lib/string/String>#join
    i32.const 7856
-   i32.const 247
+   i32.const 245
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -24819,7 +24811,7 @@
   else
    i32.const 1136
    i32.const 7856
-   i32.const 248
+   i32.const 246
    i32.const 24
    call $~lib/builtins/abort
    unreachable
@@ -25578,7 +25570,7 @@
    i32.const 64
    call $~lib/staticarray/StaticArray<~lib/string/String>#join
    i32.const 7856
-   i32.const 288
+   i32.const 286
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -25609,7 +25601,7 @@
    i32.const 64
    call $~lib/staticarray/StaticArray<~lib/string/String>#join
    i32.const 7856
-   i32.const 268
+   i32.const 266
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -25621,7 +25613,7 @@
   else
    i32.const 1136
    i32.const 7856
-   i32.const 269
+   i32.const 267
    i32.const 24
    call $~lib/builtins/abort
    unreachable
@@ -25694,7 +25686,7 @@
    i32.const 64
    call $~lib/staticarray/StaticArray<~lib/string/String>#join
    i32.const 7856
-   i32.const 277
+   i32.const 275
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -25707,7 +25699,7 @@
   if
    i32.const 15008
    i32.const 7856
-   i32.const 278
+   i32.const 276
    i32.const 3
    call $~lib/builtins/abort
    unreachable
