@@ -4,7 +4,6 @@ import { tests as tokensTests } from './tokens.ava';
 import { tests as nearAPITests } from './nearAPI.ava';
 import { tests as multicallTests } from './multicall.ava';
 
-const CRONCAT_MANAGER_ADDRESS = "placeholder";
 const nusdc_address: string = "nusdc.ft-fin.testnet";
 const ndai_address: string = "ndai.ft-fin.testnet";
 const nusdt_address: string = "nusdt.ft-fin.testnet";
@@ -17,23 +16,50 @@ const workspace = Workspace.init(async ({root}) => {
   const alice = await root.createAccount('alice');
   const bob = await root.createAccount('bob');
 
-  // deploy multicall instance with alice admin
-  const multicall = await root.createAndDeploy(
-    'multicall',
-    'build/multicall/release/contract.wasm',
+  // deploy multicall factory with alice admin
+  const multicallFactory = await root.createAndDeploy(
+    'factory',
+    'build/factory/release/contract.wasm',
     {
       method: 'init',
       args: {
-        admin_accounts: [alice.accountId],
-        croncat_manager: CRONCAT_MANAGER_ADDRESS,
-        job_bond: NEAR.parse("1") // 1 NEAR
+        init_owners: [alice.accountId]
       },
       gas: Gas.parse("10 Tgas")
     }
   );
 
+  // set multicall instance creation fee to 0.001 NEAR
+  await alice.call(
+    multicallFactory.accountId,
+    "set_fee",
+    { amount: NEAR.parse('1 mN') }
+  );
+
+  // add root as dao factory, so we can deploy an instance for alice later
+  await alice.call(
+    multicallFactory.accountId,
+    "factories_add",
+    { account_ids: [root.accountId] }
+  );
+
+  // create a multicall instance for alice. Alice will be admin
+  await alice.call(
+    multicallFactory.accountId,
+    "create",
+    {},
+    {
+      gas: Gas.parse("70 Tgas"),
+      attachedDeposit: NEAR.parse('1') // 1 NEAR, cover fee + initial account storage costs
+    }
+  );
+
+  const multicall = multicallFactory.getAccount("alice");
+  // give multicall 100 NEAR for later testing 
+  await multicall.updateAccount({amount: NEAR.parse('100').toString()});
+
   // add nDAI to token whitelist
-  await multicall.call(
+  await alice.call(
     multicall.accountId,
     "tokens_add",
     { addresses: [ndai_address] }
