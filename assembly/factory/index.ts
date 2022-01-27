@@ -1,6 +1,4 @@
-// TODO: use enums as storage keys, parse string.fromCharCode(97 + "YOUR_ENUM")
-
-import { context, storage, PersistentSet, ContractPromiseBatch, ContractPromise, u128, base64, util } from 'near-sdk-as';
+import { context, storage, PersistentSet, ContractPromiseBatch, ContractPromise, u128, base64, base58, util } from 'near-sdk-as';
 
 const CODE: StaticArray<u8> = includeBytes("../../build/multicall/release/contract.wasm");
 
@@ -29,7 +27,7 @@ export function init(init_owners: string[]): void {
 }
 
 /**
- * NEAR amount required to create a multicall instance
+ * fee required to create a multicall instance
  * 
  * @param amount
  */
@@ -90,7 +88,15 @@ export function get_users(start: i32 = 0, end: i32 = i32.MAX_VALUE): string[] {
   return users.values().slice(start, end);
 }
 
-// TODO: automatically infer arguments, except for job bond fee
+/**
+ * create a multicall instance. Require predecessor to pay a fee
+ * and be direct subaccount of a whitelisted dao_factory.
+ * NOTE: public key is without the "ed25519:" prefix
+ * 
+ * @param args 
+ * @param public_key 
+ * @returns 
+ */
 export function create(args: string, public_key: string = ""): ContractPromiseBatch {
   _is_dao(context.predecessor);
 
@@ -102,7 +108,7 @@ export function create(args: string, public_key: string = ""): ContractPromiseBa
     .deploy_contract(Uint8Array.wrap(changetype<ArrayBuffer>(CODE)))
     .transfer(u128.sub(context.attachedDeposit, get_fee()));
   if (public_key != "") {
-    promise = promise.add_full_access_key(util.stringToBytes(public_key));
+    promise = promise.add_full_access_key(base58.decode(public_key));
   }
   promise = promise.function_call(
       "init",
@@ -126,6 +132,15 @@ export function create(args: string, public_key: string = ""): ContractPromiseBa
   return promise;
 }
 
+/**
+ * callback to check if instance creation succeeded.
+ * if not, refund user's attached deposit
+ * 
+ * @param account_id 
+ * @param attached_deposit 
+ * @param predecessor_account_id 
+ * @returns 
+ */
 export function on_create(account_id: string, attached_deposit: u128, predecessor_account_id: string): boolean {
   _is_private();
 

@@ -2,7 +2,6 @@ import { context, ContractPromiseBatch, ContractPromise, storage, PersistentUnor
 import { ContractCall, Job, FtOnTransferArgs, MulticallArgs, JobActivateArgs } from './model';
 import { StorageCostUtils } from './utils';
 
-// TODO: use enums for storage keys. See:  https://github.com/near/near-sdk-rs/blob/master/HELP.md
 const admins = new PersistentSet<string>('a');
 const tokens = new PersistentSet<string>('b');
 const jobs = new PersistentUnorderedMap<i32,Job>('c');
@@ -206,7 +205,7 @@ export function get_tokens(start: i32 = 0, end: i32 = i32.MAX_VALUE): string[] {
   return tokens.values().slice(start, end);
 }
 
-// TODO: only facory contract should have access to init
+// init contract
 export function init(admin_accounts: string[], croncat_manager: string, job_bond: u128): void {
   assert(storage.get<string>(KEY_INIT) == null, "Already initialized");
 

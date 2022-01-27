@@ -329,48 +329,60 @@
  (data (i32.const 64872) "\01\00\00\00:\00\00\00U\00n\00d\00e\00r\00f\00l\00o\00w\00 \00d\00u\00r\00i\00n\00g\00 \00s\00u\00b\00s\00t\00r\00a\00c\00t\00i\00o\00n")
  (data (i32.const 64940) "\\")
  (data (i32.const 64952) "\01\00\00\00F\00\00\00~\00l\00i\00b\00/\00a\00s\00-\00b\00i\00g\00n\00u\00m\00/\00i\00n\00t\00e\00g\00e\00r\00/\00s\00a\00f\00e\00/\00u\001\002\008\00.\00t\00s")
- (data (i32.const 65036) "\1c")
- (data (i32.const 65048) "\01\00\00\00\08\00\00\00i\00n\00i\00t")
- (data (i32.const 65068) "\1c")
- (data (i32.const 65080) "\01\00\00\00\02\00\00\00=")
- (data (i32.const 65100) "\9c")
- (data (i32.const 65116) "\80")
- (data (i32.const 65163) ">\00\00\00?456789:;<=\00\00\00\00\00\00\00\00\01\02\03\04\05\06\07\08\t\n\0b\0c\0d\0e\0f\10\11\12\13\14\15\16\17\18\19\00\00\00\00\00\00\1a\1b\1c\1d\1e\1f !\"#$%&\'()*+,-./0123")
- (data (i32.const 65260) "<")
- (data (i32.const 65272) "\01\00\00\00&\00\00\00~\00l\00i\00b\00/\00s\00t\00a\00t\00i\00c\00a\00r\00r\00a\00y\00.\00t\00s")
- (data (i32.const 65324) ",")
- (data (i32.const 65336) "\01\00\00\00\12\00\00\00o\00n\00_\00c\00r\00e\00a\00t\00e")
- (data (i32.const 65372) ",")
- (data (i32.const 65384) "\01\00\00\00\1c\00\00\00\"\00a\00c\00c\00o\00u\00n\00t\00_\00i\00d\00\"\00:\00\"")
- (data (i32.const 65420) "\1c")
- (data (i32.const 65432) "\01\00\00\00\04\00\00\00\"\00,")
+ (data (i32.const 65036) "\8c")
+ (data (i32.const 65048) "\01\00\00\00t\00\00\001\002\003\004\005\006\007\008\009\00A\00B\00C\00D\00E\00F\00G\00H\00J\00K\00L\00M\00N\00P\00Q\00R\00S\00T\00U\00V\00W\00X\00Y\00Z\00a\00b\00c\00d\00e\00f\00g\00h\00i\00j\00k\00m\00n\00o\00p\00q\00r\00s\00t\00u\00v\00w\00x\00y\00z")
+ (data (i32.const 65180) ",")
+ (data (i32.const 65192) "\01\00\00\00\1a\00\00\00 \00i\00s\00 \00a\00m\00b\00i\00g\00u\00o\00u\00s")
+ (data (i32.const 65228) "L")
+ (data (i32.const 65240) "\01\00\00\008\00\00\00~\00l\00i\00b\00/\00n\00e\00a\00r\00-\00s\00d\00k\00-\00c\00o\00r\00e\00/\00b\00a\00s\00e\005\008\00.\00t\00s")
+ (data (i32.const 65308) "\1c")
+ (data (i32.const 65320) "\01\00\00\00\02\00\00\00 ")
+ (data (i32.const 65340) ",")
+ (data (i32.const 65352) "\01\00\00\00\1c\00\00\00N\00o\00n\00-\00z\00e\00r\00o\00 \00c\00a\00r\00r\00y")
+ (data (i32.const 65388) "<")
+ (data (i32.const 65400) "\01\00\00\00(\00\00\00N\00o\00n\00-\00b\00a\00s\00e\005\008\00 \00c\00h\00a\00r\00a\00c\00t\00e\00r")
  (data (i32.const 65452) "\1c")
- (data (i32.const 65464) "\1e\00\00\00\0c\00\00\00p\ff\00\00\00\00\00\00\a0\ff")
- (data (i32.const 65484) "<")
- (data (i32.const 65496) "\01\00\00\00(\00\00\00\"\00a\00t\00t\00a\00c\00h\00e\00d\00_\00d\00e\00p\00o\00s\00i\00t\00\"\00:\00\"")
- (data (i32.const 65548) "\1c")
- (data (i32.const 65560) "\1e\00\00\00\0c\00\00\00\e0\ff\00\00\00\00\00\00\a0\ff")
- (data (i32.const 65580) "L")
- (data (i32.const 65592) "\01\00\00\004\00\00\00\"\00p\00r\00e\00d\00e\00c\00e\00s\00s\00o\00r\00_\00a\00c\00c\00o\00u\00n\00t\00_\00i\00d\00\"\00:\00\"")
- (data (i32.const 65660) "\1c")
- (data (i32.const 65672) "\1e\00\00\00\0c\00\00\00@\00\01\00\00\00\00\00p\e1")
- (data (i32.const 65692) ",")
- (data (i32.const 65704) "\01\00\00\00\14\00\00\00a\00c\00c\00o\00u\00n\00t\00_\00i\00d")
- (data (i32.const 65740) "<")
- (data (i32.const 65752) "\01\00\00\00 \00\00\00a\00t\00t\00a\00c\00h\00e\00d\00_\00d\00e\00p\00o\00s\00i\00t")
- (data (i32.const 65804) "<")
- (data (i32.const 65816) "\01\00\00\00,\00\00\00p\00r\00e\00d\00e\00c\00e\00s\00s\00o\00r\00_\00a\00c\00c\00o\00u\00n\00t\00_\00i\00d")
- (data (i32.const 65868) "<")
- (data (i32.const 65880) "\01\00\00\00\"\00\00\00M\00e\00t\00h\00o\00d\00 \00i\00s\00 \00p\00r\00i\00v\00a\00t\00e")
- (data (i32.const 65936) "#\00\00\00 \00\00\00\00\00\00\00 ")
- (data (i32.const 65964) "d\00\00\00\00\00\00\00B\00\00\00\00\00\00\00\02\t")
- (data (i32.const 65996) "A\00\00\00\02")
- (data (i32.const 66024) "\0b\00\00\00 \00\00\00\00\00\00\00\10A\82")
- (data (i32.const 66048) "\0e\00\00\00 \00\00\00\00\00\00\00\02A")
- (data (i32.const 66088) "\0b\00\00\00\02A")
- (data (i32.const 66104) "\0b\00\00\00 \00\00\00\0b\00\00\00 \00\00\00\17\00\00\00 \00\00\00\0b\00\00\00 \00\00\00\0b\00\00\00 \00\00\00\0b\00\00\00\00\00\00\00\1b")
- (data (i32.const 66164) " \00\00\00\1d\00\00\00 \00\00\00\00\00\00\00\04A\00\00\00\00\00\00A\08\00\00\02\00\00\00 ")
- (data (i32.const 66212) "\02A")
+ (data (i32.const 65464) "\01\00\00\00\08\00\00\00i\00n\00i\00t")
+ (data (i32.const 65484) "\1c")
+ (data (i32.const 65496) "\01\00\00\00\02\00\00\00=")
+ (data (i32.const 65516) "\9c")
+ (data (i32.const 65532) "\80")
+ (data (i32.const 65579) ">\00\00\00?456789:;<=\00\00\00\00\00\00\00\00\01\02\03\04\05\06\07\08\t\n\0b\0c\0d\0e\0f\10\11\12\13\14\15\16\17\18\19\00\00\00\00\00\00\1a\1b\1c\1d\1e\1f !\"#$%&\'()*+,-./0123")
+ (data (i32.const 65676) "<")
+ (data (i32.const 65688) "\01\00\00\00&\00\00\00~\00l\00i\00b\00/\00s\00t\00a\00t\00i\00c\00a\00r\00r\00a\00y\00.\00t\00s")
+ (data (i32.const 65740) ",")
+ (data (i32.const 65752) "\01\00\00\00\12\00\00\00o\00n\00_\00c\00r\00e\00a\00t\00e")
+ (data (i32.const 65788) ",")
+ (data (i32.const 65800) "\01\00\00\00\1c\00\00\00\"\00a\00c\00c\00o\00u\00n\00t\00_\00i\00d\00\"\00:\00\"")
+ (data (i32.const 65836) "\1c")
+ (data (i32.const 65848) "\01\00\00\00\04\00\00\00\"\00,")
+ (data (i32.const 65868) "\1c")
+ (data (i32.const 65880) "\1e\00\00\00\0c\00\00\00\10\01\01\00\00\00\00\00@\01\01")
+ (data (i32.const 65900) "<")
+ (data (i32.const 65912) "\01\00\00\00(\00\00\00\"\00a\00t\00t\00a\00c\00h\00e\00d\00_\00d\00e\00p\00o\00s\00i\00t\00\"\00:\00\"")
+ (data (i32.const 65964) "\1c")
+ (data (i32.const 65976) "\1e\00\00\00\0c\00\00\00\80\01\01\00\00\00\00\00@\01\01")
+ (data (i32.const 65996) "L")
+ (data (i32.const 66008) "\01\00\00\004\00\00\00\"\00p\00r\00e\00d\00e\00c\00e\00s\00s\00o\00r\00_\00a\00c\00c\00o\00u\00n\00t\00_\00i\00d\00\"\00:\00\"")
+ (data (i32.const 66076) "\1c")
+ (data (i32.const 66088) "\1e\00\00\00\0c\00\00\00\e0\01\01\00\00\00\00\00p\e1")
+ (data (i32.const 66108) ",")
+ (data (i32.const 66120) "\01\00\00\00\14\00\00\00a\00c\00c\00o\00u\00n\00t\00_\00i\00d")
+ (data (i32.const 66156) "<")
+ (data (i32.const 66168) "\01\00\00\00 \00\00\00a\00t\00t\00a\00c\00h\00e\00d\00_\00d\00e\00p\00o\00s\00i\00t")
+ (data (i32.const 66220) "<")
+ (data (i32.const 66232) "\01\00\00\00,\00\00\00p\00r\00e\00d\00e\00c\00e\00s\00s\00o\00r\00_\00a\00c\00c\00o\00u\00n\00t\00_\00i\00d")
+ (data (i32.const 66284) "<")
+ (data (i32.const 66296) "\01\00\00\00\"\00\00\00M\00e\00t\00h\00o\00d\00 \00i\00s\00 \00p\00r\00i\00v\00a\00t\00e")
+ (data (i32.const 66352) "#\00\00\00 \00\00\00\00\00\00\00 ")
+ (data (i32.const 66380) "d\00\00\00\00\00\00\00B\00\00\00\00\00\00\00\02\t")
+ (data (i32.const 66412) "A\00\00\00\02")
+ (data (i32.const 66440) "\0b\00\00\00 \00\00\00\00\00\00\00\10A\82")
+ (data (i32.const 66464) "\0e\00\00\00 \00\00\00\00\00\00\00\02A")
+ (data (i32.const 66504) "\0b\00\00\00\02A")
+ (data (i32.const 66520) "\0b\00\00\00 \00\00\00\0b\00\00\00 \00\00\00\17\00\00\00 \00\00\00\0b\00\00\00 \00\00\00\0b\00\00\00 \00\00\00\0b\00\00\00\00\00\00\00\1b")
+ (data (i32.const 66580) " \00\00\00\1d\00\00\00 \00\00\00\00\00\00\00\04A\00\00\00\00\00\00A\08\00\00\02\00\00\00 ")
+ (data (i32.const 66628) "\02A")
  (export "init" (func $assembly/factory/index/__wrapper_init))
  (export "set_fee" (func $assembly/factory/index/__wrapper_set_fee))
  (export "get_fee" (func $assembly/factory/index/__wrapper_get_fee))
@@ -2683,7 +2695,7 @@
     i32.sub
     i32.load offset=12
     local.tee $3
-    i32.const 65936
+    i32.const 66352
     i32.load
     i32.le_u
     if
@@ -2697,7 +2709,7 @@
       local.get $3
       i32.const 3
       i32.shl
-      i32.const 65940
+      i32.const 66356
       i32.add
       i32.load offset=4
       local.tee $3
@@ -2726,7 +2738,7 @@
     i32.sub
     i32.load offset=12
     local.tee $3
-    i32.const 65936
+    i32.const 66352
     i32.load
     i32.le_u
     if
@@ -2740,7 +2752,7 @@
       local.get $3
       i32.const 3
       i32.shl
-      i32.const 65940
+      i32.const 66356
       i32.add
       i32.load offset=4
       local.tee $3
@@ -2953,7 +2965,7 @@
      i32.sub
      i32.load offset=12
      local.tee $1
-     i32.const 65936
+     i32.const 66352
      i32.load
      i32.le_u
      if
@@ -2967,7 +2979,7 @@
        local.get $1
        i32.const 3
        i32.shl
-       i32.const 65940
+       i32.const 66356
        i32.add
        i32.load offset=4
        local.tee $1
@@ -2996,7 +3008,7 @@
      i32.sub
      i32.load offset=12
      local.tee $1
-     i32.const 65936
+     i32.const 66352
      i32.load
      i32.le_u
      if
@@ -3010,7 +3022,7 @@
        local.get $1
        i32.const 3
        i32.shl
-       i32.const 65940
+       i32.const 66356
        i32.add
        i32.load offset=4
        local.tee $1
@@ -5914,7 +5926,7 @@
    i32.sub
    i32.load offset=12
    local.tee $0
-   i32.const 65936
+   i32.const 66352
    i32.load
    i32.le_u
    if
@@ -5928,7 +5940,7 @@
      local.get $0
      i32.const 3
      i32.shl
-     i32.const 65940
+     i32.const 66356
      i32.add
      i32.load offset=4
      local.tee $0
@@ -5989,7 +6001,7 @@
     i32.sub
     i32.load offset=12
     local.tee $2
-    i32.const 65936
+    i32.const 66352
     i32.load
     i32.le_u
     if
@@ -6003,7 +6015,7 @@
       local.get $2
       i32.const 3
       i32.shl
-      i32.const 65940
+      i32.const 66356
       i32.add
       i32.load offset=4
       local.tee $2
@@ -6030,7 +6042,7 @@
     i32.sub
     i32.load offset=12
     local.tee $2
-    i32.const 65936
+    i32.const 66352
     i32.load
     i32.le_u
     if
@@ -6044,7 +6056,7 @@
       local.get $2
       i32.const 3
       i32.shl
-      i32.const 65940
+      i32.const 66356
       i32.add
       i32.load offset=4
       local.tee $2
@@ -6080,7 +6092,7 @@
     i32.sub
     i32.load offset=12
     local.tee $2
-    i32.const 65936
+    i32.const 66352
     i32.load
     i32.le_u
     if
@@ -6094,7 +6106,7 @@
       local.get $2
       i32.const 3
       i32.shl
-      i32.const 65940
+      i32.const 66356
       i32.add
       i32.load offset=4
       local.tee $2
@@ -6118,7 +6130,7 @@
     i32.sub
     i32.load offset=12
     local.tee $2
-    i32.const 65936
+    i32.const 66352
     i32.load
     i32.le_u
     if
@@ -6132,7 +6144,7 @@
       local.get $2
       i32.const 3
       i32.shl
-      i32.const 65940
+      i32.const 66356
       i32.add
       i32.load offset=4
       local.tee $2
@@ -6163,7 +6175,7 @@
    i32.sub
    i32.load offset=12
    local.tee $1
-   i32.const 65936
+   i32.const 66352
    i32.load
    i32.le_u
    if
@@ -6177,7 +6189,7 @@
      local.get $1
      i32.const 3
      i32.shl
-     i32.const 65940
+     i32.const 66356
      i32.add
      i32.load offset=4
      local.tee $1
@@ -6209,7 +6221,7 @@
     i32.sub
     i32.load offset=12
     local.tee $2
-    i32.const 65936
+    i32.const 66352
     i32.load
     i32.le_u
     if
@@ -6223,7 +6235,7 @@
       local.get $2
       i32.const 3
       i32.shl
-      i32.const 65940
+      i32.const 66356
       i32.add
       i32.load offset=4
       local.tee $2
@@ -6250,7 +6262,7 @@
     i32.sub
     i32.load offset=12
     local.tee $2
-    i32.const 65936
+    i32.const 66352
     i32.load
     i32.le_u
     if
@@ -6264,7 +6276,7 @@
       local.get $2
       i32.const 3
       i32.shl
-      i32.const 65940
+      i32.const 66356
       i32.add
       i32.load offset=4
       local.tee $2
@@ -6300,7 +6312,7 @@
     i32.sub
     i32.load offset=12
     local.tee $2
-    i32.const 65936
+    i32.const 66352
     i32.load
     i32.le_u
     if
@@ -6314,7 +6326,7 @@
       local.get $2
       i32.const 3
       i32.shl
-      i32.const 65940
+      i32.const 66356
       i32.add
       i32.load offset=4
       local.tee $2
@@ -6338,7 +6350,7 @@
     i32.sub
     i32.load offset=12
     local.tee $2
-    i32.const 65936
+    i32.const 66352
     i32.load
     i32.le_u
     if
@@ -6352,7 +6364,7 @@
       local.get $2
       i32.const 3
       i32.shl
-      i32.const 65940
+      i32.const 66356
       i32.add
       i32.load offset=4
       local.tee $2
@@ -6385,7 +6397,7 @@
    i32.sub
    i32.load offset=12
    local.tee $2
-   i32.const 65936
+   i32.const 66352
    i32.load
    i32.le_u
    if
@@ -6399,7 +6411,7 @@
      local.get $2
      i32.const 3
      i32.shl
-     i32.const 65940
+     i32.const 66356
      i32.add
      i32.load offset=4
      local.tee $2
@@ -8473,7 +8485,7 @@
   if
    i32.const 60256
    i32.const 60320
-   i32.const 20
+   i32.const 21
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -8510,7 +8522,7 @@
     i32.sub
     i32.load offset=12
     local.tee $1
-    i32.const 65936
+    i32.const 66352
     i32.load
     i32.le_u
     if
@@ -8524,7 +8536,7 @@
       local.get $1
       i32.const 3
       i32.shl
-      i32.const 65940
+      i32.const 66356
       i32.add
       i32.load offset=4
       local.tee $1
@@ -8548,7 +8560,7 @@
     i32.sub
     i32.load offset=12
     local.tee $1
-    i32.const 65936
+    i32.const 66352
     i32.load
     i32.le_u
     if
@@ -8562,7 +8574,7 @@
       local.get $1
       i32.const 3
       i32.shl
-      i32.const 65940
+      i32.const 66356
       i32.add
       i32.load offset=4
       local.tee $1
@@ -8586,7 +8598,7 @@
     i32.sub
     i32.load offset=12
     local.tee $1
-    i32.const 65936
+    i32.const 66352
     i32.load
     i32.le_u
     if
@@ -8600,7 +8612,7 @@
       local.get $1
       i32.const 3
       i32.shl
-      i32.const 65940
+      i32.const 66356
       i32.add
       i32.load offset=4
       local.tee $1
@@ -8624,7 +8636,7 @@
     i32.sub
     i32.load offset=12
     local.tee $1
-    i32.const 65936
+    i32.const 66352
     i32.load
     i32.le_u
     if
@@ -8638,7 +8650,7 @@
       local.get $1
       i32.const 3
       i32.shl
-      i32.const 65940
+      i32.const 66356
       i32.add
       i32.load offset=4
       local.tee $1
@@ -8662,7 +8674,7 @@
     i32.sub
     i32.load offset=12
     local.tee $1
-    i32.const 65936
+    i32.const 66352
     i32.load
     i32.le_u
     if
@@ -8676,7 +8688,7 @@
       local.get $1
       i32.const 3
       i32.shl
-      i32.const 65940
+      i32.const 66356
       i32.add
       i32.load offset=4
       local.tee $1
@@ -8700,7 +8712,7 @@
     i32.sub
     i32.load offset=12
     local.tee $1
-    i32.const 65936
+    i32.const 66352
     i32.load
     i32.le_u
     if
@@ -8714,7 +8726,7 @@
       local.get $1
       i32.const 3
       i32.shl
-      i32.const 65940
+      i32.const 66356
       i32.add
       i32.load offset=4
       local.tee $1
@@ -8738,7 +8750,7 @@
     i32.sub
     i32.load offset=12
     local.tee $0
-    i32.const 65936
+    i32.const 66352
     i32.load
     i32.le_u
     if
@@ -8752,7 +8764,7 @@
       local.get $0
       i32.const 3
       i32.shl
-      i32.const 65940
+      i32.const 66356
       i32.add
       i32.load offset=4
       local.tee $0
@@ -9429,7 +9441,7 @@
     i32.sub
     i32.load offset=12
     local.tee $3
-    i32.const 65936
+    i32.const 66352
     i32.load
     i32.le_u
     if
@@ -9443,7 +9455,7 @@
       local.get $3
       i32.const 3
       i32.shl
-      i32.const 65940
+      i32.const 66356
       i32.add
       i32.load offset=4
       local.tee $3
@@ -9470,7 +9482,7 @@
     i32.sub
     i32.load offset=12
     local.tee $3
-    i32.const 65936
+    i32.const 66352
     i32.load
     i32.le_u
     if
@@ -9484,7 +9496,7 @@
       local.get $3
       i32.const 3
       i32.shl
-      i32.const 65940
+      i32.const 66356
       i32.add
       i32.load offset=4
       local.tee $3
@@ -9521,7 +9533,7 @@
     i32.sub
     i32.load offset=12
     local.tee $0
-    i32.const 65936
+    i32.const 66352
     i32.load
     i32.le_u
     if
@@ -9535,7 +9547,7 @@
       local.get $0
       i32.const 3
       i32.shl
-      i32.const 65940
+      i32.const 66356
       i32.add
       i32.load offset=4
       local.tee $0
@@ -9559,7 +9571,7 @@
     i32.sub
     i32.load offset=12
     local.tee $0
-    i32.const 65936
+    i32.const 66352
     i32.load
     i32.le_u
     if
@@ -9573,7 +9585,7 @@
       local.get $0
       i32.const 3
       i32.shl
-      i32.const 65940
+      i32.const 66356
       i32.add
       i32.load offset=4
       local.tee $0
@@ -9609,7 +9621,7 @@
     i32.sub
     i32.load offset=12
     local.tee $3
-    i32.const 65936
+    i32.const 66352
     i32.load
     i32.le_u
     if
@@ -9623,7 +9635,7 @@
       local.get $3
       i32.const 3
       i32.shl
-      i32.const 65940
+      i32.const 66356
       i32.add
       i32.load offset=4
       local.tee $3
@@ -9654,7 +9666,7 @@
    i32.sub
    i32.load offset=12
    local.tee $1
-   i32.const 65936
+   i32.const 66352
    i32.load
    i32.le_u
    if
@@ -9668,7 +9680,7 @@
      local.get $1
      i32.const 3
      i32.shl
-     i32.const 65940
+     i32.const 66356
      i32.add
      i32.load offset=4
      local.tee $1
@@ -9748,7 +9760,7 @@
    i32.shr_u
    call $~lib/util/string/joinStringArray
    i32.const 60320
-   i32.const 92
+   i32.const 93
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -10149,7 +10161,7 @@
     i32.sub
     i32.load offset=12
     local.tee $2
-    i32.const 65936
+    i32.const 66352
     i32.load
     i32.le_u
     if
@@ -10163,7 +10175,7 @@
       local.get $2
       i32.const 3
       i32.shl
-      i32.const 65940
+      i32.const 66356
       i32.add
       i32.load offset=4
       local.tee $2
@@ -10190,7 +10202,7 @@
     i32.sub
     i32.load offset=12
     local.tee $2
-    i32.const 65936
+    i32.const 66352
     i32.load
     i32.le_u
     if
@@ -10204,7 +10216,7 @@
       local.get $2
       i32.const 3
       i32.shl
-      i32.const 65940
+      i32.const 66356
       i32.add
       i32.load offset=4
       local.tee $2
@@ -10241,7 +10253,7 @@
     i32.sub
     i32.load offset=12
     local.tee $0
-    i32.const 65936
+    i32.const 66352
     i32.load
     i32.le_u
     if
@@ -10255,7 +10267,7 @@
       local.get $0
       i32.const 3
       i32.shl
-      i32.const 65940
+      i32.const 66356
       i32.add
       i32.load offset=4
       local.tee $0
@@ -10279,7 +10291,7 @@
     i32.sub
     i32.load offset=12
     local.tee $0
-    i32.const 65936
+    i32.const 66352
     i32.load
     i32.le_u
     if
@@ -10293,7 +10305,7 @@
       local.get $0
       i32.const 3
       i32.shl
-      i32.const 65940
+      i32.const 66356
       i32.add
       i32.load offset=4
       local.tee $0
@@ -10329,7 +10341,7 @@
     i32.sub
     i32.load offset=12
     local.tee $2
-    i32.const 65936
+    i32.const 66352
     i32.load
     i32.le_u
     if
@@ -10343,7 +10355,7 @@
       local.get $2
       i32.const 3
       i32.shl
-      i32.const 65940
+      i32.const 66356
       i32.add
       i32.load offset=4
       local.tee $2
@@ -10374,7 +10386,7 @@
    i32.sub
    i32.load offset=12
    local.tee $0
-   i32.const 65936
+   i32.const 66352
    i32.load
    i32.le_u
    if
@@ -10388,7 +10400,7 @@
      local.get $0
      i32.const 3
      i32.shl
-     i32.const 65940
+     i32.const 66356
      i32.add
      i32.load offset=4
      local.tee $0
@@ -11396,7 +11408,7 @@
     i32.sub
     i32.load offset=12
     local.tee $2
-    i32.const 65936
+    i32.const 66352
     i32.load
     i32.le_u
     if
@@ -11410,7 +11422,7 @@
       local.get $2
       i32.const 3
       i32.shl
-      i32.const 65940
+      i32.const 66356
       i32.add
       i32.load offset=4
       local.tee $2
@@ -11437,7 +11449,7 @@
     i32.sub
     i32.load offset=12
     local.tee $2
-    i32.const 65936
+    i32.const 66352
     i32.load
     i32.le_u
     if
@@ -11451,7 +11463,7 @@
       local.get $2
       i32.const 3
       i32.shl
-      i32.const 65940
+      i32.const 66356
       i32.add
       i32.load offset=4
       local.tee $2
@@ -11495,7 +11507,7 @@
     i32.sub
     i32.load offset=12
     local.tee $2
-    i32.const 65936
+    i32.const 66352
     i32.load
     i32.le_u
     if
@@ -11509,7 +11521,7 @@
       local.get $2
       i32.const 3
       i32.shl
-      i32.const 65940
+      i32.const 66356
       i32.add
       i32.load offset=4
       local.tee $2
@@ -11544,7 +11556,7 @@
    i32.sub
    i32.load offset=12
    local.tee $1
-   i32.const 65936
+   i32.const 66352
    i32.load
    i32.le_u
    if
@@ -11558,7 +11570,7 @@
      local.get $1
      i32.const 3
      i32.shl
-     i32.const 65940
+     i32.const 66356
      i32.add
      i32.load offset=4
      local.tee $1
@@ -11890,26 +11902,6 @@
   call $~lib/near-sdk-core/env/env/env.promise_batch_action_transfer
   local.get $0
  )
- (func $~lib/staticarray/StaticArray<u8>#__get (param $0 i32) (param $1 i32) (result i32)
-  local.get $1
-  local.get $0
-  i32.const 20
-  i32.sub
-  i32.load offset=16
-  i32.ge_u
-  if
-   i32.const 57088
-   i32.const 65280
-   i32.const 113
-   i32.const 41
-   call $~lib/builtins/abort
-   unreachable
-  end
-  local.get $0
-  local.get $1
-  i32.add
-  i32.load8_u
- )
  (func $~lib/typedarray/Uint8Array#__set (param $0 i32) (param $1 i32) (param $2 i32)
   local.get $1
   local.get $0
@@ -11929,6 +11921,369 @@
   i32.add
   local.get $2
   i32.store8
+ )
+ (func $~lib/near-sdk-core/base58/decodeUnsafe (param $0 i32) (result i32)
+  (local $1 i32)
+  (local $2 i32)
+  (local $3 i32)
+  (local $4 i32)
+  (local $5 i32)
+  (local $6 i32)
+  (local $7 i32)
+  (local $8 i32)
+  (local $9 i32)
+  local.get $0
+  i32.const 20
+  i32.sub
+  i32.load offset=16
+  i32.const 1
+  i32.shr_u
+  i32.eqz
+  if
+   i32.const 12
+   i32.const 7
+   call $~lib/rt/stub/__new
+   i32.const 0
+   call $~lib/arraybuffer/ArrayBufferView#constructor
+   return
+  end
+  i32.const 65052
+  i32.load
+  i32.const 1
+  i32.shr_u
+  local.set $3
+  i32.const 65056
+  i32.const 0
+  call $~lib/string/String#charAt
+  local.set $8
+  i32.const 12
+  i32.const 7
+  call $~lib/rt/stub/__new
+  i32.const 256
+  call $~lib/arraybuffer/ArrayBufferView#constructor
+  local.set $6
+  loop $for-loop|0
+   local.get $9
+   local.get $6
+   i32.load offset=8
+   i32.lt_s
+   if
+    local.get $6
+    local.get $9
+    i32.const 255
+    call $~lib/typedarray/Uint8Array#__set
+    local.get $9
+    i32.const 1
+    i32.add
+    local.set $9
+    br $for-loop|0
+   end
+  end
+  i32.const 0
+  local.set $9
+  loop $for-loop|1
+   local.get $9
+   i32.const 65052
+   i32.load
+   i32.const 1
+   i32.shr_u
+   i32.lt_s
+   if
+    local.get $6
+    block $__inlined_func$~lib/string/String#charCodeAt (result i32)
+     i32.const -1
+     i32.const 65056
+     local.get $9
+     call $~lib/string/String#charAt
+     local.tee $1
+     i32.const 20
+     i32.sub
+     i32.load offset=16
+     i32.const 1
+     i32.shr_u
+     i32.eqz
+     br_if $__inlined_func$~lib/string/String#charCodeAt
+     drop
+     local.get $1
+     i32.load16_u
+    end
+    local.tee $2
+    call $~lib/typedarray/Uint8Array#__get
+    i32.const 255
+    i32.ne
+    if
+     local.get $1
+     i32.const 65200
+     call $~lib/string/String#concat
+     i32.const 65248
+     i32.const 93
+     i32.const 7
+     call $~lib/builtins/abort
+     unreachable
+    end
+    local.get $6
+    local.get $2
+    local.get $9
+    call $~lib/typedarray/Uint8Array#__set
+    local.get $9
+    i32.const 1
+    i32.add
+    local.set $9
+    br $for-loop|1
+   end
+  end
+  i32.const 0
+  local.set $9
+  loop $while-continue|2
+   local.get $0
+   local.get $9
+   call $~lib/string/String#charAt
+   i32.const 65328
+   i32.eq
+   if
+    local.get $9
+    i32.const 1
+    i32.add
+    local.set $9
+    br $while-continue|2
+   end
+  end
+  i32.const 0
+  local.set $1
+  loop $while-continue|3
+   local.get $0
+   local.get $9
+   call $~lib/string/String#charAt
+   local.get $8
+   i32.eq
+   if
+    local.get $9
+    i32.const 1
+    i32.add
+    local.set $9
+    br $while-continue|3
+   end
+  end
+  local.get $0
+  i32.const 20
+  i32.sub
+  i32.load offset=16
+  i32.const 1
+  i32.shr_u
+  local.get $9
+  i32.sub
+  i32.const 1
+  i32.add
+  local.set $4
+  i32.const 12
+  i32.const 7
+  call $~lib/rt/stub/__new
+  local.get $4
+  i32.const 1
+  i32.sub
+  call $~lib/arraybuffer/ArrayBufferView#constructor
+  local.set $8
+  loop $while-continue|4
+   local.get $0
+   local.get $9
+   call $~lib/string/String#charAt
+   if
+    block $while-break|4
+     block $__inlined_func$~lib/string/String#charCodeAt4 (result i32)
+      i32.const -1
+      local.get $9
+      local.get $0
+      i32.const 20
+      i32.sub
+      i32.load offset=16
+      i32.const 1
+      i32.shr_u
+      i32.ge_u
+      br_if $__inlined_func$~lib/string/String#charCodeAt4
+      drop
+      local.get $0
+      local.get $9
+      i32.const 1
+      i32.shl
+      i32.add
+      i32.load16_u
+     end
+     local.tee $2
+     i32.const 0
+     i32.lt_s
+     br_if $while-break|4
+     local.get $6
+     local.get $2
+     call $~lib/typedarray/Uint8Array#__get
+     local.tee $7
+     i32.const 255
+     i32.eq
+     br_if $while-break|4
+     i32.const 0
+     local.set $2
+     local.get $4
+     i32.const 2
+     i32.sub
+     local.set $5
+     loop $for-loop|5
+      local.get $5
+      i32.const -1
+      i32.ne
+      i32.const 0
+      i32.const 1
+      local.get $1
+      local.get $2
+      i32.gt_s
+      local.get $7
+      select
+      select
+      if
+       local.get $8
+       local.get $5
+       local.get $7
+       local.get $8
+       local.get $5
+       call $~lib/typedarray/Uint8Array#__get
+       local.get $3
+       i32.mul
+       i32.add
+       local.tee $7
+       i32.const 256
+       i32.rem_s
+       call $~lib/typedarray/Uint8Array#__set
+       local.get $7
+       i32.const 256
+       i32.div_s
+       local.set $7
+       local.get $5
+       i32.const 1
+       i32.sub
+       local.set $5
+       local.get $2
+       i32.const 1
+       i32.add
+       local.set $2
+       br $for-loop|5
+      end
+     end
+     local.get $7
+     if
+      i32.const 65360
+      i32.const 65248
+      i32.const 139
+      i32.const 7
+      call $~lib/builtins/abort
+      unreachable
+     end
+     local.get $2
+     local.set $1
+     local.get $9
+     i32.const 1
+     i32.add
+     local.set $9
+     br $while-continue|4
+    end
+   end
+  end
+  loop $while-continue|6
+   local.get $0
+   local.get $9
+   call $~lib/string/String#charAt
+   i32.const 65328
+   i32.eq
+   if
+    local.get $9
+    i32.const 1
+    i32.add
+    local.set $9
+    br $while-continue|6
+   end
+  end
+  i32.const 0
+  local.set $0
+  loop $while-continue|7
+   local.get $8
+   local.get $0
+   call $~lib/typedarray/Uint8Array#__get
+   i32.eqz
+   if
+    local.get $0
+    i32.const 1
+    i32.add
+    local.set $0
+    br $while-continue|7
+   end
+  end
+  local.get $8
+  i32.load offset=8
+  local.set $2
+  i32.const 12
+  i32.const 7
+  call $~lib/rt/stub/__new
+  local.get $2
+  local.get $0
+  i32.const 1
+  i32.sub
+  local.tee $0
+  i32.const 0
+  i32.lt_s
+  if (result i32)
+   local.get $0
+   local.get $2
+   i32.add
+   local.tee $0
+   i32.const 0
+   local.get $0
+   i32.const 0
+   i32.gt_s
+   select
+  else
+   local.get $0
+   local.get $2
+   local.get $0
+   local.get $2
+   i32.lt_s
+   select
+  end
+  local.tee $0
+  i32.sub
+  local.tee $2
+  i32.const 0
+  local.get $2
+  i32.const 0
+  i32.gt_s
+  select
+  local.tee $2
+  call $~lib/arraybuffer/ArrayBufferView#constructor
+  local.tee $1
+  i32.load offset=4
+  local.get $0
+  local.get $8
+  i32.load offset=4
+  i32.add
+  local.get $2
+  call $~lib/memory/memory.copy
+  local.get $1
+ )
+ (func $~lib/staticarray/StaticArray<u8>#__get (param $0 i32) (param $1 i32) (result i32)
+  local.get $1
+  local.get $0
+  i32.const 20
+  i32.sub
+  i32.load offset=16
+  i32.ge_u
+  if
+   i32.const 57088
+   i32.const 65696
+   i32.const 113
+   i32.const 41
+   call $~lib/builtins/abort
+   unreachable
+  end
+  local.get $0
+  local.get $1
+  i32.add
+  i32.load8_u
  )
  (func $~lib/near-sdk-core/base64/base64.decode (param $0 i32) (result i32)
   (local $1 i32)
@@ -11959,7 +12314,7 @@
   i32.const 1
   i32.sub
   call $~lib/string/String#charAt
-  i32.const 65088
+  i32.const 65504
   call $~lib/string/String.__eq
   if
    i32.const 2
@@ -11969,7 +12324,7 @@
    i32.const 2
    i32.sub
    call $~lib/string/String#charAt
-   i32.const 65088
+   i32.const 65504
    call $~lib/string/String.__eq
    select
    local.set $6
@@ -12396,7 +12751,7 @@
    i32.shr_u
    call $~lib/util/string/joinStringArray
    i32.const 60320
-   i32.const 96
+   i32.const 97
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -12502,8 +12857,17 @@
   i32.eqz
   if
    local.get $1
-   call $~lib/near-sdk-core/util/util.stringToBytes
-   local.set $1
+   call $~lib/near-sdk-core/base58/decodeUnsafe
+   local.tee $1
+   i32.eqz
+   if
+    i32.const 65408
+    i32.const 65248
+    i32.const 69
+    i32.const 5
+    call $~lib/builtins/abort
+    unreachable
+   end
    local.get $2
    i64.load
    local.get $1
@@ -12516,7 +12880,7 @@
    call $~lib/near-sdk-core/env/env/env.promise_batch_action_add_key_with_full_access
   end
   local.get $2
-  i32.const 65056
+  i32.const 65472
   local.get $0
   call $~lib/near-sdk-core/base64/base64.decode
   i32.const 16
@@ -12552,23 +12916,23 @@
   local.get $0
   local.get $3
   i64.store
-  i32.const 65476
+  i32.const 65892
   local.get $7
   i32.store
   i32.const 57280
-  i32.const 65472
-  i32.const 65468
+  i32.const 65888
+  i32.const 65884
   i32.load
   i32.const 2
   i32.shr_u
   call $~lib/util/string/joinStringArray
   call $~lib/string/String#concat
-  i32.const 65572
+  i32.const 65988
   call $~lib/near-sdk-core/contract/Context.get:attachedDeposit
   call $~lib/as-bignum/integer/u128/u128#toString
   i32.store
-  i32.const 65568
-  i32.const 65564
+  i32.const 65984
+  i32.const 65980
   i32.load
   i32.const 2
   i32.shr_u
@@ -12577,14 +12941,14 @@
   local.set $1
   i64.const 0
   call $~lib/near-sdk-core/env/env/env.predecessor_account_id
-  i32.const 65684
+  i32.const 66100
   call $~lib/near-sdk-core/util/util.read_register_string
   i32.store
   local.get $0
-  i32.const 65344
+  i32.const 65760
   local.get $1
-  i32.const 65680
-  i32.const 65676
+  i32.const 66096
+  i32.const 66092
   i32.load
   i32.const 2
   i32.shr_u
@@ -12708,46 +13072,46 @@
   call $~lib/near-sdk-bindgen/index/getInput
   local.tee $0
   i32.load
-  i32.const 65712
-  i32.const 65712
+  i32.const 66128
+  i32.const 66128
   call $~lib/util/hash/HASH<~lib/string/String>
   call $~lib/map/Map<~lib/string/String,~lib/assemblyscript-json/JSON/Value>#find
   if (result i32)
    local.get $0
-   i32.const 65712
+   i32.const 66128
    call $~lib/near-sdk-bindgen/index/decode<~lib/string/String,~lib/assemblyscript-json/JSON/Value>
   else
-   i32.const 65712
+   i32.const 66128
    call $~lib/near-sdk-bindgen/index/requireParameter<~lib/string/String>
   end
   local.set $8
   local.get $0
   i32.load
-  i32.const 65760
-  i32.const 65760
+  i32.const 66176
+  i32.const 66176
   call $~lib/util/hash/HASH<~lib/string/String>
   call $~lib/map/Map<~lib/string/String,~lib/assemblyscript-json/JSON/Value>#find
   if (result i32)
    local.get $0
-   i32.const 65760
+   i32.const 66176
    call $~lib/near-sdk-bindgen/index/decode<~lib/as-bignum/integer/safe/u128/u128,~lib/assemblyscript-json/JSON/Obj>
   else
-   i32.const 65760
+   i32.const 66176
    call $~lib/near-sdk-bindgen/index/requireParameter<~lib/as-bignum/integer/safe/u128/u128>
   end
   local.set $6
   local.get $0
   i32.load
-  i32.const 65824
-  i32.const 65824
+  i32.const 66240
+  i32.const 66240
   call $~lib/util/hash/HASH<~lib/string/String>
   call $~lib/map/Map<~lib/string/String,~lib/assemblyscript-json/JSON/Value>#find
   if (result i32)
    local.get $0
-   i32.const 65824
+   i32.const 66240
    call $~lib/near-sdk-bindgen/index/decode<~lib/string/String,~lib/assemblyscript-json/JSON/Value>
   else
-   i32.const 65824
+   i32.const 66240
    call $~lib/near-sdk-bindgen/index/requireParameter<~lib/string/String>
   end
   local.set $0
@@ -12760,9 +13124,9 @@
   call $~lib/string/String.__eq
   i32.eqz
   if
-   i32.const 65888
+   i32.const 66304
    i32.const 60320
-   i32.const 99
+   i32.const 100
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -12926,7 +13290,7 @@
   (local $0 i32)
   (local $1 i32)
   (local $2 i32)
-  i32.const 66220
+  i32.const 66636
   global.set $~lib/rt/stub/offset
   i32.const 55215
   i32.const 0
@@ -13001,7 +13365,7 @@
   i32.const 128
   i32.const 0
   i32.const 4
-  i32.const 65120
+  i32.const 65536
   call $~lib/rt/__newArray
   local.tee $0
   i32.load offset=12
