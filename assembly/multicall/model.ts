@@ -18,5 +18,5 @@ export class FtOnTransferArgs {
 
 @nearBindgen
 export class MulticallArgs {
-  schedules: ContractCall[][];
+  actions: ContractCall[][];
 }

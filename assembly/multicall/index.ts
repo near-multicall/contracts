@@ -11,51 +11,61 @@ const storageCosts = new StorageCostUtils();
 /**
  * execute an array of contract calls
  * 
- * @param schedules 
+ * @param actions 
  */
-export function multicall(schedules: ContractCall[][]): void {
+export function multicall(actions: ContractCall[][]): void {
   _is_admin(context.predecessor);
-  _internal_multicall(schedules);
+  _internal_multicall(actions);
 }
 
-function _internal_multicall(schedules: ContractCall[][]): void {
-  assert(schedules.length != 0, "schedules cannot be empty");
+function _internal_multicall(actions: ContractCall[][]): void {
+  assert(actions.length != 0, "actions array cannot be empty");
 
-  // group 1-element schedules with same target address into batch calls for gas efficiency
+  // group parallel actions with same target address into batch calls for gas
+  // efficiency. Ignore actions that have an attached callback
   const batches = new Map<string, ContractCall[]>();
 
-  // check for sufficient funds (Sum of all first sequential calls <= account balance minus funds reserved for storage)
+  // variable to track attached deposits total
   let totalDeposits = u128.Zero;
-  for (let i = schedules.length - 1; i >= 0; i--) {
-    // cannot have empty schedule
-    assert(schedules[i].length != 0, `schedules[${i}] cannot be empty`);
-    totalDeposits = u128.add(totalDeposits, schedules[i][0].depo);
 
-    if (schedules[i].length == 1) {
-      const curr_call: ContractCall = schedules[i][0];
+  for (let i = actions.length - 1; i >= 0; i--) {
+    // cannot have empty array in actions
+    assert(actions[i].length > 0, `actions[${i}] cannot be empty`);
+
+    totalDeposits = u128.add(totalDeposits, actions[i][0].depo);
+
+    // check for actions that have no attached callback
+    if (actions[i].length == 1) {
+      const curr_call: ContractCall = actions[i][0];
+      // add action to existing batch if possible, otherwise make new batch
       if (batches.has(curr_call.addr)) {
         batches.get(curr_call.addr).push(curr_call);
       } else {
         batches.set(curr_call.addr, [curr_call])
       }
-      // do not execute batches with regular schedules
-      schedules.splice(i, 1);
+      // actions saved in batches Map are removed from actions[][]
+      actions.splice(i, 1);
     }
   }
 
-  assert(u128.le(totalDeposits, u128.sub(context.accountBalance, storageCosts.get_min_storage_balance())), "funds insufficient for attached deposits");
+  // check for sufficient funds (Sum of all first sequential calls <= account balance minus funds reserved for storage)
+  assert(
+    u128.le(totalDeposits, u128.sub(context.accountBalance, storageCosts.get_min_storage_balance())),
+    "funds insufficient for attached deposits"
+  );
 
   const batchGroups: ContractCall[][] = batches.values();
 
   // execute batches
   for (let i = 0; i < batches.size; i++) {
 
+    // batches with only 1 element are returned back to actions[][]
     if (batchGroups[i].length <= 1) {
-      schedules.push(batchGroups[i]);
+      actions.push(batchGroups[i]);
       continue;
     }
 
-    // initial promise
+    // initial batch promise
     const last: i32 = batchGroups[i].length - 1;
     let promise: ContractPromiseBatch = ContractPromiseBatch.create(batchGroups[i][last].addr).function_call(
       batchGroups[i][last].func,
@@ -75,12 +85,9 @@ function _internal_multicall(schedules: ContractCall[][]): void {
     }
   }
 
-  // outer loop is parallel
-  for (let i = 0; i < schedules.length; i++) {
-
-    // inner loop is sequential
-    _sequential(schedules[i]);
-
+  // execute calls and promise chains in actions[][]
+  for (let i = 0; i < actions.length; i++) {
+    _sequential(actions[i]);
   }
 
 }
@@ -135,7 +142,7 @@ export function ft_on_transfer(sender_id: string, amount: u128, msg: string): u1
   if (methodAndArgs.function_id == "multicall") {
     const multicallArgs : MulticallArgs = util.parseFromBytes<MulticallArgs>(base64.decode(methodAndArgs.args));
     // call multicall
-    _internal_multicall(multicallArgs.schedules);
+    _internal_multicall(multicallArgs.actions);
   } else {
     // invalid action, reimburse full amount
     return amount;  
@@ -145,10 +152,7 @@ export function ft_on_transfer(sender_id: string, amount: u128, msg: string): u1
 }
 
 /**
- * send $NEAR
- * If amount is 0 then empty all contract funds. 
- * 
- * TODO: receive array of recipients and amounts
+ * send $NEAR. If amount not specified or u128.Max then empty all contract funds. 
  * 
  * @param account_id 
  * @param amount 

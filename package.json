@@ -5,7 +5,7 @@
   "scripts": {
     "build:release": "./build.sh release",
     "build:debug": "./build.sh debug",
-    "test": "near-workspaces-ava",
+    "test": "./test.sh",
     "test:testnet": "near-workspaces-ava --config ./ava.testnet.config.cjs"
   },
   "dependencies": {

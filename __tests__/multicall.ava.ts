@@ -19,7 +19,7 @@ export function tests(workspace: Workspace) {
       await bob.call(
         multicall.accountId,
         'multicall',
-        {schedules: [ [] ]}
+        {actions: [ [] ]}
       );
     } catch (error) { callError = error}
     test.true(
