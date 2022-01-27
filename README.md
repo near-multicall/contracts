@@ -26,14 +26,14 @@ where
 This project consists of three main features:
 
 1. The **main method** in this contract is:  
-`multicall ( schedules: ContractCall[][] )`  
+`multicall ( actions: ContractCall[][] )`  
 It executes a bunch of `ContractCall` arrays.  
 Each `ContractCall` has information for making a cross-contract call: the target address, function name, arguments encoded in base64, gas to use (u64 encoded as string) and amount of yoctoNEAR attached deposit (u128 encoded as string).  
 Contract calls inside one array run one after another, as a promise chain.  
 Different arrays of contract calls run in parallel.  
 Example: `TX_12` waits for `TX_11` and `TX_13` waits for `TX_12`. `TX_22` waits for `TX_21`. The two arrays start executing in the same block.
     ```
-    schedules = [
+    actions = [
         [ TX_11, TX_12, TX_13 ],
         [ TX_21, TX_22]
     ]
@@ -68,7 +68,7 @@ The following must be specified when creating a job:
 example multicall arguments:
 ```json=
 {
-    "schedules": [
+    "actions": [
         [ 
             {
                 "addr": "hello.lennczar.testnet",
@@ -91,7 +91,7 @@ The resulting transaction can be seen [here](https://explorer.testnet.near.org/t
 ) <sub>(link uses outdated code)</sub>. 
 ```json=
 {
-   "schedules": [
+   "actions": [
       [
           {
              "addr": "ref-finance-101.testnet",
