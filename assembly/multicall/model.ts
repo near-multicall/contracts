@@ -1,4 +1,6 @@
 import { u128 } from 'near-sdk-as';
+
+
 @nearBindgen
 export class ContractCall { 
   addr: string;
