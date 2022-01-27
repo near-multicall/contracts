@@ -12442,7 +12442,7 @@
   call $~lib/as-bignum/integer/u128/u128#constructor
   local.set $0
   call $~lib/near-sdk-core/env/env/env.prepaid_gas
-  i64.const 85000000000000
+  i64.const 60000000000000
   i64.sub
   local.set $5
   i32.const 48640

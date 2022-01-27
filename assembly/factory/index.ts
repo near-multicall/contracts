@@ -10,7 +10,7 @@ const KEY_INIT: string = "d";
 const KEY_FEE: string = "e";
 
 // Gas spent on the call & account creation.
-const CREATE_CALL_GAS: u64 = 75_000_000_000_000;
+const CREATE_CALL_GAS: u64 = 50_000_000_000_000;
 // Gas allocated on the callback.
 const ON_CREATE_CALL_GAS: u64 = 10_000_000_000_000;
 

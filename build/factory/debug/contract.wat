@@ -73,7 +73,7 @@
  (global $assembly/factory/index/users (mut i32) (i32.const 0))
  (global $assembly/factory/index/KEY_INIT i32 (i32.const 38800))
  (global $assembly/factory/index/KEY_FEE i32 (i32.const 38832))
- (global $assembly/factory/index/CREATE_CALL_GAS i64 (i64.const 75000000000000))
+ (global $assembly/factory/index/CREATE_CALL_GAS i64 (i64.const 50000000000000))
  (global $assembly/factory/index/ON_CREATE_CALL_GAS i64 (i64.const 10000000000000))
  (global $~lib/builtins/u32.MAX_VALUE i32 (i32.const -1))
  (global $~lib/number/U32.MAX_VALUE i32 (i32.const -1))
