@@ -19,10 +19,6 @@ export class Croncat {
 
   KEY_CRONCAT_MANAGER_ADDRESS: string;
 
-  static GAS_FOR_CREATE_TASK: u64 = 20_000_000_000_000;
-  static GAS_FOR_REMOVE_TASK: u64 = 15_000_000_000_000;
-  static GAS_FOR_REFILL_BALANCE: u64 = 15_000_000_000_000;
-
   // constructor for initializing the Croncat manager address
   constructor(keyCroncatManagerAddress: string) {
     this.KEY_CRONCAT_MANAGER_ADDRESS = keyCroncatManagerAddress;
@@ -51,70 +47,64 @@ export class Croncat {
    * contract, function id & other settings. When the task runs out of balance
    * the task is no longer executed, any additional funds will be returned to task owner
    * 
-   * @param contract_id 
-   * @param function_id 
-   * @param cadence 
-   * @param recurring 
-   * @param deposit 
-   * @param budget 
-   * @param gas 
-   * @param task_args 
+   * @param call_args 
+   * @param call_gas 
+   * @param call_deposit 
+   * @returns 
    */
   create_task(
-    contract_id: string,
-    function_id: string,
-    cadence: string,
-    recurring: boolean,
-    deposit: u128,
-    budget: u128, 
-    gas: u64,
-    task_args: string
-  ): void {
-    ContractPromise.create<CroncatCreateTaskArgs>(
+    call_args: CroncatCreateTaskArgs,
+    call_gas: u64,
+    call_deposit: u128
+  ): ContractPromise {
+    return ContractPromise.create<CroncatCreateTaskArgs>(
       this.get_manager_address(),
       "create_task",
-      {
-        contract_id: contract_id,
-        function_id: function_id,
-        cadence: cadence,
-        recurring: recurring,
-        deposit: deposit,
-        gas: gas,
-        arguments: task_args
-      },
-      Croncat.GAS_FOR_CREATE_TASK,
-      budget
+      call_args,
+      call_gas,
+      call_deposit
     );
   };
 
   /**
    * deletes a task, returning remaining balance to task owner.
    * 
-   * @param task_hash 
+   * @param call_args 
+   * @param call_gas 
+   * @param call_deposit 
    */
-  remove_task(task_hash: string): void {
+  remove_task(
+    call_args: CroncatRemoveTaskArgs,
+    call_gas: u64,
+    call_deposit: u128
+  ): void {
     ContractPromise.create<CroncatRemoveTaskArgs>(
       this.get_manager_address(),
       "remove_task",
-      { task_hash: task_hash },
-      Croncat.GAS_FOR_REMOVE_TASK,
-      u128.Zero
+      call_args,
+      call_gas,
+      call_deposit
     );
   };
 
   /**
    * refill a task with more balance to continue its execution
    * 
-   * @param task_hash 
-   * @param amount 
+   * @param call_args 
+   * @param call_gas 
+   * @param call_deposit 
    */
-  refill_balance(task_hash: string, amount: u128): void {
+  refill_balance(
+    call_args: CroncatRefillTaskArgs,
+    call_gas: u64,
+    call_deposit: u128
+  ): void {
     ContractPromise.create<CroncatRefillTaskArgs>(
       this.get_manager_address(),
       "refill_balance",
-      { task_hash: task_hash },
-      Croncat.GAS_FOR_REFILL_BALANCE,
-      amount
+      call_args,
+      call_gas,
+      call_deposit
     );
   }
 }
