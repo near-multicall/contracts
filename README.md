@@ -1,5 +1,7 @@
 # multicall.near
 
+![tests workflow](https://github.com/quicswap/near-multicall/actions/workflows/tests.yml/badge.svg)  
+
 bundle cross-contract calls for powerful DAO proposals
 
 ## Quick Start
@@ -26,19 +28,19 @@ where
 This project consists of three main features:
 
 1. The **main method** in this contract is:  
-`multicall ( schedules: ContractCall[][] )`  
-It executes a bunch of `ContractCall` arrays.  
-Each `ContractCall` has information for making a cross-contract call: the target address, function name, arguments encoded in base64, gas to use (u64 encoded as string) and amount of yoctoNEAR attached deposit (u128 encoded as string).  
-Contract calls inside one array run one after another, as a promise chain.  
-Different arrays of contract calls run in parallel.  
-Example: `TX_12` waits for `TX_11` and `TX_13` waits for `TX_12`. `TX_22` waits for `TX_21`. The two arrays start executing in the same block.
+`multicall ( calls: BatchCall[][] )`  
+It executes a bunch of `BatchCall` arrays.  
+Each `BatchCall` has information for making a batch of function-calls: a target address and an array on function-calls to execute on that target. Each function-call has a function name, arguments encoded in base64, gas to use (u64 encoded as string) and amount of yoctoNEAR attached deposit (u128 encoded as string).  
+Batches inside one array run one after another, as a promise chain.  
+Different arrays of batches run in parallel.  
+Example:  
     ```
-    schedules = [
-        [ TX_11, TX_12, TX_13 ],
-        [ TX_21, TX_22]
+    calls = [
+        [ Batch_11, Batch_12, Batch_13 ],
+        [ Batch_21, Batch_22]
     ]
     ```  
-
+    In this example we have 2 arrays of batches. In the first one `Batch_12` waits for `Batch_11` and `Batch_13` waits for `Batch_12`. In the second array `Batch_22` waits for `Batch_21`. Both arrays start executing in the same block and are independent of each other.
 
 2. **Permissioned interactions** with the contract through whitelisting of addresses:  
 Due to the async nature of Near, funds can sit in the contract during multiple blocks awaiting the execution of cross-contract calls. To prevent stealing of funds, we require an address to be whitelisted before calling one of the contract's critical methods.
@@ -52,14 +54,14 @@ Multicall executions can be scheduled to run in recurring fashion, made possible
 The following must be specified when creating a job:
     ```ts
     function job_add (
-        job_schedules: ContractCall[][], // multicall arguments
+        job_schedules: BatchCall[][], // multicall arguments
         job_cadence: string, // cron expression
         job_trigger_gas: u64,
         job_trigger_deposit: u128,
         job_total_budget: u128,
         job_runs_max: u64,
         job_start_at: u64 = context.blockTimestamp
-    ): i32 
+    ): u32 
     ```
 
 ## Example Calls
@@ -68,30 +70,66 @@ The following must be specified when creating a job:
 example multicall arguments:
 ```json=
 {
-    "schedules": [
+    "calls": [
         [ 
             {
-                "addr": "hello.lennczar.testnet",
-                "func": "hello",
-                "args": "eyJ0aGluZyI6IldvcmxkIn0=", // base64 encoding for {"thing":"World"}
-                "gas": "10000000000000",
-                "depo": "0"
+                "address": "hello.lennczar.testnet",
+                "actions": [
+                    {
+                        "func": "hello",
+                        "args": "eyJ0aGluZyI6IldvcmxkIn0=", // base64 encoding for {"thing":"World"}
+                        "gas": "10000000000000",
+                        "depo": "0"
+                    },
+                    {
+                        "func": "hello",
+                        "args": "eyJ0aGluZyI6IldvcmxkIn0=", // base64 encoding for {"thing":"World"}
+                        "gas": "10000000000000",
+                        "depo": "0"
+                    }
+                ]
+            },
+            {
+                "address": "hello.lennczar.testnet",
+                "actions": [
+                    {
+                        "func": "hello",
+                        "args": "eyJ0aGluZyI6IldvcmxkIn0=", // base64 encoding for {"thing":"World"}
+                        "gas": "10000000000000",
+                        "depo": "0"
+                    }
+                ]
+            }
+        ],
+        [
+            {
+                "address": "hello.lennczar.testnet",
+                "actions": [
+                    {
+                        "func": "hello",
+                        "args": "eyJ0aGluZyI6IldvcmxkIn0=", // base64 encoding for {"thing":"World"}
+                        "gas": "10000000000000",
+                        "depo": "0"
+                    }
+                ]
             }
         ]
     ]
 }
 ```
-This example calls the function `hello(thing: string): string` in the contract `hello.lennczar.testnet`.
+This example calls the function `hello(thing: string): string` in the contract `hello.lennczar.testnet`.  
+We see two arrays of batches: in the first array we have 2 batches that will be run as a promise chain (i.e. second batch will wait for the first batch). The first batch calls the function twice and the second batch calls it only once. In the second array we have one batch that calls the function once, it will run in parallel independently of the two previously mentioned batches.  
+Running this results in the following [transaction](https://explorer.testnet.near.org/transactions/HHEDj5FnRXJpGwR68PegHNWgpGjXcFWFyq2Nw27sDkx2)  
 
 
-### Use case: SputnikDAO custom function proposals  
+### (OUTDATED) Use case: SputnikDAO custom function proposals  
 The following is an example created as part of [a Near Metabuidl Challenge](https://airtable.com/shrdNEynK25TGJ91h/tblTtriXzrEiCfpoy/viwGhGQTKiJ4L5JSG/recUH7SubilpUKeNm).
 A [DAO proposal](https://testnet-v2.sputnik.fund/#/voyager.sputnikv2.testnet/6) was created with the JSON below.   
 The resulting transaction can be seen [here](https://explorer.testnet.near.org/transactions/ELhBMPALasHNuugPNRoiWU4GYFDkyS4AHRCK35k11xMF
 ) <sub>(link uses outdated code)</sub>. 
 ```json=
 {
-   "schedules": [
+   "actions": [
       [
           {
              "addr": "ref-finance-101.testnet",

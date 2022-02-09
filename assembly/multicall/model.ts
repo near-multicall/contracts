@@ -1,11 +1,18 @@
 import { u128 } from 'near-sdk-as';
+
+
 @nearBindgen
-export class ContractCall { 
-  addr: string;
+export class FunctionCall {
   func: string; 
   args: string; // base64 encoded JSON args
   gas: u64;
   depo: u128;
+}
+
+@nearBindgen
+export class BatchCall { 
+  address: string;
+  actions: FunctionCall[];
 }
 
 @nearBindgen
@@ -16,34 +23,38 @@ export class FtOnTransferArgs {
 
 @nearBindgen
 export class MulticallArgs {
-  schedules: ContractCall[][];
+  calls: BatchCall[][];
 }
 
 @nearBindgen
 export class JobActivateArgs {
-  job_id: i32;
-}
-
-
-@nearBindgen
-export class SwapAction {
-  // Pool which should be used for swapping.
-  pool_id: u64;
-  // Token to swap from.
-  token_in: string;
-  // Amount to exchange.
-  // If amount_in is None, it will take amount_out from previous step.
-  // Will fail if amount_in is None on the first step.
-  amount_in: u128;
-  // Token to swap into.
-  token_out: string;
-  // Required minimum amount of token_out.
-  min_amount_out: u128;
+  job_id: u32;
 }
 
 @nearBindgen
-export class Job {
-  id: i32;
+export class CroncatRemoveTaskArgs {
+  task_hash: string;
+}
+
+@nearBindgen
+export class CroncatRefillTaskArgs {
+  task_hash: string;
+}
+
+@nearBindgen
+export class CroncatCreateTaskArgs {
+  contract_id: string;
+  function_id: string;
+  cadence: string;
+  recurring: boolean;
+  deposit: u128;
+  gas: u64;
+  arguments: string;
+}
+
+@nearBindgen
+export class JobSchema {
+  id: u32;
   croncat_hash: string;
   creator: string;
   bond: u128;
@@ -55,5 +66,5 @@ export class Job {
   runs_max: u64;
   runs_current: u64;
   is_active: boolean;
-  schedules: ContractCall[][];
+  calls: BatchCall[][];
 }

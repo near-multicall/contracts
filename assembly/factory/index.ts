@@ -1,4 +1,5 @@
-import { context, storage, PersistentSet, ContractPromiseBatch, ContractPromise, u128, base64, base58, util } from 'near-sdk-as';
+import { context, storage, PersistentSet, ContractPromiseBatch, ContractPromise, u128, base58 } from 'near-sdk-as';
+import { MulticallInitArgs, OnCreateArgs } from './model';
 
 const CODE: StaticArray<u8> = includeBytes("../../build/multicall/release/contract.wasm");
 
@@ -9,19 +10,30 @@ const KEY_INIT: string = "d";
 const KEY_FEE: string = "e";
 
 // Gas spent on the call & account creation.
-const CREATE_CALL_GAS: u64 = 75_000_000_000_000;
+const CREATE_CALL_GAS: u64 = 50_000_000_000_000;
 // Gas allocated on the callback.
 const ON_CREATE_CALL_GAS: u64 = 10_000_000_000_000;
 
 
 
-export function init(init_owners: string[]): void {
+export function init(
+  init_owners: string[],
+  init_fee: u128,
+  init_factories: string[]
+): void {
   assert(storage.get<string>(KEY_INIT) == null, "Already initialized");
 
-  // add owners
+  // add initial owners
   for (let i = 0; i < init_owners.length; i++) {
     owners.add(init_owners[i]);
   }
+
+  // set initial fee
+  set_fee(init_fee);
+
+  // set initial dao factories
+  factories_add(init_factories);
+
   // set contract to initialized 
   storage.set(KEY_INIT, "done");
 }
@@ -93,11 +105,14 @@ export function get_users(start: i32 = 0, end: i32 = i32.MAX_VALUE): string[] {
  * and be direct subaccount of a whitelisted dao_factory.
  * NOTE: public key is without the "ed25519:" prefix
  * 
- * @param args 
+ * @param initial_admins
  * @param public_key 
  * @returns 
  */
-export function create(args: string, public_key: string = ""): ContractPromiseBatch {
+export function create(
+  multicall_init_args: MulticallInitArgs,
+  public_key: string = ""
+): ContractPromiseBatch {
   _is_dao(context.predecessor);
 
   // get sub-account name (exp: potato.sputnik-dao.near => potato)
@@ -110,21 +125,19 @@ export function create(args: string, public_key: string = ""): ContractPromiseBa
   if (public_key != "") {
     promise = promise.add_full_access_key(base58.decode(public_key));
   }
-  promise = promise.function_call(
+  promise = promise.function_call<MulticallInitArgs>(
       "init",
-      base64.decode(args),
+      multicall_init_args,
       u128.Zero,
       context.prepaidGas - CREATE_CALL_GAS - ON_CREATE_CALL_GAS
     )
-    .then(context.contractName).function_call(
+    .then(context.contractName).function_call<OnCreateArgs>(
       "on_create",
-      util.stringToBytes(
-        '{' +
-        `"account_id":"${account_id}",` +
-        `"attached_deposit":"${context.attachedDeposit.toString()}",` +
-        `"predecessor_account_id":"${context.predecessor}"` +
-        '}'
-      ),
+      {
+        account_id: account_id,
+        attached_deposit: context.attachedDeposit,
+        predecessor_account_id: context.predecessor
+      },
       u128.Zero,
       ON_CREATE_CALL_GAS,
     );

@@ -1,4 +1,4 @@
-import { Workspace } from 'near-workspaces-ava';
+import { Workspace, NEAR, Gas } from 'near-workspaces-ava';
 
 const nusdc_address: string = "nusdc.ft-fin.testnet";
 const ndai_address: string = "ndai.ft-fin.testnet";
@@ -18,6 +18,10 @@ export function tests(workspace: Workspace) {
         'tokens_add',
         {
           addresses: [nusdc_address]
+        },
+        {
+          gas: Gas.parse('5 Tgas'),
+          attachedDeposit: NEAR.from('1') // 1 yocto
         }
       );
     } catch (error) {}
@@ -34,6 +38,10 @@ export function tests(workspace: Workspace) {
       'tokens_add',
       {
         addresses: [nusdc_address]
+      },
+      {
+        gas: Gas.parse('5 Tgas'),
+        attachedDeposit: NEAR.from('1') // 1 yocto
       }
     );
     const tokens: string[] = await multicall.view('get_tokens', {})
@@ -55,6 +63,10 @@ export function tests(workspace: Workspace) {
         'tokens_remove',
         {
           addresses: [ndai_address]
+        },
+        {
+          gas: Gas.parse('5 Tgas'),
+          attachedDeposit: NEAR.from('1') // 1 yocto
         }
       );
     } catch (error) {}
@@ -71,6 +83,10 @@ export function tests(workspace: Workspace) {
       'tokens_remove',
       {
         addresses: [ndai_address]
+      },
+      {
+        gas: Gas.parse('5 Tgas'),
+        attachedDeposit: NEAR.from('1') // 1 yocto
       }
     );
     const tokens: string[] = await multicall.view('get_tokens', {})

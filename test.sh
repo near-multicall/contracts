@@ -1,13 +1,13 @@
 #!/bin/bash
 set -e
 
-yarn test "**/main*/" $@ # pass along any CLI flags, such as `--verbose`
+near-workspaces-ava "**/main*/" $@ # pass along any CLI flags, such as `--verbose`
 
 
 # To run only one test file:
-#    npm run test "**/main*"         # matches test files starting with "main"
-#    npm run test "**/whatever/**/*" # matches test files in the "whatever" directory
+#    near-workspaces-ava "**/main*"         # matches test files starting with "main"
+#    near-workspaces-ava "**/whatever/**/*" # matches test files in the "whatever" directory
 
 # To run only one test:
-#    npm run test -- -m "root sets*" # matches tests with titles starting with "root sets"
+#    near-workspaces-ava -- -m "root sets*" # matches tests with titles starting with "root sets"
 #    yarn test -m "root sets*"       # same thing using yarn instead of npm, see https://yarnpkg.com/

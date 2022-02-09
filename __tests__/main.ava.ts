@@ -4,10 +4,11 @@ import { tests as tokensTests } from './tokens.ava';
 import { tests as nearAPITests } from './nearAPI.ava';
 import { tests as multicallTests } from './multicall.ava';
 
-const CRONCAT_MANAGER_ADDRESS = "placeholder";
 const nusdc_address: string = "nusdc.ft-fin.testnet";
 const ndai_address: string = "ndai.ft-fin.testnet";
 const nusdt_address: string = "nusdt.ft-fin.testnet";
+const croncat_manager_address: string = "manager_v1.croncat.testnet";
+const job_bond_amount: NEAR = NEAR.parse("1 mN");
 
 
 /**
@@ -17,26 +18,53 @@ const workspace = Workspace.init(async ({root}) => {
   const alice = await root.createAccount('alice');
   const bob = await root.createAccount('bob');
 
-  // deploy multicall instance with alice admin
-  const multicall = await root.createAndDeploy(
-    'multicall',
-    'build/multicall/release/contract.wasm',
+  // deploy multicall factory with alice admin
+  const multicallFactory = await root.createAndDeploy(
+    'factory',
+    'build/factory/release/contract.wasm',
     {
       method: 'init',
       args: {
-        admin_accounts: [alice.accountId],
-        croncat_manager: CRONCAT_MANAGER_ADDRESS,
-        job_bond: NEAR.parse("1") // 1 NEAR
+        init_owners: [root.accountId],
+        // set multicall instance creation fee to 0.001 NEAR
+        init_fee: NEAR.parse('1 mN'),
+        // add root as dao factory, so we can deploy an instance for alice later
+        init_factories: [root.accountId]
       },
       gas: Gas.parse("10 Tgas")
     }
   );
 
+  // create a multicall instance for alice. Alice will be admin
+  await alice.call(
+    multicallFactory.accountId,
+    "create",
+    { 
+      multicall_init_args: {
+        admin_accounts: [alice.accountId],
+        croncat_manager: croncat_manager_address,
+        job_bond: job_bond_amount
+      }
+    },
+    {
+      gas: Gas.parse("70 Tgas"),
+      attachedDeposit: NEAR.parse('1') // 1 NEAR, cover fee + initial multicall account storage costs
+    }
+  );
+
+  const multicall = multicallFactory.getAccount("alice");
+  // give multicall 100 NEAR for later testing 
+  await multicall.updateAccount({amount: NEAR.parse('100').toString()});
+
   // add nDAI to token whitelist
-  await multicall.call(
+  await alice.call(
     multicall.accountId,
     "tokens_add",
-    { addresses: [ndai_address] }
+    { addresses: [ndai_address] },
+    {
+      gas: Gas.parse('5 Tgas'),
+      attachedDeposit: NEAR.from('1') // 1 yocto
+    }
   );
 
   // Return accounts to be available in tests

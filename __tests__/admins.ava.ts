@@ -1,4 +1,4 @@
-import { Workspace } from 'near-workspaces-ava';
+import { NEAR, Gas, Workspace } from 'near-workspaces-ava';
 
 
 export function tests(workspace: Workspace) {
@@ -15,6 +15,10 @@ export function tests(workspace: Workspace) {
         'admins_add',
         {
           account_ids: [bob.accountId]
+        },
+        {
+          gas: Gas.parse('5 Tgas'),
+          attachedDeposit: NEAR.from('1') // 1 yocto
         }
       );
     } catch (error) {}
@@ -31,6 +35,10 @@ export function tests(workspace: Workspace) {
       'admins_add',
       {
         account_ids: [bob.accountId]
+      },
+      {
+        gas: Gas.parse('5 Tgas'),
+        attachedDeposit: NEAR.from('1') // 1 yocto
       }
     );
     const admins: string[] = await multicall.view('get_admins', {})
@@ -52,6 +60,10 @@ export function tests(workspace: Workspace) {
         'admins_remove',
         {
           account_ids: [alice.accountId]
+        },
+        {
+          gas: Gas.parse('5 Tgas'),
+          attachedDeposit: NEAR.from('1') // 1 yocto
         }
       );
     } catch (error) {}
@@ -68,6 +80,10 @@ export function tests(workspace: Workspace) {
       'admins_remove',
       {
         account_ids: [alice.accountId]
+      },
+      {
+        gas: Gas.parse('5 Tgas'),
+        attachedDeposit: NEAR.from('1') // 1 yocto
       }
     );
     const admins: string[] = await multicall.view('get_admins', {})

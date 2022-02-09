@@ -1,6 +1,6 @@
 // TODO: add tests for multicall
 
-import { Workspace } from 'near-workspaces-ava';
+import { Workspace, NEAR, Gas } from 'near-workspaces-ava';
 
 
 /**
@@ -19,7 +19,11 @@ export function tests(workspace: Workspace) {
       await bob.call(
         multicall.accountId,
         'multicall',
-        {schedules: [ [] ]}
+        {calls: [ [] ]},
+        {
+          gas: Gas.parse('5 Tgas'),
+          attachedDeposit: NEAR.from('1') // 1 yocto
+        }
       );
     } catch (error) { callError = error}
     test.true(

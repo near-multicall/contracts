@@ -1,4 +1,4 @@
-import { Workspace, NEAR } from 'near-workspaces-ava';
+import { Workspace, NEAR, Gas } from 'near-workspaces-ava';
 
 
 /**
@@ -21,6 +21,10 @@ export function tests(workspace: Workspace) {
         {
           account_id: bob.accountId,
           amount: NEAR.parse("1").toString() // 1 NEAR
+        },
+        {
+          gas: Gas.parse('5 Tgas'),
+          attachedDeposit: NEAR.from('1') // 1 yocto
         }
       );
     } catch (error) {}
@@ -42,6 +46,10 @@ export function tests(workspace: Workspace) {
       {
         account_id: alice.accountId,
         amount: NEAR.parse("1").toString() // 1 NEAR
+      },
+      {
+        gas: Gas.parse('5 Tgas'),
+        attachedDeposit: NEAR.from('1') // 1 yocto
       }
     );
     const balance  = await multicall.balance();
@@ -61,6 +69,10 @@ export function tests(workspace: Workspace) {
       'near_transfer',
       {
         account_id: alice.accountId
+      },
+      {
+        gas: Gas.parse('5 Tgas'),
+        attachedDeposit: NEAR.from('1') // 1 yocto
       }
     );
     const balance  = await multicall.balance();
