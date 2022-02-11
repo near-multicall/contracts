@@ -27086,7 +27086,7 @@
    i64.const 0
    call $~lib/as-bignum/integer/safe/u128/u128#constructor
    call $assembly/multicall/utils/Croncat#remove_task
-   drop
+   call $~lib/near-sdk-core/contract/ContractPromise#returnAsResult
    return
   end
   local.get $2

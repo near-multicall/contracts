@@ -341,6 +341,7 @@ export function job_delete (job_id: u32): void {
 export function job_trigger (job_id: i32): void {
   _is_croncat_manager(context.predecessor);
 
+  // internal method returns a promise as result
   _jobs.trigger(job_id);
 }
 

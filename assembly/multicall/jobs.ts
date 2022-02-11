@@ -323,7 +323,7 @@ export class Jobs {
         { task_hash:  aJob.croncat_hash},
         context.prepaidGas - this.GAS_DELETE,
         u128.Zero
-      );
+      ).returnAsResult();
 
       return;
     }

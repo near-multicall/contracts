@@ -21362,7 +21362,8 @@
     local.get $4
     local.get $0
     call $~lib/near-sdk-core/contract/ContractPromise.create<assembly/multicall/model/CroncatRefillTaskArgs>
-    drop
+    i64.load
+    call $~lib/near-sdk-core/env/env/env.promise_return
     br $__inlined_func$assembly/multicall/jobs/Jobs#trigger
    end
    local.get $0
