@@ -17,25 +17,33 @@ export class Jobs {
   // used to generate unique job ID for new jobs
   KEY_JOB_COUNT: string; 
 
+  CALLBACK_POST_JOB_ACTIVATE: string;
+  CALLBACK_POST_JOB_DELETE: string;
+
   croncat: Croncat;
   jobMap: PersistentUnorderedMap<u32, JobSchema>;
 
   GAS_ACTIVATE: u64 = 40_000_000_000_000;
   GAS_EDIT: u64 = 20_000_000_000_000;
-  GAS_DELETE: u64 = 15_000_000_000_000;
+  GAS_DELETE: u64 = 35_000_000_000_000;
   GAS_CREATE_TASK_CALLBACK: u64 = 15_000_000_000_000;
+  GAS_EXIT_TASK_CALLBACK: u64 = 15_000_000_000_000;
 
   // constructor for initializing the Croncat manager address
   constructor(
     keyCroncatManagerAddress: string,
     keyJobBond: string,
     keyJobMap: string,
-    keyJobCount: string
+    keyJobCount: string,
+    callbackForJobActivate: string,
+    callbackForJobDelete: string
   ) {
     this.croncat = new Croncat(keyCroncatManagerAddress);
     this.KEY_BOND = keyJobBond;
     this.jobMap = new PersistentUnorderedMap<u32, JobSchema>(keyJobMap);
     this.KEY_JOB_COUNT = keyJobCount;
+    this.CALLBACK_POST_JOB_ACTIVATE = callbackForJobActivate;
+    this.CALLBACK_POST_JOB_DELETE = callbackForJobDelete;
   }
 
   /**
@@ -132,9 +140,8 @@ export class Jobs {
    * create a croncat task for a job and set it to active
    * 
    * @param job_id 
-   * @param callback_name 
    */
-  activate (job_id: u32, callback_name: string): void {
+  activate (job_id: u32): void {
     let aJob: JobSchema = this.jobMap.getSome(job_id);
     // is job already active?
     if (aJob.is_active == true) {
@@ -162,7 +169,7 @@ export class Jobs {
         aJob.croncat_budget,
       ).then<JobActivateArgs>(
         context.contractName,
-        callback_name,
+        this.CALLBACK_POST_JOB_ACTIVATE,
         croncatTaskArgs,
         this.GAS_CREATE_TASK_CALLBACK,
         u128.Zero
@@ -235,7 +242,7 @@ export class Jobs {
         let aJob: JobSchema = <JobSchema> aJobOrNull;
         // is job aleady inactive?
         if (aJob.is_active == false) {
-          logging.log(`job ${aJob.id} already not active`);
+          logging.log(`job ${aJob.id} already paused`);
           continue;
         }
         aJob.is_active = false;
@@ -289,20 +296,52 @@ export class Jobs {
   /**
    * multicall jobs can take lots of memory, thus locking part of the
    * contract funds. We can free up space by deleting jobs.
-   * Also delete the job's task on croncat
+   * Also can delete the job's task on croncat
    * 
    * @param job_id 
    */
-  delete (job_id: u32): void {
+  delete (job_id: u32, delete_on_croncat: boolean): void {
     // panick on job_id not found
     const aJob: JobSchema = this.jobMap.getSome(job_id);
-    this.jobMap.delete(job_id);
-    // remove the job's task on croncat
-    this.croncat.remove_task(
-      { task_hash:  aJob.croncat_hash},
-      context.prepaidGas - this.GAS_DELETE,
-      u128.Zero
-    ).returnAsResult();
+
+    // if we want to delete on croncat then call croncat first then
+    // locally delete using callback to check if croncat call succeeded
+    if (delete_on_croncat == true) {
+      // remove the job's task on croncat
+      let promise = this.croncat.remove_task(
+        { task_hash:  aJob.croncat_hash},
+        context.prepaidGas - this.GAS_DELETE,
+        u128.Zero
+      ).then<JobActivateArgs>(
+        context.contractName,
+        this.CALLBACK_POST_JOB_DELETE,
+        { job_id: aJob.id },
+        this.GAS_EXIT_TASK_CALLBACK,
+        u128.Zero
+      );
+      // return the promise as result
+      promise.returnAsResult();
+    }
+    else {
+      this.jobMap.delete(aJob.id);
+    }
+  }
+
+  /**
+   * Check if croncat sucessfully deleted the task before deleting a job.
+   * 
+   * @param job_id 
+   */
+  delete_callback (job_id: u32): void {
+    // panick on job_id not found
+    const aJob: JobSchema = this.jobMap.getSome(job_id);
+
+    // check if call to croncat succeeded
+    let result = ContractPromise.getResults()[0];
+    if (result.succeeded) {
+      // delete the job
+      this.jobMap.delete(aJob.id);
+    }
   }
 
   /**
@@ -318,12 +357,9 @@ export class Jobs {
 
     if (aJob.runs_max <= aJob.runs_current) {
       logging.log(`retiring job ${job_id}, max runs reached`);
-      // remove this job's croncat task
-      this.croncat.remove_task(
-        { task_hash:  aJob.croncat_hash},
-        context.prepaidGas - this.GAS_DELETE,
-        u128.Zero
-      ).returnAsResult();
+
+      // delete the job both on croncat and locally
+      this.delete(aJob.id, true); // returns promise as result
 
       return;
     }
@@ -332,7 +368,15 @@ export class Jobs {
     aJob.runs_current += 1;
 
     logging.log(`job ${aJob.id} runs max: ${aJob.runs_max} runs current: ${aJob.runs_current}`)
-    this.jobMap.set(aJob.id, aJob);
+
+    // recurring job, persist current job state
+    if (aJob.runs_max > 1) {
+      this.jobMap.set(aJob.id, aJob);
+    }
+    // non-recurring job, will be automatically deleted on croncat, so we only delete locally
+    else {
+      this.delete(aJob.id, false);
+    }
 
     // run the job as a multicall
     _internal_multicall(aJob.calls);

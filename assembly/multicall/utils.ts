@@ -60,10 +60,26 @@ export class Croncat {
     call_gas: u64,
     call_deposit: u128
   ): ContractPromise {
-    return ContractPromise.create<CroncatCreateTaskArgs>(
+
+    // manually encode args because gas must be encoded as JSON number.
+    // near-sdk-rs has custom Gas type but assembly-script doesn't
+    // so we work with u64. Problem: u64 is encoded as JSON string
+    const encodedArgs: Uint8Array = util.stringToBytes(
+      "{" +
+      `"contract_id":"${call_args.contract_id}",` +
+      `"function_id":"${call_args.function_id}",` +
+      `"cadence":"${call_args.cadence}",` +
+      `"recurring":${call_args.recurring},` +
+      `"deposit":"${call_args.deposit}",` +
+      `"gas":${call_args.gas},` +
+      `"arguments":"${call_args.arguments}"` +
+      "}"
+    );
+    
+    return ContractPromise.create(
       this.get_manager_address(),
       "create_task",
-      call_args,
+      encodedArgs,
       call_gas,
       call_deposit
     );

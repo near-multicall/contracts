@@ -12,11 +12,17 @@ const KEY_JOB_BOND: string = "e";
 const KEY_JOB_MAP: string = "f";
 const KEY_JOB_COUNT: string = "g";
 
+
+// TODO: code here runs before all function calls
+// not all functions need jobs, so only instantiate jobs
+// for functions that need it
 const _jobs = new Jobs(
   KEY_CRONCAT_MANAGER_ADDRESS,
   KEY_JOB_BOND,
   KEY_JOB_MAP,
-  KEY_JOB_COUNT
+  KEY_JOB_COUNT,
+  "job_activate_callback",
+  "job_delete_callback"
 );
 
 
@@ -70,7 +76,7 @@ export function ft_on_transfer (sender_id: string, amount: u128, msg: string): v
       base64.decode(methodAndArgs.args)
     );
     // call job_activate (returns promise)
-    _jobs.activate(jobActivateArgs.job_id, "job_activate_callback");
+    _jobs.activate(jobActivateArgs.job_id);
   }
 
   // otherwise don't return anything, ft standard reimburses full amount to sender
@@ -229,8 +235,8 @@ export function get_jobs (start: i32 = 0, end: i32 = _jobs.jobMap.length): JobSc
   job_trigger_deposit: u128,
   job_total_budget: u128,
   job_runs_max: u64,
-  job_start_at: u64
-): i32 
+  job_start_at: u64 = context.blockTimestamp
+): u32 
 {
   // anyone can add jobs if they pay required bond
   return _jobs.add(
@@ -249,14 +255,14 @@ export function get_jobs (start: i32 = 0, end: i32 = _jobs.jobMap.length): JobSc
  * 
  * @param job_id 
  */
-export function job_activate (job_id: i32): void {
+export function job_activate (job_id: u32): void {
   _is_admin(context.predecessor);
   _assert_deposit();
 
-  _jobs.activate(job_id, "job_activate_callback");
+  _jobs.activate(job_id);
 }
 
-export function job_activate_callback (job_id: i32): void {
+export function job_activate_callback (job_id: u32): void {
   _is_private();
 
   _jobs.activate_callback(job_id);
@@ -267,12 +273,12 @@ export function job_activate_callback (job_id: i32): void {
  * 
  * @param job_ids  
  */
-  export function jobs_pause (job_ids: u32[]): void {
-    _is_admin(context.predecessor);
-    _assert_deposit();
+export function jobs_pause (job_ids: u32[]): void {
+  _is_admin(context.predecessor);
+  _assert_deposit();
 
-    _jobs.pause(job_ids);
-  }
+  _jobs.pause(job_ids);
+}
 
 /**
  * resume a job to be ready for execution
@@ -326,11 +332,20 @@ export function job_edit (
  * 
  * @param job_id 
  */
-export function job_delete (job_id: u32): void {
+export function job_delete (
+  job_id: u32,
+  delete_on_croncat: boolean = true
+): void {
   _is_admin(context.predecessor);
   _assert_deposit();
 
-  _jobs.delete(job_id);
+  _jobs.delete(job_id, delete_on_croncat);
+}
+
+export function job_delete_callback (job_id: u32): void {
+  _is_private();
+
+  _jobs.delete_callback(job_id);
 }
 
 /**
@@ -338,7 +353,7 @@ export function job_delete (job_id: u32): void {
  * 
  * @param job_id 
  */
-export function job_trigger (job_id: i32): void {
+export function job_trigger (job_id: u32): void {
   _is_croncat_manager(context.predecessor);
 
   // internal method returns a promise as result
