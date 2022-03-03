@@ -122,8 +122,8 @@
  (global $~lib/near-sdk-core/contract/PromiseStatus.Pending i32 (i32.const 0))
  (global $~lib/near-sdk-core/contract/PromiseStatus.Successful i32 (i32.const 1))
  (global $~lib/near-sdk-core/contract/PromiseStatus.Failed i32 (i32.const 2))
- (global $~lib/rt/__rtti_base i32 (i32.const 14992))
- (global $~lib/memory/__heap_base i32 (i32.const 15452))
+ (global $~lib/rt/__rtti_base i32 (i32.const 15088))
+ (global $~lib/memory/__heap_base i32 (i32.const 15548))
  (memory $0 1)
  (data (i32.const 12) "<\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00(\00\00\001\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\00\00\00\00\00")
  (data (i32.const 76) ",\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\1a\00\00\00I\00n\00v\00a\00l\00i\00d\00 \00r\00a\00d\00i\00x\00\00\00")
@@ -327,50 +327,51 @@
  (data (i32.const 12428) "|\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00^\00\00\00~\00l\00i\00b\00/\00n\00e\00a\00r\00-\00s\00d\00k\00-\00c\00o\00r\00e\00/\00c\00o\00l\00l\00e\00c\00t\00i\00o\00n\00s\00/\00p\00e\00r\00s\00i\00s\00t\00e\00n\00t\00S\00e\00t\00.\00t\00s\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00")
  (data (i32.const 12556) "<\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\1e\00\00\00V\00e\00c\00t\00o\00r\00 \00i\00s\00 \00e\00m\00p\00t\00y\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00")
  (data (i32.const 12620) "<\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00&\00\00\00I\00n\00d\00e\00x\00 \00o\00u\00t\00 \00o\00f\00 \00b\00o\00u\00n\00d\00s\00\00\00\00\00\00\00")
- (data (i32.const 12684) "\1c\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\n\00\00\00s\00t\00a\00r\00t\00\00\00")
- (data (i32.const 12716) "\1c\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\06\00\00\00i\003\002\00\00\00\00\00\00\00")
- (data (i32.const 12748) "\1c\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\06\00\00\00e\00n\00d\00\00\00\00\00\00\00")
- (data (i32.const 12780) ",\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\12\00\00\00a\00d\00d\00r\00e\00s\00s\00e\00s\00\00\00\00\00\00\00\00\00\00\00")
- (data (i32.const 12828) ",\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\1c\00\00\00a\00d\00m\00i\00n\00_\00a\00c\00c\00o\00u\00n\00t\00s\00")
- (data (i32.const 12876) "<\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\1e\00\00\00c\00r\00o\00n\00c\00a\00t\00_\00m\00a\00n\00a\00g\00e\00r\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00")
- (data (i32.const 12940) ",\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\10\00\00\00j\00o\00b\00_\00b\00o\00n\00d\00\00\00\00\00\00\00\00\00\00\00\00\00")
- (data (i32.const 12988) "<\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00&\00\00\00A\00l\00r\00e\00a\00d\00y\00 \00i\00n\00i\00t\00i\00a\00l\00i\00z\00e\00d\00\00\00\00\00\00\00")
- (data (i32.const 13052) "\1c\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\08\00\00\00d\00o\00n\00e\00\00\00\00\00")
- (data (i32.const 13084) ",\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\12\00\00\00j\00o\00b\00_\00c\00a\00l\00l\00s\00\00\00\00\00\00\00\00\00\00\00")
- (data (i32.const 13132) ",\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\16\00\00\00j\00o\00b\00_\00c\00a\00d\00e\00n\00c\00e\00\00\00\00\00\00\00")
- (data (i32.const 13180) "<\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\1e\00\00\00j\00o\00b\00_\00t\00r\00i\00g\00g\00e\00r\00_\00g\00a\00s\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00")
- (data (i32.const 13244) "<\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00&\00\00\00j\00o\00b\00_\00t\00r\00i\00g\00g\00e\00r\00_\00d\00e\00p\00o\00s\00i\00t\00\00\00\00\00\00\00")
- (data (i32.const 13308) "<\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00 \00\00\00j\00o\00b\00_\00t\00o\00t\00a\00l\00_\00b\00u\00d\00g\00e\00t\00\00\00\00\00\00\00\00\00\00\00\00\00")
- (data (i32.const 13372) ",\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\18\00\00\00j\00o\00b\00_\00r\00u\00n\00s\00_\00m\00a\00x\00\00\00\00\00")
- (data (i32.const 13420) ",\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\18\00\00\00j\00o\00b\00_\00s\00t\00a\00r\00t\00_\00a\00t\00\00\00\00\00")
- (data (i32.const 13468) "\9c\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\80\00\00\00a\00t\00t\00a\00c\00h\00e\00d\00 \00d\00e\00p\00o\00s\00i\00t\00 \00m\00u\00s\00t\00 \00b\00e\00 \00g\00r\00e\00a\00t\00e\00r\00 \00o\00r\00 \00e\00q\00u\00a\00l\00 \00t\00h\00a\00n\00 \00t\00h\00e\00 \00r\00e\00q\00u\00i\00r\00e\00d\00 \00b\00o\00n\00d\00\00\00\00\00\00\00\00\00\00\00\00\00")
- (data (i32.const 13628) "L\00\00\00\00\00\00\00\00\00\00\00\01\00\00\004\00\00\00a\00s\00s\00e\00m\00b\00l\00y\00/\00m\00u\00l\00t\00i\00c\00a\00l\00l\00/\00j\00o\00b\00s\00.\00t\00s\00\00\00\00\00\00\00\00\00")
- (data (i32.const 13708) "<\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\"\00\00\00M\00e\00t\00h\00o\00d\00 \00i\00s\00 \00p\00r\00i\00v\00a\00t\00e\00\00\00\00\00\00\00\00\00\00\00")
- (data (i32.const 13772) ",\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\0e\00\00\00j\00o\00b\00_\00i\00d\00s\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00")
- (data (i32.const 13820) ",\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\14\00\00\00A\00r\00r\00a\00y\00<\00u\003\002\00>\00\00\00\00\00\00\00\00\00")
- (data (i32.const 13868) "<\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\1e\00\00\00 \00a\00l\00r\00e\00a\00d\00y\00 \00p\00a\00u\00s\00e\00d\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00")
- (data (i32.const 13932) "\1c\00\00\00\00\00\00\00\00\00\00\00)\00\00\00\0c\00\00\00\80)\00\00\00\00\00\00@6\00\00")
- (data (i32.const 13964) ",\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\14\00\00\00 \00n\00o\00t\00 \00f\00o\00u\00n\00d\00\00\00\00\00\00\00\00\00")
- (data (i32.const 14012) "\1c\00\00\00\00\00\00\00\00\00\00\00)\00\00\00\0c\00\00\00\80)\00\00\00\00\00\00\a06\00\00")
- (data (i32.const 14044) "\1c\00\00\00\00\00\00\00\00\00\00\00)\00\00\00\0c\00\00\00\80)\00\00\00\00\00\00\a0)\00\00")
- (data (i32.const 14076) "\1c\00\00\00\00\00\00\00\00\00\00\00)\00\00\00\0c\00\00\00\80)\00\00\00\00\00\00\a06\00\00")
- (data (i32.const 14108) ",\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\1a\00\00\00j\00o\00b\00_\00i\00s\00_\00a\00c\00t\00i\00v\00e\00\00\00")
- (data (i32.const 14156) ",\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\1c\00\00\00r\00e\00f\00i\00l\00l\00_\00b\00a\00l\00a\00n\00c\00e\00")
- (data (i32.const 14204) ",\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\12\00\00\00t\00a\00s\00k\00_\00h\00a\00s\00h\00\00\00\00\00\00\00\00\00\00\00")
- (data (i32.const 14252) "<\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\"\00\00\00d\00e\00l\00e\00t\00e\00_\00o\00n\00_\00c\00r\00o\00n\00c\00a\00t\00\00\00\00\00\00\00\00\00\00\00")
- (data (i32.const 14316) ",\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\16\00\00\00r\00e\00m\00o\00v\00e\00_\00t\00a\00s\00k\00\00\00\00\00\00\00")
- (data (i32.const 14364) "l\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\\\00\00\00 \00m\00u\00s\00t\00 \00b\00e\00 \00c\00r\00o\00n\00c\00a\00t\00 \00m\00a\00n\00a\00g\00e\00r\00 \00t\00o\00 \00c\00a\00l\00l\00 \00t\00h\00i\00s\00 \00f\00u\00n\00c\00t\00i\00o\00n\00")
- (data (i32.const 14476) "\1c\00\00\00\00\00\00\00\00\00\00\00)\00\00\00\0c\00\00\00\10\02\00\00\00\00\00\0008\00\00")
- (data (i32.const 14508) "<\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\1e\00\00\00 \00m\00u\00s\00t\00 \00b\00e\00 \00a\00c\00t\00i\00v\00e\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00")
- (data (i32.const 14572) "\1c\00\00\00\00\00\00\00\00\00\00\00)\00\00\00\0c\00\00\00\80)\00\00\00\00\00\00\c08\00\00")
- (data (i32.const 14604) "L\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00<\00\00\00p\00l\00e\00a\00s\00e\00 \00w\00a\00i\00t\00 \00f\00o\00r\00 \00j\00o\00b\00 \00s\00t\00a\00r\00t\00 \00t\00i\00m\00e\00")
- (data (i32.const 14684) ",\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\1a\00\00\00r\00e\00t\00i\00r\00i\00n\00g\00 \00j\00o\00b\00 \00\00\00")
- (data (i32.const 14732) "<\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00$\00\00\00,\00 \00m\00a\00x\00 \00r\00u\00n\00s\00 \00r\00e\00a\00c\00h\00e\00d\00\00\00\00\00\00\00\00\00")
- (data (i32.const 14796) "\1c\00\00\00\00\00\00\00\00\00\00\00)\00\00\00\0c\00\00\00p9\00\00\00\00\00\00\a09\00\00")
- (data (i32.const 14828) ",\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\16\00\00\00 \00r\00u\00n\00s\00 \00m\00a\00x\00:\00 \00\00\00\00\00\00\00")
- (data (i32.const 14876) "<\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\1e\00\00\00 \00r\00u\00n\00s\00 \00c\00u\00r\00r\00e\00n\00t\00:\00 \00\00\00\00\00\00\00\00\00\00\00\00\00\00\00")
- (data (i32.const 14940) ",\00\00\00\00\00\00\00\00\00\00\00)\00\00\00\1c\00\00\00\80)\00\00\00\00\00\00\00:\00\00\00\00\00\000:\00\00\00\00\00\00\10\02\00\00")
- (data (i32.const 14992) "9\00\00\00 \00\00\00\00\00\00\00 \00\00\00\00\00\00\00\00\00\00\00\00\00\00\00 \00\00\00\04\00\00\00 \00\00\00\00\00\00\00B\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00A\00\00\00\02\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\02A\00\00\00\00\00\00\02A\00\00\00\00\00\00\02A\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\17\00\00\00 \00\00\00\00\00\00\00\10A\82\00\00\00\00\00\00\00\00\00\1a\00\00\00 \00\00\00\00\00\00\00\02A\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\17\00\00\00\02A\00\00\00\00\00\00\00\00\00\00\17\00\00\00 \00\00\00\17\00\00\00 \00\00\00#\00\00\00 \00\00\00\17\00\00\00 \00\00\00\17\00\00\00 \00\00\00\17\00\00\00\00\00\00\00\'\00\00\00\00\00\00\00\00\00\00\00\02\t\00\00\00\00\00\00\04A\00\00\00\00\00\00\02\02\00\00\00\00\00\00 \00\00\00\00\00\00\00d\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00 \00\00\00\00\00\00\00\00\00\00\00\00\00\00\00 \00\00\00\00\00\00\00A\08\00\00\02\00\00\00\02A\00\00\00\00\00\00\00\00\00\00\00\00\00\00\02A\00\00\00\00\00\00\02\01\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00")
+ (data (i32.const 12684) "\\\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00F\00\00\00c\00o\00n\00t\00r\00a\00c\00t\00 \00m\00u\00s\00t\00 \00h\00a\00v\00e\00 \00a\00t\00 \00l\00e\00a\00s\00t\00 \001\00 \00a\00d\00m\00i\00n\00\00\00\00\00\00\00")
+ (data (i32.const 12780) "\1c\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\n\00\00\00s\00t\00a\00r\00t\00\00\00")
+ (data (i32.const 12812) "\1c\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\06\00\00\00i\003\002\00\00\00\00\00\00\00")
+ (data (i32.const 12844) "\1c\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\06\00\00\00e\00n\00d\00\00\00\00\00\00\00")
+ (data (i32.const 12876) ",\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\12\00\00\00a\00d\00d\00r\00e\00s\00s\00e\00s\00\00\00\00\00\00\00\00\00\00\00")
+ (data (i32.const 12924) ",\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\1c\00\00\00a\00d\00m\00i\00n\00_\00a\00c\00c\00o\00u\00n\00t\00s\00")
+ (data (i32.const 12972) "<\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\1e\00\00\00c\00r\00o\00n\00c\00a\00t\00_\00m\00a\00n\00a\00g\00e\00r\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00")
+ (data (i32.const 13036) ",\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\10\00\00\00j\00o\00b\00_\00b\00o\00n\00d\00\00\00\00\00\00\00\00\00\00\00\00\00")
+ (data (i32.const 13084) "<\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00&\00\00\00A\00l\00r\00e\00a\00d\00y\00 \00i\00n\00i\00t\00i\00a\00l\00i\00z\00e\00d\00\00\00\00\00\00\00")
+ (data (i32.const 13148) "\1c\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\08\00\00\00d\00o\00n\00e\00\00\00\00\00")
+ (data (i32.const 13180) ",\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\12\00\00\00j\00o\00b\00_\00c\00a\00l\00l\00s\00\00\00\00\00\00\00\00\00\00\00")
+ (data (i32.const 13228) ",\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\16\00\00\00j\00o\00b\00_\00c\00a\00d\00e\00n\00c\00e\00\00\00\00\00\00\00")
+ (data (i32.const 13276) "<\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\1e\00\00\00j\00o\00b\00_\00t\00r\00i\00g\00g\00e\00r\00_\00g\00a\00s\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00")
+ (data (i32.const 13340) "<\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00&\00\00\00j\00o\00b\00_\00t\00r\00i\00g\00g\00e\00r\00_\00d\00e\00p\00o\00s\00i\00t\00\00\00\00\00\00\00")
+ (data (i32.const 13404) "<\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00 \00\00\00j\00o\00b\00_\00t\00o\00t\00a\00l\00_\00b\00u\00d\00g\00e\00t\00\00\00\00\00\00\00\00\00\00\00\00\00")
+ (data (i32.const 13468) ",\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\18\00\00\00j\00o\00b\00_\00r\00u\00n\00s\00_\00m\00a\00x\00\00\00\00\00")
+ (data (i32.const 13516) ",\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\18\00\00\00j\00o\00b\00_\00s\00t\00a\00r\00t\00_\00a\00t\00\00\00\00\00")
+ (data (i32.const 13564) "\9c\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\80\00\00\00a\00t\00t\00a\00c\00h\00e\00d\00 \00d\00e\00p\00o\00s\00i\00t\00 \00m\00u\00s\00t\00 \00b\00e\00 \00g\00r\00e\00a\00t\00e\00r\00 \00o\00r\00 \00e\00q\00u\00a\00l\00 \00t\00h\00a\00n\00 \00t\00h\00e\00 \00r\00e\00q\00u\00i\00r\00e\00d\00 \00b\00o\00n\00d\00\00\00\00\00\00\00\00\00\00\00\00\00")
+ (data (i32.const 13724) "L\00\00\00\00\00\00\00\00\00\00\00\01\00\00\004\00\00\00a\00s\00s\00e\00m\00b\00l\00y\00/\00m\00u\00l\00t\00i\00c\00a\00l\00l\00/\00j\00o\00b\00s\00.\00t\00s\00\00\00\00\00\00\00\00\00")
+ (data (i32.const 13804) "<\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\"\00\00\00M\00e\00t\00h\00o\00d\00 \00i\00s\00 \00p\00r\00i\00v\00a\00t\00e\00\00\00\00\00\00\00\00\00\00\00")
+ (data (i32.const 13868) ",\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\0e\00\00\00j\00o\00b\00_\00i\00d\00s\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00")
+ (data (i32.const 13916) ",\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\14\00\00\00A\00r\00r\00a\00y\00<\00u\003\002\00>\00\00\00\00\00\00\00\00\00")
+ (data (i32.const 13964) "<\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\1e\00\00\00 \00a\00l\00r\00e\00a\00d\00y\00 \00p\00a\00u\00s\00e\00d\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00")
+ (data (i32.const 14028) "\1c\00\00\00\00\00\00\00\00\00\00\00)\00\00\00\0c\00\00\00\80)\00\00\00\00\00\00\a06\00\00")
+ (data (i32.const 14060) ",\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\14\00\00\00 \00n\00o\00t\00 \00f\00o\00u\00n\00d\00\00\00\00\00\00\00\00\00")
+ (data (i32.const 14108) "\1c\00\00\00\00\00\00\00\00\00\00\00)\00\00\00\0c\00\00\00\80)\00\00\00\00\00\00\007\00\00")
+ (data (i32.const 14140) "\1c\00\00\00\00\00\00\00\00\00\00\00)\00\00\00\0c\00\00\00\80)\00\00\00\00\00\00\a0)\00\00")
+ (data (i32.const 14172) "\1c\00\00\00\00\00\00\00\00\00\00\00)\00\00\00\0c\00\00\00\80)\00\00\00\00\00\00\007\00\00")
+ (data (i32.const 14204) ",\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\1a\00\00\00j\00o\00b\00_\00i\00s\00_\00a\00c\00t\00i\00v\00e\00\00\00")
+ (data (i32.const 14252) ",\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\1c\00\00\00r\00e\00f\00i\00l\00l\00_\00b\00a\00l\00a\00n\00c\00e\00")
+ (data (i32.const 14300) ",\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\12\00\00\00t\00a\00s\00k\00_\00h\00a\00s\00h\00\00\00\00\00\00\00\00\00\00\00")
+ (data (i32.const 14348) "<\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\"\00\00\00d\00e\00l\00e\00t\00e\00_\00o\00n\00_\00c\00r\00o\00n\00c\00a\00t\00\00\00\00\00\00\00\00\00\00\00")
+ (data (i32.const 14412) ",\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\16\00\00\00r\00e\00m\00o\00v\00e\00_\00t\00a\00s\00k\00\00\00\00\00\00\00")
+ (data (i32.const 14460) "l\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\\\00\00\00 \00m\00u\00s\00t\00 \00b\00e\00 \00c\00r\00o\00n\00c\00a\00t\00 \00m\00a\00n\00a\00g\00e\00r\00 \00t\00o\00 \00c\00a\00l\00l\00 \00t\00h\00i\00s\00 \00f\00u\00n\00c\00t\00i\00o\00n\00")
+ (data (i32.const 14572) "\1c\00\00\00\00\00\00\00\00\00\00\00)\00\00\00\0c\00\00\00\10\02\00\00\00\00\00\00\908\00\00")
+ (data (i32.const 14604) "<\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\1e\00\00\00 \00m\00u\00s\00t\00 \00b\00e\00 \00a\00c\00t\00i\00v\00e\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00")
+ (data (i32.const 14668) "\1c\00\00\00\00\00\00\00\00\00\00\00)\00\00\00\0c\00\00\00\80)\00\00\00\00\00\00 9\00\00")
+ (data (i32.const 14700) "L\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00<\00\00\00p\00l\00e\00a\00s\00e\00 \00w\00a\00i\00t\00 \00f\00o\00r\00 \00j\00o\00b\00 \00s\00t\00a\00r\00t\00 \00t\00i\00m\00e\00")
+ (data (i32.const 14780) ",\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\1a\00\00\00r\00e\00t\00i\00r\00i\00n\00g\00 \00j\00o\00b\00 \00\00\00")
+ (data (i32.const 14828) "<\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00$\00\00\00,\00 \00m\00a\00x\00 \00r\00u\00n\00s\00 \00r\00e\00a\00c\00h\00e\00d\00\00\00\00\00\00\00\00\00")
+ (data (i32.const 14892) "\1c\00\00\00\00\00\00\00\00\00\00\00)\00\00\00\0c\00\00\00\d09\00\00\00\00\00\00\00:\00\00")
+ (data (i32.const 14924) ",\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\16\00\00\00 \00r\00u\00n\00s\00 \00m\00a\00x\00:\00 \00\00\00\00\00\00\00")
+ (data (i32.const 14972) "<\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\1e\00\00\00 \00r\00u\00n\00s\00 \00c\00u\00r\00r\00e\00n\00t\00:\00 \00\00\00\00\00\00\00\00\00\00\00\00\00\00\00")
+ (data (i32.const 15036) ",\00\00\00\00\00\00\00\00\00\00\00)\00\00\00\1c\00\00\00\80)\00\00\00\00\00\00`:\00\00\00\00\00\00\90:\00\00\00\00\00\00\10\02\00\00")
+ (data (i32.const 15088) "9\00\00\00 \00\00\00\00\00\00\00 \00\00\00\00\00\00\00\00\00\00\00\00\00\00\00 \00\00\00\04\00\00\00 \00\00\00\00\00\00\00B\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00A\00\00\00\02\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\02A\00\00\00\00\00\00\02A\00\00\00\00\00\00\02A\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\17\00\00\00 \00\00\00\00\00\00\00\10A\82\00\00\00\00\00\00\00\00\00\1a\00\00\00 \00\00\00\00\00\00\00\02A\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\17\00\00\00\02A\00\00\00\00\00\00\00\00\00\00\17\00\00\00 \00\00\00\17\00\00\00 \00\00\00#\00\00\00 \00\00\00\17\00\00\00 \00\00\00\17\00\00\00 \00\00\00\17\00\00\00\00\00\00\00\'\00\00\00\00\00\00\00\00\00\00\00\02\t\00\00\00\00\00\00\04A\00\00\00\00\00\00\02\02\00\00\00\00\00\00 \00\00\00\00\00\00\00d\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00 \00\00\00\00\00\00\00\00\00\00\00\00\00\00\00 \00\00\00\00\00\00\00A\08\00\00\02\00\00\00\02A\00\00\00\00\00\00\00\00\00\00\00\00\00\00\02A\00\00\00\00\00\00\02\01\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00")
  (table $0 1 funcref)
  (export "multicall" (func $assembly/multicall/index/__wrapper_multicall))
  (export "ft_on_transfer" (func $assembly/multicall/index/__wrapper_ft_on_transfer))
@@ -14033,7 +14034,7 @@
    i32.const 528
    call $~lib/staticarray/StaticArray<~lib/string/String>#join
    i32.const 8192
-   i32.const 156
+   i32.const 159
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -14248,7 +14249,7 @@
   if
    i32.const 8352
    i32.const 8192
-   i32.const 159
+   i32.const 162
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -22567,6 +22568,15 @@
   local.get $5
   local.get $4
   call $~lib/near-sdk-core/collections/persistentMap/PersistentMap<~lib/typedarray/Uint8Array,i32>#set
+  local.get $0
+  i32.load
+  local.get $2
+  call $~lib/near-sdk-core/collections/persistentMap/PersistentMap<~lib/typedarray/Uint8Array,i32>#delete
+ )
+ (func $~lib/near-sdk-core/collections/persistentSet/PersistentSet<~lib/string/String>#get:size (param $0 i32) (result i32)
+  local.get $0
+  i32.load offset=4
+  call $~lib/near-sdk-core/collections/persistentVector/PersistentVector<~lib/string/String>#get:length
  )
  (func $assembly/multicall/index/admins_remove (param $0 i32)
   (local $1 i32)
@@ -22595,6 +22605,19 @@
     local.set $1
     br $for-loop|0
    end
+  end
+  global.get $assembly/multicall/index/admins
+  call $~lib/near-sdk-core/collections/persistentSet/PersistentSet<~lib/string/String>#get:size
+  i32.const 1
+  i32.ge_s
+  i32.eqz
+  if
+   i32.const 12704
+   i32.const 8192
+   i32.const 71
+   i32.const 3
+   call $~lib/builtins/abort
+   unreachable
   end
  )
  (func $assembly/multicall/index/__wrapper_admins_remove
@@ -22702,7 +22725,7 @@
      i32.const 1
      drop
      i32.const 3792
-     i32.const 12736
+     i32.const 12832
      call $~lib/string/String.__concat
      i32.const 3968
      call $~lib/string/String.__concat
@@ -22713,7 +22736,7 @@
      unreachable
     else
      i32.const 3792
-     i32.const 12736
+     i32.const 12832
      call $~lib/string/String.__concat
      i32.const 3968
      call $~lib/string/String.__concat
@@ -22759,7 +22782,7 @@
    call $~lib/string/String.__concat
    i32.const 4064
    call $~lib/string/String.__concat
-   i32.const 12736
+   i32.const 12832
    call $~lib/string/String.__concat
    i32.const 9328
    call $~lib/string/String.__concat
@@ -23072,21 +23095,21 @@
   call $~lib/near-sdk-bindgen/index/getInput
   local.set $0
   local.get $0
-  i32.const 12704
+  i32.const 12800
   call $~lib/assemblyscript-json/JSON/Obj#has
   if (result i32)
    local.get $0
-   i32.const 12704
+   i32.const 12800
    call $~lib/near-sdk-bindgen/index/decode<i32,~lib/assemblyscript-json/JSON/Obj>
   else
    i32.const 0
   end
   local.get $0
-  i32.const 12768
+  i32.const 12864
   call $~lib/assemblyscript-json/JSON/Obj#has
   if (result i32)
    local.get $0
-   i32.const 12768
+   i32.const 12864
    call $~lib/near-sdk-bindgen/index/decode<i32,~lib/assemblyscript-json/JSON/Obj>
   else
    global.get $~lib/builtins/i32.MAX_VALUE
@@ -23142,14 +23165,14 @@
   call $~lib/near-sdk-bindgen/index/getInput
   local.set $0
   local.get $0
-  i32.const 12800
+  i32.const 12896
   call $~lib/assemblyscript-json/JSON/Obj#has
   if (result i32)
    local.get $0
-   i32.const 12800
+   i32.const 12896
    call $~lib/near-sdk-bindgen/index/decode<~lib/array/Array<~lib/string/String>,~lib/assemblyscript-json/JSON/Obj>
   else
-   i32.const 12800
+   i32.const 12896
    call $~lib/near-sdk-bindgen/index/requireParameter<~lib/array/Array<~lib/string/String>>
   end
   call $assembly/multicall/index/tokens_add
@@ -23188,14 +23211,14 @@
   call $~lib/near-sdk-bindgen/index/getInput
   local.set $0
   local.get $0
-  i32.const 12800
+  i32.const 12896
   call $~lib/assemblyscript-json/JSON/Obj#has
   if (result i32)
    local.get $0
-   i32.const 12800
+   i32.const 12896
    call $~lib/near-sdk-bindgen/index/decode<~lib/array/Array<~lib/string/String>,~lib/assemblyscript-json/JSON/Obj>
   else
-   i32.const 12800
+   i32.const 12896
    call $~lib/near-sdk-bindgen/index/requireParameter<~lib/array/Array<~lib/string/String>>
   end
   call $assembly/multicall/index/tokens_remove
@@ -23214,21 +23237,21 @@
   call $~lib/near-sdk-bindgen/index/getInput
   local.set $0
   local.get $0
-  i32.const 12704
+  i32.const 12800
   call $~lib/assemblyscript-json/JSON/Obj#has
   if (result i32)
    local.get $0
-   i32.const 12704
+   i32.const 12800
    call $~lib/near-sdk-bindgen/index/decode<i32,~lib/assemblyscript-json/JSON/Obj>
   else
    i32.const 0
   end
   local.get $0
-  i32.const 12768
+  i32.const 12864
   call $~lib/assemblyscript-json/JSON/Obj#has
   if (result i32)
    local.get $0
-   i32.const 12768
+   i32.const 12864
    call $~lib/near-sdk-bindgen/index/decode<i32,~lib/assemblyscript-json/JSON/Obj>
   else
    global.get $~lib/builtins/i32.MAX_VALUE
@@ -23384,9 +23407,9 @@
   call $~lib/string/String.__eq
   i32.eqz
   if
-   i32.const 13008
+   i32.const 13104
    i32.const 8192
-   i32.const 87
+   i32.const 90
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -23423,7 +23446,7 @@
   local.get $2
   call $assembly/multicall/jobs/Jobs#set_bond
   global.get $assembly/multicall/index/KEY_INIT
-  i32.const 13072
+  i32.const 13168
   call $~lib/near-sdk-core/storage/Storage.set<~lib/string/String>
  )
  (func $assembly/multicall/index/__wrapper_init
@@ -23431,36 +23454,36 @@
   call $~lib/near-sdk-bindgen/index/getInput
   local.set $0
   local.get $0
-  i32.const 12848
+  i32.const 12944
   call $~lib/assemblyscript-json/JSON/Obj#has
   if (result i32)
    local.get $0
-   i32.const 12848
+   i32.const 12944
    call $~lib/near-sdk-bindgen/index/decode<~lib/array/Array<~lib/string/String>,~lib/assemblyscript-json/JSON/Obj>
   else
-   i32.const 12848
+   i32.const 12944
    call $~lib/near-sdk-bindgen/index/requireParameter<~lib/array/Array<~lib/string/String>>
   end
   local.get $0
-  i32.const 12896
+  i32.const 12992
   call $~lib/assemblyscript-json/JSON/Obj#has
   if (result i32)
    local.get $0
-   i32.const 12896
+   i32.const 12992
    call $~lib/near-sdk-bindgen/index/decode<~lib/string/String,~lib/assemblyscript-json/JSON/Obj>
   else
-   i32.const 12896
+   i32.const 12992
    call $~lib/near-sdk-bindgen/index/requireParameter<~lib/string/String>
   end
   local.get $0
-  i32.const 12960
+  i32.const 13056
   call $~lib/assemblyscript-json/JSON/Obj#has
   if (result i32)
    local.get $0
-   i32.const 12960
+   i32.const 13056
    call $~lib/near-sdk-bindgen/index/decode<~lib/as-bignum/integer/safe/u128/u128,~lib/assemblyscript-json/JSON/Obj>
   else
-   i32.const 12960
+   i32.const 13056
    call $~lib/near-sdk-bindgen/index/requireParameter<~lib/as-bignum/integer/safe/u128/u128>
   end
   call $assembly/multicall/index/init
@@ -24180,21 +24203,21 @@
   call $~lib/near-sdk-bindgen/index/getInput
   local.set $0
   local.get $0
-  i32.const 12704
+  i32.const 12800
   call $~lib/assemblyscript-json/JSON/Obj#has
   if (result i32)
    local.get $0
-   i32.const 12704
+   i32.const 12800
    call $~lib/near-sdk-bindgen/index/decode<i32,~lib/assemblyscript-json/JSON/Obj>
   else
    i32.const 0
   end
   local.get $0
-  i32.const 12768
+  i32.const 12864
   call $~lib/assemblyscript-json/JSON/Obj#has
   if (result i32)
    local.get $0
-   i32.const 12768
+   i32.const 12864
    call $~lib/near-sdk-bindgen/index/decode<i32,~lib/assemblyscript-json/JSON/Obj>
   else
    global.get $assembly/multicall/index/_jobs
@@ -24402,8 +24425,8 @@
   i32.ne
   i32.eqz
   if
-   i32.const 13488
-   i32.const 13648
+   i32.const 13584
+   i32.const 13744
    i32.const 60
    i32.const 5
    call $~lib/builtins/abort
@@ -24540,77 +24563,77 @@
   call $~lib/near-sdk-bindgen/index/getInput
   local.set $0
   local.get $0
-  i32.const 13104
+  i32.const 13200
   call $~lib/assemblyscript-json/JSON/Obj#has
   if (result i32)
    local.get $0
-   i32.const 13104
+   i32.const 13200
    call $~lib/near-sdk-bindgen/index/decode<~lib/array/Array<~lib/array/Array<assembly/multicall/model/BatchCall>>,~lib/assemblyscript-json/JSON/Obj>
   else
-   i32.const 13104
+   i32.const 13200
    call $~lib/near-sdk-bindgen/index/requireParameter<~lib/array/Array<~lib/array/Array<assembly/multicall/model/BatchCall>>>
   end
   local.get $0
-  i32.const 13152
+  i32.const 13248
   call $~lib/assemblyscript-json/JSON/Obj#has
   if (result i32)
    local.get $0
-   i32.const 13152
+   i32.const 13248
    call $~lib/near-sdk-bindgen/index/decode<~lib/string/String,~lib/assemblyscript-json/JSON/Obj>
   else
-   i32.const 13152
+   i32.const 13248
    call $~lib/near-sdk-bindgen/index/requireParameter<~lib/string/String>
   end
   local.get $0
-  i32.const 13200
+  i32.const 13296
   call $~lib/assemblyscript-json/JSON/Obj#has
   if (result i64)
    local.get $0
-   i32.const 13200
+   i32.const 13296
    call $~lib/near-sdk-bindgen/index/decode<u64,~lib/assemblyscript-json/JSON/Obj>
   else
-   i32.const 13200
+   i32.const 13296
    call $~lib/near-sdk-bindgen/index/requireParameter<u64>
   end
   local.get $0
-  i32.const 13264
+  i32.const 13360
   call $~lib/assemblyscript-json/JSON/Obj#has
   if (result i32)
    local.get $0
-   i32.const 13264
+   i32.const 13360
    call $~lib/near-sdk-bindgen/index/decode<~lib/as-bignum/integer/safe/u128/u128,~lib/assemblyscript-json/JSON/Obj>
   else
-   i32.const 13264
+   i32.const 13360
    call $~lib/near-sdk-bindgen/index/requireParameter<~lib/as-bignum/integer/safe/u128/u128>
   end
   local.get $0
-  i32.const 13328
+  i32.const 13424
   call $~lib/assemblyscript-json/JSON/Obj#has
   if (result i32)
    local.get $0
-   i32.const 13328
+   i32.const 13424
    call $~lib/near-sdk-bindgen/index/decode<~lib/as-bignum/integer/safe/u128/u128,~lib/assemblyscript-json/JSON/Obj>
   else
-   i32.const 13328
+   i32.const 13424
    call $~lib/near-sdk-bindgen/index/requireParameter<~lib/as-bignum/integer/safe/u128/u128>
   end
   local.get $0
-  i32.const 13392
+  i32.const 13488
   call $~lib/assemblyscript-json/JSON/Obj#has
   if (result i64)
    local.get $0
-   i32.const 13392
+   i32.const 13488
    call $~lib/near-sdk-bindgen/index/decode<u64,~lib/assemblyscript-json/JSON/Obj>
   else
-   i32.const 13392
+   i32.const 13488
    call $~lib/near-sdk-bindgen/index/requireParameter<u64>
   end
   local.get $0
-  i32.const 13440
+  i32.const 13536
   call $~lib/assemblyscript-json/JSON/Obj#has
   if (result i64)
    local.get $0
-   i32.const 13440
+   i32.const 13536
    call $~lib/near-sdk-bindgen/index/decode<u64,~lib/assemblyscript-json/JSON/Obj>
   else
    call $~lib/near-sdk-core/contract/Context.get:blockTimestamp
@@ -24684,9 +24707,9 @@
   call $~lib/string/String.__eq
   i32.eqz
   if
-   i32.const 13728
+   i32.const 13824
    i32.const 8192
-   i32.const 165
+   i32.const 168
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -25684,7 +25707,7 @@
      return
     else
      i32.const 3792
-     i32.const 13840
+     i32.const 13936
      call $~lib/string/String.__concat
      i32.const 3968
      call $~lib/string/String.__concat
@@ -25727,7 +25750,7 @@
     call $~lib/string/String.__concat
     i32.const 4064
     call $~lib/string/String.__concat
-    i32.const 13840
+    i32.const 13936
     call $~lib/string/String.__concat
     i32.const 4112
     call $~lib/string/String.__concat
@@ -25778,7 +25801,7 @@
    call $~lib/string/String.__concat
    i32.const 4064
    call $~lib/string/String.__concat
-   i32.const 13840
+   i32.const 13936
    call $~lib/string/String.__concat
    i32.const 5744
    call $~lib/string/String.__concat
@@ -25876,14 +25899,14 @@
       i32.const 0
       i32.eq
       if
-       i32.const 13952
+       i32.const 14048
        i32.const 1
        local.get $5
        i32.load
        i32.const 10
        call $~lib/number/U32#toString
        call $~lib/staticarray/StaticArray<~lib/string/String>#__uset
-       i32.const 13952
+       i32.const 14048
        i32.const 528
        call $~lib/staticarray/StaticArray<~lib/string/String>#join
        call $~lib/near-sdk-core/logging/logging.log<~lib/string/String>
@@ -25899,7 +25922,7 @@
       local.get $5
       call $~lib/near-sdk-core/collections/persistentUnorderedMap/PersistentUnorderedMap<u32,assembly/multicall/model/JobSchema>#set
      else
-      i32.const 14032
+      i32.const 14128
       i32.const 1
       local.get $1
       local.get $2
@@ -25907,7 +25930,7 @@
       i32.const 10
       call $~lib/number/U32#toString
       call $~lib/staticarray/StaticArray<~lib/string/String>#__uset
-      i32.const 14032
+      i32.const 14128
       i32.const 528
       call $~lib/staticarray/StaticArray<~lib/string/String>#join
       call $~lib/near-sdk-core/logging/logging.log<~lib/string/String>
@@ -25934,14 +25957,14 @@
   call $~lib/near-sdk-bindgen/index/getInput
   local.set $0
   local.get $0
-  i32.const 13792
+  i32.const 13888
   call $~lib/assemblyscript-json/JSON/Obj#has
   if (result i32)
    local.get $0
-   i32.const 13792
+   i32.const 13888
    call $~lib/near-sdk-bindgen/index/decode<~lib/array/Array<u32>,~lib/assemblyscript-json/JSON/Obj>
   else
-   i32.const 13792
+   i32.const 13888
    call $~lib/near-sdk-bindgen/index/requireParameter<~lib/array/Array<u32>>
   end
   call $assembly/multicall/index/jobs_pause
@@ -25983,14 +26006,14 @@
       i32.const 1
       i32.eq
       if
-       i32.const 14064
+       i32.const 14160
        i32.const 1
        local.get $5
        i32.load
        i32.const 10
        call $~lib/number/U32#toString
        call $~lib/staticarray/StaticArray<~lib/string/String>#__uset
-       i32.const 14064
+       i32.const 14160
        i32.const 528
        call $~lib/staticarray/StaticArray<~lib/string/String>#join
        call $~lib/near-sdk-core/logging/logging.log<~lib/string/String>
@@ -26006,7 +26029,7 @@
       local.get $5
       call $~lib/near-sdk-core/collections/persistentUnorderedMap/PersistentUnorderedMap<u32,assembly/multicall/model/JobSchema>#set
      else
-      i32.const 14096
+      i32.const 14192
       i32.const 1
       local.get $1
       local.get $2
@@ -26014,7 +26037,7 @@
       i32.const 10
       call $~lib/number/U32#toString
       call $~lib/staticarray/StaticArray<~lib/string/String>#__uset
-      i32.const 14096
+      i32.const 14192
       i32.const 528
       call $~lib/staticarray/StaticArray<~lib/string/String>#join
       call $~lib/near-sdk-core/logging/logging.log<~lib/string/String>
@@ -26041,14 +26064,14 @@
   call $~lib/near-sdk-bindgen/index/getInput
   local.set $0
   local.get $0
-  i32.const 13792
+  i32.const 13888
   call $~lib/assemblyscript-json/JSON/Obj#has
   if (result i32)
    local.get $0
-   i32.const 13792
+   i32.const 13888
    call $~lib/near-sdk-bindgen/index/decode<~lib/array/Array<u32>,~lib/assemblyscript-json/JSON/Obj>
   else
-   i32.const 13792
+   i32.const 13888
    call $~lib/near-sdk-bindgen/index/requireParameter<~lib/array/Array<u32>>
   end
   call $assembly/multicall/index/jobs_resume
@@ -26128,7 +26151,7 @@
   drop
   local.get $0
   i32.load
-  i32.const 14224
+  i32.const 14320
   local.get $3
   call $~lib/near-sdk-bindgen/index/encode<~lib/string/String,~lib/near-sdk-bindgen/index/JSONEncoder>
   drop
@@ -26309,7 +26332,7 @@
  (func $assembly/multicall/utils/Croncat#refill_balance (param $0 i32) (param $1 i32) (param $2 i64) (param $3 i32) (result i32)
   local.get $0
   call $assembly/multicall/utils/Croncat#get_manager_address
-  i32.const 14176
+  i32.const 14272
   local.get $1
   local.get $2
   local.get $3
@@ -26421,58 +26444,58 @@
    call $~lib/near-sdk-bindgen/index/requireParameter<u32>
   end
   local.get $0
-  i32.const 13104
+  i32.const 13200
   call $~lib/assemblyscript-json/JSON/Obj#has
   if (result i32)
    local.get $0
-   i32.const 13104
+   i32.const 13200
    call $~lib/near-sdk-bindgen/index/decode<~lib/array/Array<~lib/array/Array<assembly/multicall/model/BatchCall>>,~lib/assemblyscript-json/JSON/Obj>
   else
-   i32.const 13104
+   i32.const 13200
    call $~lib/near-sdk-bindgen/index/requireParameter<~lib/array/Array<~lib/array/Array<assembly/multicall/model/BatchCall>>>
   end
   local.get $0
-  i32.const 13328
+  i32.const 13424
   call $~lib/assemblyscript-json/JSON/Obj#has
   if (result i32)
    local.get $0
-   i32.const 13328
+   i32.const 13424
    call $~lib/near-sdk-bindgen/index/decode<~lib/as-bignum/integer/safe/u128/u128,~lib/assemblyscript-json/JSON/Obj>
   else
-   i32.const 13328
+   i32.const 13424
    call $~lib/near-sdk-bindgen/index/requireParameter<~lib/as-bignum/integer/safe/u128/u128>
   end
   local.get $0
-  i32.const 13392
+  i32.const 13488
   call $~lib/assemblyscript-json/JSON/Obj#has
   if (result i64)
    local.get $0
-   i32.const 13392
+   i32.const 13488
    call $~lib/near-sdk-bindgen/index/decode<u64,~lib/assemblyscript-json/JSON/Obj>
   else
-   i32.const 13392
+   i32.const 13488
    call $~lib/near-sdk-bindgen/index/requireParameter<u64>
   end
   local.get $0
-  i32.const 13440
+  i32.const 13536
   call $~lib/assemblyscript-json/JSON/Obj#has
   if (result i64)
    local.get $0
-   i32.const 13440
+   i32.const 13536
    call $~lib/near-sdk-bindgen/index/decode<u64,~lib/assemblyscript-json/JSON/Obj>
   else
-   i32.const 13440
+   i32.const 13536
    call $~lib/near-sdk-bindgen/index/requireParameter<u64>
   end
   local.get $0
-  i32.const 14128
+  i32.const 14224
   call $~lib/assemblyscript-json/JSON/Obj#has
   if (result i32)
    local.get $0
-   i32.const 14128
+   i32.const 14224
    call $~lib/near-sdk-bindgen/index/decode<bool,~lib/assemblyscript-json/JSON/Obj>
   else
-   i32.const 14128
+   i32.const 14224
    call $~lib/near-sdk-bindgen/index/requireParameter<bool>
   end
   call $assembly/multicall/index/job_edit
@@ -26531,7 +26554,7 @@
   drop
   local.get $0
   i32.load
-  i32.const 14224
+  i32.const 14320
   local.get $3
   call $~lib/near-sdk-bindgen/index/encode<~lib/string/String,~lib/near-sdk-bindgen/index/JSONEncoder>
   drop
@@ -26712,7 +26735,7 @@
  (func $assembly/multicall/utils/Croncat#remove_task (param $0 i32) (param $1 i32) (param $2 i64) (param $3 i32) (result i32)
   local.get $0
   call $assembly/multicall/utils/Croncat#get_manager_address
-  i32.const 14336
+  i32.const 14432
   local.get $1
   local.get $2
   local.get $3
@@ -26987,11 +27010,11 @@
    call $~lib/near-sdk-bindgen/index/requireParameter<u32>
   end
   local.get $0
-  i32.const 14272
+  i32.const 14368
   call $~lib/assemblyscript-json/JSON/Obj#has
   if (result i32)
    local.get $0
-   i32.const 14272
+   i32.const 14368
    call $~lib/near-sdk-bindgen/index/decode<bool,~lib/assemblyscript-json/JSON/Obj>
   else
    i32.const 1
@@ -27049,15 +27072,15 @@
   call $~lib/string/String.__eq
   i32.eqz
   if
-   i32.const 14496
+   i32.const 14592
    i32.const 1
    local.get $0
    call $~lib/staticarray/StaticArray<~lib/string/String>#__uset
-   i32.const 14496
+   i32.const 14592
    i32.const 528
    call $~lib/staticarray/StaticArray<~lib/string/String>#join
    i32.const 8192
-   i32.const 162
+   i32.const 165
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -27078,16 +27101,16 @@
   i32.eq
   i32.eqz
   if
-   i32.const 14592
+   i32.const 14688
    i32.const 1
    local.get $1
    i32.const 10
    call $~lib/number/U32#toString
    call $~lib/staticarray/StaticArray<~lib/string/String>#__uset
-   i32.const 14592
+   i32.const 14688
    i32.const 528
    call $~lib/staticarray/StaticArray<~lib/string/String>#join
-   i32.const 13648
+   i32.const 13744
    i32.const 187
    i32.const 5
    call $~lib/builtins/abort
@@ -27099,8 +27122,8 @@
   i64.ge_u
   i32.eqz
   if
-   i32.const 14624
-   i32.const 13648
+   i32.const 14720
+   i32.const 13744
    i32.const 188
    i32.const 5
    call $~lib/builtins/abort
@@ -27112,13 +27135,13 @@
   i64.load offset=56
   i64.le_u
   if
-   i32.const 14816
+   i32.const 14912
    i32.const 1
    local.get $1
    i32.const 10
    call $~lib/number/U32#toString
    call $~lib/staticarray/StaticArray<~lib/string/String>#__uset
-   i32.const 14816
+   i32.const 14912
    i32.const 528
    call $~lib/staticarray/StaticArray<~lib/string/String>#join
    call $~lib/near-sdk-core/logging/logging.log<~lib/string/String>
@@ -27135,28 +27158,28 @@
   i64.const 1
   i64.add
   call $assembly/multicall/model/JobSchema#set:runs_current
-  i32.const 14960
+  i32.const 15056
   i32.const 1
   local.get $2
   i32.load
   i32.const 10
   call $~lib/number/U32#toString
   call $~lib/staticarray/StaticArray<~lib/string/String>#__uset
-  i32.const 14960
+  i32.const 15056
   i32.const 3
   local.get $2
   i64.load offset=48
   i32.const 10
   call $~lib/number/U64#toString
   call $~lib/staticarray/StaticArray<~lib/string/String>#__uset
-  i32.const 14960
+  i32.const 15056
   i32.const 5
   local.get $2
   i64.load offset=56
   i32.const 10
   call $~lib/number/U64#toString
   call $~lib/staticarray/StaticArray<~lib/string/String>#__uset
-  i32.const 14960
+  i32.const 15056
   i32.const 528
   call $~lib/staticarray/StaticArray<~lib/string/String>#join
   call $~lib/near-sdk-core/logging/logging.log<~lib/string/String>

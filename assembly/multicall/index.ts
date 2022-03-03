@@ -113,8 +113,12 @@ export function admins_remove (account_ids: string[]): void {
   _is_admin(context.predecessor);
   _assert_deposit()
 
-  for (let i = 0; i < account_ids.length; i++)
+  for (let i = 0; i < account_ids.length; i++) {
     admins.delete(account_ids[i]);
+  }
+
+  // assert there's at least 1 admin left, otherwise contract can be accidentally bricked
+  assert(admins.size >= 1, "contract must have at least 1 admin");
 }
 
 export function get_admins (start: i32 = 0, end: i32 = i32.MAX_VALUE): string[] {
