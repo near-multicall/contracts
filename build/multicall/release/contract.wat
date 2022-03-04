@@ -477,7 +477,7 @@
  (data (i32.const 13644) "<")
  (data (i32.const 13656) "\01\00\00\00&\00\00\00I\00n\00d\00e\00x\00 \00o\00u\00t\00 \00o\00f\00 \00b\00o\00u\00n\00d\00s")
  (data (i32.const 13708) "\\")
- (data (i32.const 13720) "\01\00\00\00F\00\00\00c\00o\00n\00t\00r\00a\00c\00t\00 \00m\00u\00s\00t\00 \00h\00a\00v\00e\00 \00a\00t\00 \00l\00e\00a\00s\00t\00 \001\00 \00a\00d\00m\00i\00n")
+ (data (i32.const 13720) "\01\00\00\00J\00\00\00c\00o\00n\00t\00r\00a\00c\00t\00 \00m\00u\00s\00t\00 \00h\00a\00v\00e\00 \00a\00t\00 \00l\00e\00a\00s\00t\00 \00o\00n\00e\00 \00a\00d\00m\00i\00n")
  (data (i32.const 13804) "\1c")
  (data (i32.const 13816) "\01\00\00\00\n\00\00\00s\00t\00a\00r\00t")
  (data (i32.const 13836) "\1c")
@@ -18001,8 +18001,8 @@
   global.get $assembly/multicall/index/admins
   i32.load offset=4
   call $~lib/near-sdk-core/collections/persistentVector/PersistentVector<~lib/near-sdk-core/collections/util/MapEntry<u32,assembly/multicall/model/JobSchema>>#get:length
-  i32.const 1
-  i32.lt_s
+  i32.const 0
+  i32.le_s
   if
    i32.const 13728
    i32.const 9216

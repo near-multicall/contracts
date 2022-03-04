@@ -101,9 +101,9 @@ export function tests(workspace: Workspace) {
       await alice.call(
         multicall.accountId,
         'admins_remove',
-        { account_ids: ["alice.test.near","alice.factory.test.near"] },
+        { account_ids: initial_admins },
         {
-          gas: Gas.parse('20 Tgas'),
+          gas: Gas.parse('200 Tgas'),
           attachedDeposit: NEAR.from('1') // 1 yocto
         }
       );
@@ -112,7 +112,8 @@ export function tests(workspace: Workspace) {
     let test_1_admins: string[] = await multicall.view('get_admins', {});
 
     test.true(
-      test_1_admins.toString() === initial_admins.toString()
+      ( test_1_admins.toString() === initial_admins.toString() )
+      && ( callError.kind.ExecutionError.includes("contract must have at least one admin.") )
     );
     test.log(`admins after test 1: "[${test_1_admins}]"`);
 

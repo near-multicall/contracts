@@ -91,7 +91,7 @@ export function ft_on_transfer (sender_id: string, amount: u128, msg: string): v
  */
 export function near_transfer (account_id: string, amount: u128 = u128.Max): void {
   _is_admin(context.predecessor);
-  _assert_deposit()
+  _assert_deposit();
 
   if (amount == u128.Max) {
     // calculate amount reserved for storage
@@ -103,7 +103,7 @@ export function near_transfer (account_id: string, amount: u128 = u128.Max): voi
 
 export function admins_add (account_ids: string[]): void {
   _is_admin(context.predecessor);
-  _assert_deposit()
+  _assert_deposit();
 
   for (let i = 0; i < account_ids.length; i++)
     admins.add(account_ids[i]);
@@ -111,14 +111,14 @@ export function admins_add (account_ids: string[]): void {
 
 export function admins_remove (account_ids: string[]): void {
   _is_admin(context.predecessor);
-  _assert_deposit()
+  _assert_deposit();
 
   for (let i = 0; i < account_ids.length; i++) {
     admins.delete(account_ids[i]);
   }
 
   // assert there's at least 1 admin left, otherwise contract can be accidentally bricked
-  assert(admins.size >= 1, "contract must have at least 1 admin");
+  assert(admins.size > 0, "contract must have at least one admin");
 }
 
 export function get_admins (start: i32 = 0, end: i32 = i32.MAX_VALUE): string[] {
@@ -127,7 +127,7 @@ export function get_admins (start: i32 = 0, end: i32 = i32.MAX_VALUE): string[] 
 
 export function tokens_add (addresses: string[]): void {
   _is_admin(context.predecessor);
-  _assert_deposit()
+  _assert_deposit();
 
   for (let i = 0; i < addresses.length; i++)
     tokens.add(addresses[i]);
@@ -135,7 +135,7 @@ export function tokens_add (addresses: string[]): void {
 
 export function tokens_remove (addresses: string[]): void {
   _is_admin(context.predecessor);
-  _assert_deposit()
+  _assert_deposit();
 
   for (let i = 0; i < addresses.length; i++)
     tokens.delete(addresses[i]);
