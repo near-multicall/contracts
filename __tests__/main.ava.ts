@@ -36,6 +36,7 @@ const workspace = Workspace.init(async ({root}) => {
   );
 
   // create a multicall instance for alice. Alice will be admin
+  // pre-load multicall contract with 2 NEAR (minus factory fee) for state storage
   await alice.call(
     multicallFactory.accountId,
     "create",
@@ -48,13 +49,11 @@ const workspace = Workspace.init(async ({root}) => {
     },
     {
       gas: Gas.parse("70 Tgas"),
-      attachedDeposit: NEAR.parse('1') // 1 NEAR, cover fee + initial multicall account storage costs
+      attachedDeposit: NEAR.parse('2') // 2 NEAR
     }
   );
 
   const multicall = multicallFactory.getAccount("alice");
-  // give multicall 100 NEAR for later testing 
-  await multicall.updateAccount({amount: NEAR.parse('100').toString()});
 
   // add nDAI to token whitelist
   await alice.call(

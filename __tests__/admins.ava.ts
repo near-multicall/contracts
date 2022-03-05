@@ -113,7 +113,7 @@ export function tests(workspace: Workspace) {
 
     test.true(
       ( test_1_admins.toString() === initial_admins.toString() )
-      && ( callError.kind.ExecutionError.includes("contract must have at least one admin.") )
+      && ( callError.kind.ExecutionError.includes("contract must have at least one admin") )
     );
     test.log(`admins after test 1: "[${test_1_admins}]"`);
 
