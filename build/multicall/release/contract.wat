@@ -53,10 +53,10 @@
  (import "env" "promise_create" (func $~lib/near-sdk-core/env/env/env.promise_create (param i64 i64 i64 i64 i64 i64 i64 i64) (result i64)))
  (import "env" "promise_then" (func $~lib/near-sdk-core/env/env/env.promise_then (param i64 i64 i64 i64 i64 i64 i64 i64 i64) (result i64)))
  (import "env" "storage_write" (func $~lib/near-sdk-core/env/env/env.storage_write (param i64 i64 i64 i64 i64) (result i64)))
+ (import "env" "value_return" (func $~lib/near-sdk-core/env/env/env.value_return (param i64 i64)))
  (import "env" "storage_usage" (func $~lib/near-sdk-core/env/env/env.storage_usage (result i64)))
  (import "env" "account_balance" (func $~lib/near-sdk-core/env/env/env.account_balance (param i64)))
  (import "env" "storage_remove" (func $~lib/near-sdk-core/env/env/env.storage_remove (param i64 i64 i64) (result i64)))
- (import "env" "value_return" (func $~lib/near-sdk-core/env/env/env.value_return (param i64 i64)))
  (import "env" "block_timestamp" (func $~lib/near-sdk-core/env/env/env.block_timestamp (result i64)))
  (import "env" "promise_results_count" (func $~lib/near-sdk-core/env/env/env.promise_results_count (result i64)))
  (import "env" "promise_result" (func $~lib/near-sdk-core/env/env/env.promise_result (param i64 i64) (result i64)))
@@ -572,9 +572,9 @@
  (data (i32.const 16320) "\1a\00\00\00 \00\00\00\00\00\00\00\02A")
  (data (i32.const 16360) "\17\00\00\00\02A")
  (data (i32.const 16376) "\17\00\00\00 \00\00\00\17\00\00\00 \00\00\00#\00\00\00 \00\00\00\17\00\00\00 \00\00\00\17\00\00\00 \00\00\00\17\00\00\00\00\00\00\00\'")
- (data (i32.const 16436) "\02\t\00\00\00\00\00\00\04A\00\00\00\00\00\00\02\02\00\00\00\00\00\00 \00\00\00\00\00\00\00d")
- (data (i32.const 16492) " ")
- (data (i32.const 16508) " \00\00\00\00\00\00\00A\08\00\00\02\00\00\00\02A")
+ (data (i32.const 16436) "\02\t\00\00\00\00\00\00\04A\00\00\00\00\00\00 \00\00\00\00\00\00\00\02\02\00\00\00\00\00\00 \00\00\00\00\00\00\00d")
+ (data (i32.const 16500) " ")
+ (data (i32.const 16516) "A\08\00\00\02\00\00\00\02A")
  (data (i32.const 16540) "\02A\00\00\00\00\00\00\02\01")
  (export "multicall" (func $assembly/multicall/index/__wrapper_multicall))
  (export "ft_on_transfer" (func $assembly/multicall/index/__wrapper_ft_on_transfer))
@@ -11132,7 +11132,7 @@
    i32.shr_u
    call $~lib/util/string/joinStringArray
    i32.const 9216
-   i32.const 159
+   i32.const 162
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -11216,7 +11216,7 @@
   if
    i32.const 9376
    i32.const 9216
-   i32.const 162
+   i32.const 165
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -11235,7 +11235,7 @@
   call $~lib/near-sdk-core/env/env/env.promise_batch_create
   local.set $1
   i32.const 8
-  i32.const 43
+  i32.const 44
   call $~lib/rt/stub/__new
   local.tee $0
   i64.const 0
@@ -11261,7 +11261,7 @@
   call $~lib/near-sdk-core/env/env/env.promise_batch_then
   local.set $2
   i32.const 8
-  i32.const 43
+  i32.const 44
   call $~lib/rt/stub/__new
   local.tee $0
   i64.const 0
@@ -11774,7 +11774,7 @@
    call $~lib/near-sdk-core/promise/ContractPromiseBatch.create
   else
    i32.const 8
-   i32.const 43
+   i32.const 44
    call $~lib/rt/stub/__new
    local.tee $1
    i64.const 0
@@ -11889,7 +11889,7 @@
   call $~lib/near-sdk-core/env/env/env.promise_batch_action_transfer
   local.get $0
  )
- (func $assembly/multicall/internal/_internal_multicall (param $0 i32)
+ (func $assembly/multicall/internal/_internal_multicall (param $0 i32) (result i32)
   (local $1 i32)
   (local $2 i32)
   (local $3 i32)
@@ -11898,23 +11898,23 @@
   (local $6 i64)
   local.get $0
   i32.load offset=12
-  local.set $1
+  local.set $2
   i32.const 16
-  i32.const 42
+  i32.const 43
   call $~lib/rt/stub/__new
-  local.tee $2
+  local.tee $1
   i32.const 0
   i32.store
-  local.get $2
+  local.get $1
   i32.const 0
   i32.store offset=4
-  local.get $2
+  local.get $1
   i32.const 0
   i32.store offset=8
-  local.get $2
+  local.get $1
   i32.const 0
   i32.store offset=12
-  local.get $1
+  local.get $2
   i32.const 134217727
   i32.gt_u
   if
@@ -11925,9 +11925,9 @@
    call $~lib/builtins/abort
    unreachable
   end
-  local.get $1
+  local.get $2
   i32.const 8
-  local.get $1
+  local.get $2
   i32.const 8
   i32.gt_u
   select
@@ -11939,17 +11939,17 @@
   local.tee $5
   local.get $4
   call $~lib/memory/memory.fill
-  local.get $2
+  local.get $1
   local.get $5
   i32.store
-  local.get $2
+  local.get $1
   local.get $5
   i32.store offset=4
-  local.get $2
+  local.get $1
   local.get $4
   i32.store offset=8
-  local.get $2
   local.get $1
+  local.get $2
   i32.store offset=12
   loop $for-loop|0
    local.get $3
@@ -11962,41 +11962,41 @@
     call $~lib/array/Array<~lib/assemblyscript-json/JSON/Value>#__get
     local.set $4
     i32.const 0
-    local.set $1
+    local.set $2
     loop $for-loop|1
-     local.get $1
+     local.get $2
      local.get $4
      i32.load offset=12
      i32.lt_s
      if
-      local.get $1
+      local.get $2
       i32.const 0
       i32.gt_s
       if (result i64)
        local.get $4
-       local.get $1
+       local.get $2
        call $~lib/array/Array<~lib/assemblyscript-json/JSON/Value>#__get
        i32.const 0
        local.get $6
        call $assembly/multicall/internal/make_batch
       else
        local.get $4
-       local.get $1
+       local.get $2
        call $~lib/array/Array<~lib/assemblyscript-json/JSON/Value>#__get
        i32.const 1
        i64.const 0
        call $assembly/multicall/internal/make_batch
       end
       local.set $6
-      local.get $1
+      local.get $2
       i32.const 1
       i32.add
-      local.set $1
+      local.set $2
       br $for-loop|1
      end
     end
     local.get $3
-    local.get $2
+    local.get $1
     i32.load offset=12
     i32.ge_u
     if
@@ -12011,18 +12011,18 @@
       call $~lib/builtins/abort
       unreachable
      end
-     local.get $2
+     local.get $1
      local.get $3
      i32.const 1
      i32.add
-     local.tee $1
+     local.tee $2
      i32.const 3
      call $~lib/array/ensureCapacity
-     local.get $2
      local.get $1
+     local.get $2
      i32.store offset=12
     end
-    local.get $2
+    local.get $1
     i32.load offset=4
     local.get $3
     i32.const 3
@@ -12038,16 +12038,16 @@
    end
   end
   i32.const 8
-  i32.const 43
+  i32.const 44
   call $~lib/rt/stub/__new
   local.tee $0
   i64.const 0
   i64.store
   local.get $0
-  local.get $2
+  local.get $1
   i32.load offset=4
   i64.extend_i32_u
-  local.get $2
+  local.get $1
   i32.load offset=12
   i64.extend_i32_s
   call $~lib/near-sdk-core/env/env/env.promise_and
@@ -12064,8 +12064,18 @@
   i64.const 0
   call $~lib/as-bignum/integer/u128/u128#constructor
   call $~lib/near-sdk-core/promise/ContractPromiseBatch#transfer
+  local.set $1
+  i32.const 8
+  i32.const 42
+  call $~lib/rt/stub/__new
+  local.tee $0
+  i64.const 0
+  i64.store
+  local.get $0
+  local.get $1
   i64.load
-  call $~lib/near-sdk-core/env/env/env.promise_return
+  i64.store
+  local.get $0
  )
  (func $assembly/multicall/index/__wrapper_multicall
   (local $0 i32)
@@ -12090,6 +12100,8 @@
   call $assembly/multicall/index/_is_admin
   call $assembly/multicall/index/_assert_deposit
   call $assembly/multicall/internal/_internal_multicall
+  i64.load
+  call $~lib/near-sdk-core/env/env/env.promise_return
  )
  (func $~lib/near-sdk-bindgen/index/requireParameter<~lib/string/String> (param $0 i32) (result i32)
   i32.const 6720
@@ -12385,7 +12397,7 @@
    unreachable
   end
   i32.const 8
-  i32.const 45
+  i32.const 46
   call $~lib/rt/stub/__new
   block $__inlined_func$~lib/rt/__instanceof21 (result i32)
    local.get $0
@@ -12720,7 +12732,7 @@
    unreachable
   end
   i32.const 4
-  i32.const 46
+  i32.const 47
   call $~lib/rt/stub/__new
   local.set $2
   block $__inlined_func$~lib/rt/__instanceof21 (result i32)
@@ -13235,7 +13247,7 @@
    unreachable
   end
   i32.const 4
-  i32.const 47
+  i32.const 48
   call $~lib/rt/stub/__new
   local.set $2
   block $__inlined_func$~lib/rt/__instanceof21 (result i32)
@@ -15706,7 +15718,7 @@
   call $~lib/near-sdk-core/env/env/env.promise_then
   local.set $4
   i32.const 8
-  i32.const 49
+  i32.const 42
   call $~lib/rt/stub/__new
   local.tee $0
   i64.const 0
@@ -16416,7 +16428,7 @@
   call $~lib/string/String.__eq
   if
    i32.const 4
-   i32.const 47
+   i32.const 48
    call $~lib/rt/stub/__new
    local.tee $4
    i32.const 0
@@ -16428,7 +16440,7 @@
    local.get $0
    i32.load offset=16
    i32.const 36
-   i32.const 48
+   i32.const 49
    call $~lib/rt/stub/__new
    local.tee $1
    i32.const 0
@@ -16626,7 +16638,7 @@
    call $~lib/near-sdk-core/env/env/env.promise_create
    local.set $5
    i32.const 8
-   i32.const 49
+   i32.const 42
    call $~lib/rt/stub/__new
    local.tee $1
    i64.const 0
@@ -16732,6 +16744,44 @@
    call $~lib/near-sdk-core/collections/persistentUnorderedMap/PersistentUnorderedMap<u32,assembly/multicall/model/JobSchema>#set
   end
  )
+ (func $~lib/near-sdk-bindgen/index/encode<~lib/as-bignum/integer/safe/u128/u128,~lib/typedarray/Uint8Array>@varargs (param $0 i32) (result i32)
+  (local $1 i32)
+  block $2of2
+   block $1of2
+    block $outOfRange
+     global.get $~argumentsLength
+     i32.const 1
+     i32.sub
+     br_table $1of2 $1of2 $2of2 $outOfRange
+    end
+    unreachable
+   end
+   call $~lib/near-sdk-bindgen/index/JSONEncoder#constructor
+   local.set $1
+  end
+  local.get $0
+  if
+   local.get $0
+   call $~lib/as-bignum/integer/u128/u128#toString
+   local.set $0
+   local.get $1
+   i32.const 1552
+   call $~lib/assemblyscript-json/encoder/JSONEncoder#writeKey
+   local.get $1
+   local.get $0
+   call $~lib/assemblyscript-json/encoder/JSONEncoder#writeString
+  else
+   local.get $1
+   i32.const 1552
+   call $~lib/assemblyscript-json/encoder/JSONEncoder#writeKey
+   local.get $1
+   i32.load offset=4
+   i32.const 4496
+   call $~lib/array/Array<~lib/assemblyscript-json/JSON/Value>#push
+  end
+  local.get $1
+  call $~lib/assemblyscript-json/encoder/JSONEncoder#serialize
+ )
  (func $assembly/multicall/index/__wrapper_ft_on_transfer
   (local $0 i32)
   (local $1 i32)
@@ -16805,7 +16855,7 @@
    i32.shr_u
    call $~lib/util/string/joinStringArray
    i32.const 9216
-   i32.const 40
+   i32.const 42
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -16825,6 +16875,7 @@
    call $~lib/near-sdk-bindgen/index/decode<assembly/multicall/model/MulticallArgs,~lib/typedarray/Uint8Array>
    i32.load
    call $assembly/multicall/internal/_internal_multicall
+   drop
   else
    local.get $0
    i32.load
@@ -16842,6 +16893,22 @@
     call $assembly/multicall/jobs/Jobs#activate
    end
   end
+  i32.const 16
+  i32.const 3
+  call $~lib/rt/stub/__new
+  i64.const 0
+  i64.const 0
+  call $~lib/as-bignum/integer/u128/u128#constructor
+  i32.const 1
+  global.set $~argumentsLength
+  call $~lib/near-sdk-bindgen/index/encode<~lib/as-bignum/integer/safe/u128/u128,~lib/typedarray/Uint8Array>@varargs
+  local.tee $0
+  i32.load offset=8
+  i64.extend_i32_s
+  local.get $0
+  i32.load offset=4
+  i64.extend_i32_u
+  call $~lib/near-sdk-core/env/env/env.value_return
  )
  (func $~lib/as-bignum/integer/safe/u128/u128.mul (param $0 i32) (param $1 i32) (result i32)
   (local $2 i64)
@@ -18006,7 +18073,7 @@
   if
    i32.const 13728
    i32.const 9216
-   i32.const 71
+   i32.const 74
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -18582,44 +18649,6 @@
   i64.extend_i32_u
   call $~lib/near-sdk-core/env/env/env.value_return
  )
- (func $~lib/near-sdk-bindgen/index/encode<~lib/as-bignum/integer/safe/u128/u128,~lib/typedarray/Uint8Array>@varargs (param $0 i32) (result i32)
-  (local $1 i32)
-  block $2of2
-   block $1of2
-    block $outOfRange
-     global.get $~argumentsLength
-     i32.const 1
-     i32.sub
-     br_table $1of2 $1of2 $2of2 $outOfRange
-    end
-    unreachable
-   end
-   call $~lib/near-sdk-bindgen/index/JSONEncoder#constructor
-   local.set $1
-  end
-  local.get $0
-  if
-   local.get $0
-   call $~lib/as-bignum/integer/u128/u128#toString
-   local.set $0
-   local.get $1
-   i32.const 1552
-   call $~lib/assemblyscript-json/encoder/JSONEncoder#writeKey
-   local.get $1
-   local.get $0
-   call $~lib/assemblyscript-json/encoder/JSONEncoder#writeString
-  else
-   local.get $1
-   i32.const 1552
-   call $~lib/assemblyscript-json/encoder/JSONEncoder#writeKey
-   local.get $1
-   i32.load offset=4
-   i32.const 4496
-   call $~lib/array/Array<~lib/assemblyscript-json/JSON/Value>#push
-  end
-  local.get $1
-  call $~lib/assemblyscript-json/encoder/JSONEncoder#serialize
- )
  (func $assembly/multicall/index/__wrapper_init
   (local $0 i32)
   (local $1 i32)
@@ -18700,7 +18729,7 @@
   if
    i32.const 14128
    i32.const 9216
-   i32.const 90
+   i32.const 93
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -19686,7 +19715,7 @@
   if
    i32.const 14848
    i32.const 9216
-   i32.const 168
+   i32.const 171
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -20766,7 +20795,7 @@
   call $~lib/near-sdk-core/env/env/env.promise_create
   local.set $3
   i32.const 8
-  i32.const 49
+  i32.const 42
   call $~lib/rt/stub/__new
   local.tee $0
   i64.const 0
@@ -21242,7 +21271,7 @@
    local.get $0
    i32.load offset=12
    i32.const 4
-   i32.const 47
+   i32.const 48
    call $~lib/rt/stub/__new
    local.tee $2
    i32.const 0
@@ -21406,7 +21435,7 @@
    i32.shr_u
    call $~lib/util/string/joinStringArray
    i32.const 9216
-   i32.const 165
+   i32.const 168
    i32.const 3
    call $~lib/builtins/abort
    unreachable
@@ -21547,6 +21576,8 @@
    local.get $0
    i32.load offset=68
    call $assembly/multicall/internal/_internal_multicall
+   i64.load
+   call $~lib/near-sdk-core/env/env/env.promise_return
   end
  )
  (func $~start
@@ -21741,7 +21772,7 @@
   local.tee $0
   i32.load offset=12
   local.tee $1
-  i32.const 44
+  i32.const 45
   call $~lib/rt/stub/__new
   local.tee $2
   local.get $0

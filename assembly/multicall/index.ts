@@ -1,4 +1,4 @@
-import { context, ContractPromiseBatch, storage, PersistentSet, u128, base64, util } from 'near-sdk-as';
+import { context, ContractPromiseBatch, ContractPromise, storage, PersistentSet, u128, base64, util } from 'near-sdk-as';
 import { BatchCall, JobSchema, FtOnTransferArgs, MulticallArgs, JobActivateArgs } from './model';
 import { _internal_multicall } from './internal';
 import { Jobs } from './jobs';
@@ -29,13 +29,15 @@ const _jobs = new Jobs(
 /**
  * execute an array of contract calls
  * 
- * @param actions 
+ * @param calls function call batches to execute
+ * @returns a promise that aggregates all calls in multicall 
  */
 export function multicall (calls: BatchCall[][]): void {
   _is_admin(context.predecessor);
   _assert_deposit();
 
-  _internal_multicall(calls);
+  const final_promise: ContractPromise = _internal_multicall(calls);
+  final_promise.returnAsResult(); // return promise as result
 }
 
 /**
@@ -43,22 +45,16 @@ export function multicall (calls: BatchCall[][]): void {
  * 1- multicall
  * 2- job_activate
  * 
- * !!! Note: NEP-141 indicates that ft_on_transfer should return number of unused tokens
- * in string form. However we return promises as result. The token contract interprets
- * this as ft_on_transfer failing, which leads it to rollback the transfer from ft_resolve_transfer.
- * 
- * !!! Why we do this? this allows the calls made by multicall to use any amount of the
- * attached fungible tokens without worrying about re-imbursement of unused amount. That will
- * be done automatically by the token's ft_resolve_tranfer when it interprets this as "failed".
- * Of course tokens spent by multicall will not be re-imbursed, only the unused amount will be.
+ * NEP-141 indicates ft_on_transfer returns the number of unused tokens
+ * in string form. We always keep all attached tokens, so we return "0"
  * 
  * 
  * @param sender_id 
  * @param amount 
- * @param msg 
- * @returns 
+ * @param msg information on the function to execute 
+ * @returns "0"
  */
-export function ft_on_transfer (sender_id: string, amount: u128, msg: string): void {
+export function ft_on_transfer (sender_id: string, amount: u128, msg: string): u128 {
   assert(tokens.has(context.predecessor), `${context.predecessor} not on token whitelist`);
   _is_admin(sender_id);
 
@@ -69,18 +65,17 @@ export function ft_on_transfer (sender_id: string, amount: u128, msg: string): v
     const multicallArgs: MulticallArgs = util.parseFromBytes<MulticallArgs>(
       base64.decode(methodAndArgs.args)
     );
-    // call multicall (returns promise)
+    // call multicall
     _internal_multicall(multicallArgs.calls);
   } else if (methodAndArgs.function_id == "job_activate") {
     const jobActivateArgs: JobActivateArgs = util.parseFromBytes<JobActivateArgs>(
       base64.decode(methodAndArgs.args)
     );
-    // call job_activate (returns promise)
+    // call job_activate
     _jobs.activate(jobActivateArgs.job_id);
   }
 
-  // otherwise don't return anything, ft standard reimburses full amount to sender
-
+  return u128.Zero;
 }
 
 /**

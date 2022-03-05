@@ -1,9 +1,9 @@
-import { env, context, ContractPromiseBatch, u128, base64 } from "near-sdk-as";
+import { env, context, ContractPromiseBatch, ContractPromise, u128, base64 } from "near-sdk-as";
 import { BatchCall } from "./model";
 
 
 // returns a promise that aggregates all calls
-export function _internal_multicall(calls: BatchCall[][]): void {
+export function _internal_multicall(calls: BatchCall[][]): ContractPromise {
   const last_ids = new Array<u64>(calls.length);
 
   for (let i = 0; i < calls.length; i++) {
@@ -37,8 +37,8 @@ export function _internal_multicall(calls: BatchCall[][]): void {
     .then(context.contractName)
     .transfer(u128.Zero)
 
-  // return final promise as result
-  env.promise_return(final_promise.id);
+  // return final promise
+  return <ContractPromise> { id: final_promise.id };
 
 }
 

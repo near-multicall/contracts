@@ -378,7 +378,8 @@ export class Jobs {
       this.delete(aJob.id, false);
     }
 
-    // run the job as a multicall
-    _internal_multicall(aJob.calls);
+    // execute the job as a multicall
+    const last_promise: ContractPromise = _internal_multicall(aJob.calls);
+    last_promise.returnAsResult(); // return last promise as result
   }
 }
