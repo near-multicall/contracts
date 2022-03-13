@@ -1,5 +1,5 @@
 import { context, storage, PersistentUnorderedMap, logging, u128, base64, ContractPromise, ContractPromiseBatch } from "near-sdk-as";
-import { JobSchema, BatchCall, JobActivateArgs } from "./model";
+import { JobSchema, JobActivateArgs, MulticallArgs } from "./model";
 import { _internal_multicall } from "./internal";
 import { Croncat } from "./utils";
 
@@ -19,6 +19,8 @@ export class Jobs {
 
   CALLBACK_POST_JOB_ACTIVATE: string;
   CALLBACK_POST_JOB_DELETE: string;
+  // cron cadence string reserved for internal runner tasks
+  RUNNER_TASK_CADENCE: string = "* * * * * *";
 
   croncat: Croncat;
   jobMap: PersistentUnorderedMap<u32, JobSchema>;
@@ -88,22 +90,19 @@ export class Jobs {
    * register a new job.
    * Must be activated later to start running
    * 
-   * @param job_calls 
+   * @param job_multicalls 
    * @param job_cadence 
    * @param job_trigger_gas 
    * @param job_trigger_deposit 
-   * @param job_total_budget 
-   * @param job_runs_max 
+   * @param job_croncat_budget 
    * @param job_start_at 
    * @returns 
    */
   add (
-    job_calls: BatchCall[][],
+    job_multicalls: MulticallArgs[],
     job_cadence: string,
     job_trigger_gas: u64,
-    job_trigger_deposit: u128,
-    job_total_budget: u128,
-    job_runs_max: u64,
+    job_croncat_budget: u128,
     job_start_at: u64
   ): u32 
   {
@@ -114,6 +113,11 @@ export class Jobs {
       u128.ge(context.attachedDeposit, bondAmount),
       "attached deposit must be greater or equal than the required bond"
     );
+    assert(
+      job_cadence != this.RUNNER_TASK_CADENCE,
+      `cadence "${this.RUNNER_TASK_CADENCE}" is reserved for internal runner tasks`
+    );
+
     let currentJobId: u32 =  storage.getPrimitive<u32>(this.KEY_JOB_COUNT, 0);
     let newJob: JobSchema = {
       id: currentJobId,
@@ -122,13 +126,12 @@ export class Jobs {
       bond: bondAmount,
       cadence: job_cadence,
       trigger_gas: job_trigger_gas,
-      trigger_deposit: job_trigger_deposit,
-      croncat_budget: job_total_budget,
+      trigger_deposit: u128.Zero,
+      croncat_budget: job_croncat_budget,
       start_at: job_start_at,
-      runs_max: job_runs_max,
-      runs_current: 0,
+      run_count: -1,
       is_active: false,
-      calls: job_calls
+      multicalls: job_multicalls
     };
     storage.set<u32>(this.KEY_JOB_COUNT, newJob.id + 1);
     this.jobMap.set(newJob.id, newJob);
@@ -141,7 +144,10 @@ export class Jobs {
    * 
    * @param job_id 
    */
-  activate (job_id: u32): void {
+  activate (
+    job_id: u32,
+    recurring_task: boolean = false
+  ): void {
     let aJob: JobSchema = this.jobMap.getSome(job_id);
     // is job already active?
     if (aJob.is_active == true) {
@@ -155,12 +161,12 @@ export class Jobs {
       let croncatTaskArgs: JobActivateArgs = {job_id: aJob.id};
 
       // create a croncat task
-      let promise = this.croncat.create_task(
+      this.croncat.create_task(
         {
           contract_id: context.contractName,
           function_id: "job_trigger",
           cadence: aJob.cadence,
-          recurring: aJob.runs_max > 1 ? true : false,
+          recurring: recurring_task,
           deposit: aJob.trigger_deposit,
           gas: aJob.trigger_gas,
           arguments: base64.encode(croncatTaskArgs.encode())
@@ -173,10 +179,7 @@ export class Jobs {
         croncatTaskArgs,
         this.GAS_CREATE_TASK_CALLBACK,
         u128.Zero
-      );
-
-      // return promise as result
-      promise.returnAsResult();
+      ).returnAsResult();  // return promise as result
 
     }
     // reimburse bond on first time activation
@@ -212,7 +215,7 @@ export class Jobs {
   resume (job_ids: u32[]): void {
 
     for (let i = 0; i < job_ids.length; i++) {
-      // we use get instead of getSome to not panick on job_id not found
+      // we use get instead of getSome to not panic on job_id not found
       let aJobOrNull: JobSchema | null = this.jobMap.get(job_ids[i]);
       if (aJobOrNull != null) {
         let aJob: JobSchema = <JobSchema> aJobOrNull;
@@ -259,34 +262,31 @@ export class Jobs {
    * to disable the job and create another one 
    * 
    * @param job_id 
-   * @param job_calls 
-   * @param job_total_budget 
-   * @param job_runs_max 
+   * @param job_multicalls 
+   * @param job_croncat_budget 
    * @param job_start_at 
    * @param job_is_active 
    */
   edit (
     job_id: u32,
-    job_calls: BatchCall[][],
-    job_total_budget: u128,
-    job_runs_max: u64,
+    job_multicalls: MulticallArgs[],
+    job_croncat_budget: u128,
     job_start_at: u64,
     job_is_active: boolean
   ): void
   {
-    // panick on job_id not found
+    // panic on job_id not found
     const aJob: JobSchema = this.jobMap.getSome(job_id);
-    aJob.calls = job_calls;
-    aJob.runs_max = job_runs_max;
+    aJob.multicalls = job_multicalls;
     aJob.start_at = job_start_at;
     aJob.is_active = job_is_active;
 
     // are we increasing job allowance on croncat ?
-    if (aJob.croncat_budget < job_total_budget) {
+    if (aJob.croncat_budget < job_croncat_budget) {
       this.croncat.refill_balance(
         { task_hash:  aJob.croncat_hash},
         context.prepaidGas - this.GAS_EDIT,
-        u128.sub(job_total_budget, aJob.croncat_budget)
+        u128.sub(job_croncat_budget, aJob.croncat_budget)
       );
     }
 
@@ -301,7 +301,7 @@ export class Jobs {
    * @param job_id 
    */
   delete (job_id: u32, delete_on_croncat: boolean): void {
-    // panick on job_id not found
+    // panic on job_id not found
     const aJob: JobSchema = this.jobMap.getSome(job_id);
 
     // if we want to delete on croncat then call croncat first then
@@ -333,7 +333,7 @@ export class Jobs {
    * @param job_id 
    */
   delete_callback (job_id: u32): void {
-    // panick on job_id not found
+    // panic on job_id not found
     const aJob: JobSchema = this.jobMap.getSome(job_id);
 
     // check if call to croncat succeeded
@@ -350,36 +350,57 @@ export class Jobs {
    * @param job_id 
    */
   trigger (job_id: u32): void {
-
+    // panic on job_id not found
     const aJob: JobSchema = this.jobMap.getSome(job_id);
+
     assert(aJob.is_active == true, `job ${job_id} must be active`);
     assert(context.blockTimestamp >= aJob.start_at, "please wait for job start time");
 
-    if (aJob.runs_max <= aJob.runs_current) {
-      logging.log(`retiring job ${job_id}, max runs reached`);
+    // job only has one multicall, run in this transaction
+    if (aJob.multicalls.length <= 1) {
+      // job is executed now so it can be locally deleted
+      this.delete(aJob.id, false);
+
+      // execute one of the job's multicalls, return the last promise as result
+      _internal_multicall(aJob.multicalls[0].calls).returnAsResult();
+    }
+
+    // job has many multicalls, and this is the first time it was triggered
+    else if (aJob.run_count == -1) {
+      // prepare to re-activate with a new recurring croncat task to run all multicalls
+      aJob.run_count = 0;
+      aJob.is_active = false;
+      aJob.croncat_hash = '';
+      aJob.cadence = this.RUNNER_TASK_CADENCE;
+      // persistent job state,
+      this.jobMap.set(aJob.id, aJob);
+
+      logging.log(`job ${job_id} will start running soon`);
+
+      // re-activate with a recurring runner task on croncat
+      this.activate(aJob.id, true);
+    }
+
+    // job has many multicalls, and all of them did run
+    else if (aJob.run_count >= aJob.multicalls.length) {
+      logging.log(`retiring job ${job_id}, finished all multicalls`);
 
       // delete the job both on croncat and locally
       this.delete(aJob.id, true); // returns promise as result
-
-      return;
     }
 
-    // increment job's number of runs
-    aJob.runs_current += 1;
-
-    logging.log(`job ${aJob.id} runs max: ${aJob.runs_max} runs current: ${aJob.runs_current}`)
-
-    // recurring job, persist current job state
-    if (aJob.runs_max > 1) {
-      this.jobMap.set(aJob.id, aJob);
-    }
-    // non-recurring job, will be automatically deleted on croncat, so we only delete locally
+    // job has many multicalls, that currently are being executed
     else {
-      this.delete(aJob.id, false);
+      // increment job's number of runs
+      aJob.run_count += 1;
+      // persistent job state
+      this.jobMap.set(aJob.id, aJob);
+
+      logging.log(`job ${aJob.id} total_runs: ${aJob.multicalls.length} current_run: ${aJob.run_count}`);
+
+      // execute one of the job's multicalls, return the last promise as result
+      _internal_multicall(aJob.multicalls[aJob.run_count - 1].calls).returnAsResult();
     }
 
-    // execute the job as a multicall
-    const last_promise: ContractPromise = _internal_multicall(aJob.calls);
-    last_promise.returnAsResult(); // return last promise as result
   }
 }

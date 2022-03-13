@@ -63,8 +63,7 @@ export class JobSchema {
   trigger_deposit: u128;
   croncat_budget: u128;
   start_at: u64;
-  runs_max: u64;
-  runs_current: u64;
+  run_count: i32;
   is_active: boolean;
-  calls: BatchCall[][];
+  multicalls: MulticallArgs[];
 }

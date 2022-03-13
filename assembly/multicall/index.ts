@@ -218,33 +218,27 @@ export function get_jobs (start: i32 = 0, end: i32 = _jobs.jobMap.length): JobSc
 /**
  * register a new job.
  * 
- * @param job_calls 
+ * @param job_multicalls 
  * @param job_cadence 
  * @param job_trigger_gas 
- * @param job_trigger_deposit 
  * @param job_total_budget 
- * @param job_runs_max 
  * @param job_start_at 
  * @returns 
  */
  export function job_add (
-  job_calls: BatchCall[][],
+  job_multicalls: MulticallArgs[],
   job_cadence: string,
   job_trigger_gas: u64,
-  job_trigger_deposit: u128,
   job_total_budget: u128,
-  job_runs_max: u64,
   job_start_at: u64 = context.blockTimestamp
 ): u32 
 {
   // anyone can add jobs if they pay required bond
   return _jobs.add(
-    job_calls,
+    job_multicalls,
     job_cadence,
     job_trigger_gas,
-    job_trigger_deposit,
     job_total_budget,
-    job_runs_max,
     job_start_at
   );
 }
@@ -297,17 +291,15 @@ export function jobs_pause (job_ids: u32[]): void {
  * to disable the job and create another one 
  * 
  * @param job_id 
- * @param job_calls 
+ * @param job_multicalls 
  * @param job_total_budget 
- * @param job_runs_max 
  * @param job_start_at 
  * @param job_is_active 
  */
 export function job_edit (
   job_id: u32,
-  job_calls: BatchCall[][],
+  job_multicalls: MulticallArgs[],
   job_total_budget: u128,
-  job_runs_max: u64,
   job_start_at: u64,
   job_is_active: boolean
 ): void {
@@ -316,9 +308,8 @@ export function job_edit (
 
   _jobs.edit(
     job_id,
-    job_calls,
+    job_multicalls,
     job_total_budget,
-    job_runs_max,
     job_start_at,
     job_is_active
   );
