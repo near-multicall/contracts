@@ -1,0 +1,14 @@
+diff --git a/node_modules/near-sdk-core/assembly/collections/persistentSet.ts b/node_modules/near-sdk-core/assembly/collections/persistentSet.ts
+index 3f4385e..7f78b6c 100644
+--- a/node_modules/near-sdk-core/assembly/collections/persistentSet.ts
++++ b/node_modules/near-sdk-core/assembly/collections/persistentSet.ts
+@@ -90,6 +90,9 @@ export class PersistentSet<T> {
+     // update our accounting of items in the set
+     const swapKey = this._hashedItem(swapItem);
+     this._map.set(swapKey, index);
++    
++    // !! IMPORTANT temporary patch
++    this._map.delete(key);
+   }
+ 
+   /**

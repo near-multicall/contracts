@@ -1,4 +1,4 @@
-import { context, ContractPromiseBatch, storage, PersistentSet, u128, base64, util } from 'near-sdk-as';
+import { context, ContractPromiseBatch, ContractPromise, storage, PersistentSet, u128, base64, util } from 'near-sdk-as';
 import { BatchCall, JobSchema, FtOnTransferArgs, MulticallArgs, JobActivateArgs } from './model';
 import { _internal_multicall } from './internal';
 import { Jobs } from './jobs';
@@ -29,13 +29,15 @@ const _jobs = new Jobs(
 /**
  * execute an array of contract calls
  * 
- * @param actions 
+ * @param calls function call batches to execute
+ * @returns a promise that aggregates all calls in multicall 
  */
 export function multicall (calls: BatchCall[][]): void {
   _is_admin(context.predecessor);
   _assert_deposit();
 
-  _internal_multicall(calls);
+  // run multicall, return its final promise as result
+  _internal_multicall(calls).returnAsResult();
 }
 
 /**
@@ -43,22 +45,16 @@ export function multicall (calls: BatchCall[][]): void {
  * 1- multicall
  * 2- job_activate
  * 
- * !!! Note: NEP-141 indicates that ft_on_transfer should return number of unused tokens
- * in string form. However we return promises as result. The token contract interprets
- * this as ft_on_transfer failing, which leads it to rollback the transfer from ft_resolve_transfer.
- * 
- * !!! Why we do this? this allows the calls made by multicall to use any amount of the
- * attached fungible tokens without worrying about re-imbursement of unused amount. That will
- * be done automatically by the token's ft_resolve_tranfer when it interprets this as "failed".
- * Of course tokens spent by multicall will not be re-imbursed, only the unused amount will be.
+ * NEP-141 indicates ft_on_transfer returns the number of unused tokens
+ * in string form. We always keep all attached tokens, so we return "0"
  * 
  * 
  * @param sender_id 
  * @param amount 
- * @param msg 
- * @returns 
+ * @param msg information on the function to execute 
+ * @returns "0"
  */
-export function ft_on_transfer (sender_id: string, amount: u128, msg: string): void {
+export function ft_on_transfer (sender_id: string, amount: u128, msg: string): u128 {
   assert(tokens.has(context.predecessor), `${context.predecessor} not on token whitelist`);
   _is_admin(sender_id);
 
@@ -69,18 +65,17 @@ export function ft_on_transfer (sender_id: string, amount: u128, msg: string): v
     const multicallArgs: MulticallArgs = util.parseFromBytes<MulticallArgs>(
       base64.decode(methodAndArgs.args)
     );
-    // call multicall (returns promise)
+    // call multicall
     _internal_multicall(multicallArgs.calls);
   } else if (methodAndArgs.function_id == "job_activate") {
     const jobActivateArgs: JobActivateArgs = util.parseFromBytes<JobActivateArgs>(
       base64.decode(methodAndArgs.args)
     );
-    // call job_activate (returns promise)
+    // call job_activate
     _jobs.activate(jobActivateArgs.job_id);
   }
 
-  // otherwise don't return anything, ft standard reimburses full amount to sender
-
+  return u128.Zero;
 }
 
 /**
@@ -91,7 +86,7 @@ export function ft_on_transfer (sender_id: string, amount: u128, msg: string): v
  */
 export function near_transfer (account_id: string, amount: u128 = u128.Max): void {
   _is_admin(context.predecessor);
-  _assert_deposit()
+  _assert_deposit();
 
   if (amount == u128.Max) {
     // calculate amount reserved for storage
@@ -103,7 +98,7 @@ export function near_transfer (account_id: string, amount: u128 = u128.Max): voi
 
 export function admins_add (account_ids: string[]): void {
   _is_admin(context.predecessor);
-  _assert_deposit()
+  _assert_deposit();
 
   for (let i = 0; i < account_ids.length; i++)
     admins.add(account_ids[i]);
@@ -111,10 +106,14 @@ export function admins_add (account_ids: string[]): void {
 
 export function admins_remove (account_ids: string[]): void {
   _is_admin(context.predecessor);
-  _assert_deposit()
+  _assert_deposit();
 
-  for (let i = 0; i < account_ids.length; i++)
+  for (let i = 0; i < account_ids.length; i++) {
     admins.delete(account_ids[i]);
+  }
+
+  // assert there's at least 1 admin left, otherwise contract can be accidentally bricked
+  assert(admins.size > 0, "contract must have at least one admin");
 }
 
 export function get_admins (start: i32 = 0, end: i32 = i32.MAX_VALUE): string[] {
@@ -123,7 +122,7 @@ export function get_admins (start: i32 = 0, end: i32 = i32.MAX_VALUE): string[] 
 
 export function tokens_add (addresses: string[]): void {
   _is_admin(context.predecessor);
-  _assert_deposit()
+  _assert_deposit();
 
   for (let i = 0; i < addresses.length; i++)
     tokens.add(addresses[i]);
@@ -131,7 +130,7 @@ export function tokens_add (addresses: string[]): void {
 
 export function tokens_remove (addresses: string[]): void {
   _is_admin(context.predecessor);
-  _assert_deposit()
+  _assert_deposit();
 
   for (let i = 0; i < addresses.length; i++)
     tokens.delete(addresses[i]);
@@ -219,33 +218,27 @@ export function get_jobs (start: i32 = 0, end: i32 = _jobs.jobMap.length): JobSc
 /**
  * register a new job.
  * 
- * @param job_calls 
+ * @param job_multicalls 
  * @param job_cadence 
  * @param job_trigger_gas 
- * @param job_trigger_deposit 
  * @param job_total_budget 
- * @param job_runs_max 
  * @param job_start_at 
  * @returns 
  */
  export function job_add (
-  job_calls: BatchCall[][],
+  job_multicalls: MulticallArgs[],
   job_cadence: string,
   job_trigger_gas: u64,
-  job_trigger_deposit: u128,
   job_total_budget: u128,
-  job_runs_max: u64,
   job_start_at: u64 = context.blockTimestamp
 ): u32 
 {
   // anyone can add jobs if they pay required bond
   return _jobs.add(
-    job_calls,
+    job_multicalls,
     job_cadence,
     job_trigger_gas,
-    job_trigger_deposit,
     job_total_budget,
-    job_runs_max,
     job_start_at
   );
 }
@@ -298,17 +291,15 @@ export function jobs_pause (job_ids: u32[]): void {
  * to disable the job and create another one 
  * 
  * @param job_id 
- * @param job_calls 
+ * @param job_multicalls 
  * @param job_total_budget 
- * @param job_runs_max 
  * @param job_start_at 
  * @param job_is_active 
  */
 export function job_edit (
   job_id: u32,
-  job_calls: BatchCall[][],
+  job_multicalls: MulticallArgs[],
   job_total_budget: u128,
-  job_runs_max: u64,
   job_start_at: u64,
   job_is_active: boolean
 ): void {
@@ -317,9 +308,8 @@ export function job_edit (
 
   _jobs.edit(
     job_id,
-    job_calls,
+    job_multicalls,
     job_total_budget,
-    job_runs_max,
     job_start_at,
     job_is_active
   );

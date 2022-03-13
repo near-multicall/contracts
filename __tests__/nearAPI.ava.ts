@@ -10,6 +10,7 @@ export function tests(workspace: Workspace) {
    * transfer NEAR
    */
   workspace.test('transfer near by non-admin', async (test, {alice, bob, multicall, root}) => {
+    let callError: any;
     const oldBalance = await multicall.balance();
     test.log(`initial balance: ${oldBalance.total.toHuman()}`);
     // bob isn't admin so he can't transfer near from multicall
@@ -27,12 +28,15 @@ export function tests(workspace: Workspace) {
           attachedDeposit: NEAR.from('1') // 1 yocto
         }
       );
-    } catch (error) {}
+    } catch (error) { callError = error }
+
     const balance  = await multicall.balance();
+
     test.true(
       // balance won't decrease. Only increase by 30% of gas fees
-      // make sure balance did not decreased
-      ( oldBalance.total.sub( balance.total ) ).lte( NEAR.from("0") )
+      // make sure balance did not decrease
+      ( ( oldBalance.total.sub( balance.total ) ).lte( NEAR.from("0") ) )
+      && ( callError.kind.ExecutionError.includes("must be admin to call this function") )
     );
     test.log(`balance: ${balance.total.toHuman()}`);
   });

@@ -1,7 +1,7 @@
 import { context, storage, PersistentSet, ContractPromiseBatch, ContractPromise, u128, base58 } from 'near-sdk-as';
 import { MulticallInitArgs, OnCreateArgs } from './model';
 
-const CODE: StaticArray<u8> = includeBytes("../../build/multicall/release/contract.wasm");
+const CODE: StaticArray<u8> = includeBytes("../../build/multicall_release.wasm");
 
 const owners = new PersistentSet<string>('a');
 const dao_factories = new PersistentSet<string>('b');

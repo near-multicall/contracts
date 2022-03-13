@@ -10,6 +10,7 @@ export function tests(workspace: Workspace) {
    * add tokens to whitelist
    */
   workspace.test('add tokens to whitelist by non-admin', async (test, {alice, bob, multicall, root}) => {
+    let callError: any;
     // bob isn't admin so he can't modify tokens whitelist
     try {
       // try catch bacause contract should panick
@@ -24,10 +25,13 @@ export function tests(workspace: Workspace) {
           attachedDeposit: NEAR.from('1') // 1 yocto
         }
       );
-    } catch (error) {}
+    } catch (error) { callError = error }
+
     const tokens: string[] = await multicall.view('get_tokens', {})
+
     test.true(
-      tokens.includes(ndai_address) && !tokens.includes(nusdc_address)
+      ( tokens.includes(ndai_address) && !tokens.includes(nusdc_address) )
+      && ( callError.kind.ExecutionError.includes("must be admin to call this function") )
     );
     test.log(`tokens: [${tokens}]`);
   });
@@ -55,6 +59,7 @@ export function tests(workspace: Workspace) {
    * remove tokens from whitelist
    */
   workspace.test('remove tokens from whitelist by non-admin', async (test, {alice, bob, multicall, root}) => {
+    let callError: any;
     // bob isn't admin so he can't modify tokens whitelist
     try {
       // try catch bacause contract should panick
@@ -69,10 +74,12 @@ export function tests(workspace: Workspace) {
           attachedDeposit: NEAR.from('1') // 1 yocto
         }
       );
-    } catch (error) {}
+    } catch (error) { callError = error }
+
     const tokens: string[] = await multicall.view('get_tokens', {})
     test.true(
-      tokens.includes(ndai_address)
+      ( tokens.includes(ndai_address) )
+      && ( callError.kind.ExecutionError.includes("must be admin to call this function") )
     );
     test.log(`tokens: [${tokens}]`);
   });
