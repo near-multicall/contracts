@@ -93,7 +93,6 @@ export class Jobs {
    * @param job_multicalls 
    * @param job_cadence 
    * @param job_trigger_gas 
-   * @param job_trigger_deposit 
    * @param job_croncat_budget 
    * @param job_start_at 
    * @returns 
@@ -126,7 +125,6 @@ export class Jobs {
       bond: bondAmount,
       cadence: job_cadence,
       trigger_gas: job_trigger_gas,
-      trigger_deposit: u128.Zero,
       croncat_budget: job_croncat_budget,
       start_at: job_start_at,
       run_count: -1,
@@ -167,7 +165,7 @@ export class Jobs {
           function_id: "job_trigger",
           cadence: aJob.cadence,
           recurring: recurring_task,
-          deposit: aJob.trigger_deposit,
+          deposit: u128.Zero,
           gas: aJob.trigger_gas,
           arguments: base64.encode(croncatTaskArgs.encode())
         },
@@ -396,7 +394,7 @@ export class Jobs {
       // persistent job state
       this.jobMap.set(aJob.id, aJob);
 
-      logging.log(`job ${aJob.id} total_runs: ${aJob.multicalls.length} current_run: ${aJob.run_count}`);
+      logging.log(`job ${aJob.id} run: ${aJob.run_count}/${aJob.multicalls.length}`);
 
       // execute one of the job's multicalls, return the last promise as result
       _internal_multicall(aJob.multicalls[aJob.run_count - 1].calls).returnAsResult();
