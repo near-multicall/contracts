@@ -11,7 +11,7 @@ bundle cross-contract calls for powerful DAO proposals
 3. Compile: `yarn build:release`
 4. Deploy:  
     ```bash
-    near deploy $CONTRACT_ADDRESS build/multicall/release/contract.wasm
+    near deploy $CONTRACT_ADDRESS ./build/multicall_release.wasm
     ```
 6. Initialize the contract:
     ```bash

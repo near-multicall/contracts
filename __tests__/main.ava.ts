@@ -21,7 +21,7 @@ const workspace = Workspace.init(async ({root}) => {
   // deploy multicall factory with alice admin
   const multicallFactory = await root.createAndDeploy(
     'factory',
-    'build/factory/release/contract.wasm',
+    'build/factory_release.wasm',
     {
       method: 'init',
       args: {
