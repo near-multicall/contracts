@@ -36,8 +36,8 @@ export function multicall (calls: BatchCall[][]): void {
   _is_admin(context.predecessor);
   _assert_deposit();
 
-  const final_promise: ContractPromise = _internal_multicall(calls);
-  final_promise.returnAsResult(); // return promise as result
+  // run multicall, return its final promise as result
+  _internal_multicall(calls).returnAsResult();
 }
 
 /**
