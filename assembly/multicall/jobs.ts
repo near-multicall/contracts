@@ -376,6 +376,8 @@ export class Jobs {
       logging.log(`job ${job_id} will start running soon`);
 
       // re-activate with a recurring runner task on croncat
+      // P.S. activate() will limit gas consumption for this transaction to GAS_ACTIVATE
+      // but it's okay as this case and a regular activate() roughly have the same consumption
       this.activate(aJob.id, true);
     }
 
