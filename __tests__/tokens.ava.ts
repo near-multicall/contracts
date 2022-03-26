@@ -1,4 +1,5 @@
 import { Workspace, NEAR, Gas } from 'near-workspaces-ava';
+import { getFunctionCallError } from './helpers';
 
 const nusdc_address: string = "nusdc.ft-fin.testnet";
 const ndai_address: string = "ndai.ft-fin.testnet";
@@ -25,13 +26,13 @@ export function tests(workspace: Workspace) {
           attachedDeposit: NEAR.from('1') // 1 yocto
         }
       );
-    } catch (error) { callError = error }
+    } catch (error) { callError = getFunctionCallError(error) }
 
     const tokens: string[] = await multicall.view('get_tokens', {})
 
     test.true(
       ( tokens.includes(ndai_address) && !tokens.includes(nusdc_address) )
-      && ( callError.kind.ExecutionError.includes("must be admin to call this function") )
+      && ( callError.includes("must be admin to call this function") )
     );
     test.log(`tokens: [${tokens}]`);
   });
@@ -74,12 +75,12 @@ export function tests(workspace: Workspace) {
           attachedDeposit: NEAR.from('1') // 1 yocto
         }
       );
-    } catch (error) { callError = error }
+    } catch (error) { callError = getFunctionCallError(error) }
 
     const tokens: string[] = await multicall.view('get_tokens', {})
     test.true(
       ( tokens.includes(ndai_address) )
-      && ( callError.kind.ExecutionError.includes("must be admin to call this function") )
+      && ( callError.includes("must be admin to call this function") )
     );
     test.log(`tokens: [${tokens}]`);
   });

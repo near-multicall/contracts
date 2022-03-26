@@ -1,4 +1,5 @@
 import { NEAR, Gas, Workspace } from 'near-workspaces-ava';
+import { getFunctionCallError } from './helpers';
 
 
 export function tests(workspace: Workspace) {
@@ -22,11 +23,11 @@ export function tests(workspace: Workspace) {
           attachedDeposit: NEAR.from('1') // 1 yocto
         }
       );
-    } catch (error) { callError = error }
+    } catch (error) { callError = getFunctionCallError(error) }
     const admins: string[] = await multicall.view('get_admins', {})
     test.true(
       ( admins.includes(alice.accountId) && !admins.includes(bob.accountId) )
-      && ( callError.kind.ExecutionError.includes("must be admin to call this function") )
+      && ( callError.includes("must be admin to call this function") )
     );
     test.log(`admins: [${admins}]`);
   });
@@ -67,11 +68,11 @@ export function tests(workspace: Workspace) {
           attachedDeposit: NEAR.from('1') // 1 yocto
         }
       );
-    } catch (error) { callError = error }
+    } catch (error) { callError = getFunctionCallError(error) }
     const admins: string[] = await multicall.view('get_admins', {})
     test.true(
       ( admins.includes(alice.accountId) )
-      && ( callError.kind.ExecutionError.includes("must be admin to call this function") )
+      && ( callError.includes("must be admin to call this function") )
     );
     test.log(`admins: [${admins}]`);
   });
@@ -107,13 +108,13 @@ export function tests(workspace: Workspace) {
           attachedDeposit: NEAR.from('1') // 1 yocto
         }
       );
-    } catch (error) { callError = error }
+    } catch (error) { callError = getFunctionCallError(error) }
 
     let test_1_admins: string[] = await multicall.view('get_admins', {});
 
     test.true(
       ( test_1_admins.toString() === initial_admins.toString() )
-      && ( callError.kind.ExecutionError.includes("contract must have at least one admin") )
+      && ( callError.includes("contract must have at least one admin") )
     );
     test.log(`admins after test 1: "[${test_1_admins}]"`);
 
@@ -147,12 +148,12 @@ export function tests(workspace: Workspace) {
           attachedDeposit: NEAR.from('1') // 1 yocto
         }
       ); 
-    } catch (error) { callError = error }
+    } catch (error) { callError = getFunctionCallError(error) }
     let test_3_admins: string[] = await multicall.view('get_admins', {});
 
     test.true(
       ( test_3_admins.toString() === test_2_admins.toString() )
-      && ( callError.kind.ExecutionError.includes("The item was not found in the set") )
+      && ( callError.includes("The item was not found in the set") )
     );
     test.log(`admins: [${test_3_admins}]`);
 

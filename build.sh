@@ -3,7 +3,7 @@ set -e
 
 targetConfig=${1}
 
-for contract in "multicall" "factory"
+for contract in "multicall" "factory" "test_helper"
 do 
   entry="assembly/${contract}/index.ts"
   binary="build/${contract}_$targetConfig.wasm"

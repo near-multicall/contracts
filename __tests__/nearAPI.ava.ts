@@ -1,4 +1,5 @@
 import { Workspace, NEAR, Gas } from 'near-workspaces-ava';
+import { getFunctionCallError } from './helpers';
 
 
 /**
@@ -28,7 +29,7 @@ export function tests(workspace: Workspace) {
           attachedDeposit: NEAR.from('1') // 1 yocto
         }
       );
-    } catch (error) { callError = error }
+    } catch (error) { callError = getFunctionCallError(error) }
 
     const balance  = await multicall.balance();
 
@@ -36,7 +37,7 @@ export function tests(workspace: Workspace) {
       // balance won't decrease. Only increase by 30% of gas fees
       // make sure balance did not decrease
       ( ( oldBalance.total.sub( balance.total ) ).lte( NEAR.from("0") ) )
-      && ( callError.kind.ExecutionError.includes("must be admin to call this function") )
+      && ( callError.includes("must be admin to call this function") )
     );
     test.log(`balance: ${balance.total.toHuman()}`);
   });

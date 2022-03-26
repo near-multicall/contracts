@@ -18,6 +18,12 @@ const workspace = Workspace.init(async ({root}) => {
   const alice = await root.createAccount('alice');
   const bob = await root.createAccount('bob');
 
+  // deploy testing helper contract
+  const testHelper = await root.createAndDeploy(
+    'helper',
+    'build/test_helper_release.wasm'
+  );
+
   // deploy multicall factory with alice admin
   const multicallFactory = await root.createAndDeploy(
     'factory',
@@ -67,7 +73,7 @@ const workspace = Workspace.init(async ({root}) => {
   );
 
   // Return accounts to be available in tests
-  return {alice, bob, multicall};
+  return {alice, bob, multicall, testHelper};
 });
 
 // run tests
