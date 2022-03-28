@@ -1,3 +1,7 @@
+# smart contracr debug build
+build/*_debug.wasm
+build/*_debug.wat
+
 # Logs
 logs
 *.log
