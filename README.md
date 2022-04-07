@@ -50,16 +50,14 @@ there are two main whitelists:
 The contract's address is whitelisted by default, this allows nesting multiple contract methods for convenience.  
 
 3. **Jobs**:  
-Multicall executions can be scheduled to run in recurring fashion, made possible by integrating [croncat](https://cron.cat/). Anyone can register a job on the multicall contract, but an admin has to approve it. Admins can pause/resume job executions and also edit a job's multicall arguments.  
+Multicall executions can be scheduled to run at a certain time in the future, made possible by integrating [croncat](https://cron.cat/). Anyone can register a job on the multicall contract, but an admin has to approve it. Admins can pause/resume job executions and also edit a job's multicall arguments.  
 The following must be specified when creating a job:
     ```ts
     function job_add (
-        job_schedules: BatchCall[][], // multicall arguments
+        job_multicalls: MulticallArgs[],
         job_cadence: string, // cron expression
         job_trigger_gas: u64,
-        job_trigger_deposit: u128,
         job_total_budget: u128,
-        job_runs_max: u64,
         job_start_at: u64 = context.blockTimestamp
     ): u32 
     ```
