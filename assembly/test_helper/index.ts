@@ -14,3 +14,7 @@ export function get_logs (start: i32 = 0, end: i32 = call_logs.length): MapEntry
 export function get_log_block (log_msg: string): u64 {
     return call_logs.getSome(log_msg);
 }
+
+export function do_fail (): void {
+    assert(false);
+}

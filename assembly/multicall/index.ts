@@ -1,4 +1,4 @@
-import { context, ContractPromiseBatch, storage, PersistentSet, u128, base64, util } from 'near-sdk-as';
+import { context, ContractPromiseBatch, ContractPromise, storage, PersistentSet, u128, base64, util } from 'near-sdk-as';
 import { BatchCall, JobSchema, FtOnTransferArgs, MulticallArgs, JobActivateArgs } from './model';
 import { _internal_multicall } from './internal';
 import { Jobs } from './jobs';
@@ -38,6 +38,80 @@ export function multicall (calls: BatchCall[][]): void {
 
   // run multicall, return its final promise as result
   _internal_multicall(calls).returnAsResult();
+}
+
+/**
+ * if previous call succeeded, call on_success
+ * if previous call faild then:
+ *  1- if on_fail provided then it will run
+ *  2- if on_fail not provided, it will revert
+ * 
+ * why revert in case 2 ? if there's a promise chain of safe_then, then it's expected
+ * that if one ín the chain fails, then all later calls should fail as well.
+ * 
+ * What happens in case 1 ? will execute something else, but as result if that call succeeds
+ * then the safe_then calls after it will execute teir "on_succeed". KEEP IN MIND
+ * 
+ * Batch 1 -> Batch 2 -> Batch 3 -> Batch 4
+ * 
+ * TODO: add test case in multicall tests
+ * 
+ * @param on_success 
+ * @param on_fail 
+ */
+export function safe_then (on_success: BatchCall, on_fail: BatchCall = new BatchCall() ): void {
+  // Get all results
+  const results = ContractPromise.getResults();
+
+  let is_successful: boolean = true;
+  for (let i = 0; i < results.length; i++) {
+    if (! results[i].succeeded) {
+      is_successful = false;
+      break;
+    }
+  }
+
+  // all promises succeeded
+  if (is_successful) {
+    // run on_success batch call
+    const promise: ContractPromiseBatch = ContractPromiseBatch.create(on_success.address);
+
+    for (let i = 0; i < on_success.actions.length; i++) {
+      promise.function_call(
+        on_success.actions[i].func,
+        on_success.actions[i].args,
+        on_success.actions[i].depo,
+        on_success.actions[i].gas
+      );
+    }
+
+    let return_promise: ContractPromise = <ContractPromise> { id: promise.id }
+    return_promise.returnAsResult();
+  }
+  else {
+    // user did provide an otherwise batch call
+    if (on_fail.actions.length > 0) {
+      // run otherwise batch call
+      const promise: ContractPromiseBatch = ContractPromiseBatch.create(on_fail.address);
+
+      for (let i = 0; i < on_fail.actions.length; i++) {
+        promise.function_call(
+          on_fail.actions[i].func,
+          on_fail.actions[i].args,
+          on_fail.actions[i].depo,
+          on_fail.actions[i].gas
+        );
+      }
+
+      let return_promise: ContractPromise = <ContractPromise> { id: promise.id }
+      return_promise.returnAsResult();
+    }
+    // user did not provide an otherwise batch call
+    else {
+      // revert, to make the next safe_then calls also fail (if there are any)
+      assert(false, "promise failed");
+    }
+  }
 }
 
 /**
