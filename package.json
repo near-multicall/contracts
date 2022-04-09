@@ -4,9 +4,9 @@
   "version": "1.0.0",
   "scripts": {
     "postinstall": "patch-package",
-    "build:release": "./build.sh release",
-    "build:debug": "./build.sh debug",
-    "test": "./test.sh",
+    "build:release": "./scripts/build.sh release",
+    "build:debug": "./scripts/build.sh debug",
+    "test": "./scripts/test.sh",
     "test:testnet": "near-workspaces-ava --config ./ava.testnet.config.cjs"
   },
   "dependencies": {
