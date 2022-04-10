@@ -16,5 +16,5 @@ export function get_log_block (log_msg: string): u64 {
 }
 
 export function do_fail (): void {
-    assert(false);
+    assert(false, "task failed successfully");
 }
