@@ -7,6 +7,7 @@
     "build:release": "./scripts/build.sh release",
     "build:debug": "./scripts/build.sh debug",
     "test": "./scripts/test.sh",
+    "test:verbose": "./scripts/test.sh --verbose",
     "test:testnet": "near-workspaces-ava --config ./ava.testnet.config.cjs"
   },
   "dependencies": {
