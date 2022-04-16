@@ -1,4 +1,4 @@
-import { Workspace, NEAR, Gas } from 'near-workspaces-ava';
+import { Workspace, NEAR, Gas, TransactionResult } from 'near-workspaces-ava';
 import { getFunctionCallError, encodeBase64 } from './helpers';
 
 
@@ -347,6 +347,169 @@ export function tests(workspace: Workspace) {
       && ( logs.hasOwnProperty("call_15_1 on_success") )
     );
     test.log(logs);
+  });
+  workspace.test('multicall by ft_transfer_call', async (test, {alice, bob, multicall, testHelper, testToken, root}) => {
+    let txReturn: TransactionResult;
+    const mintAmount: string = "10";
+    const multicallArgs: any = {
+      calls: [
+        [ 
+          {
+            address: testHelper.accountId,
+            actions: [
+              {
+                func: "log",
+                args: encodeBase64(JSON.stringify( { msg: "call_11_1" } )),
+                gas: "5000000000000",
+                depo: "0"
+              },
+              {
+                func: "log",
+                args: encodeBase64(JSON.stringify( { msg: "call_11_2" } )),
+                gas: "5000000000000",
+                depo: "0"
+              }
+            ]
+          },
+          {
+            address: testHelper.accountId,
+            actions: [
+              {
+                func: "log",
+                args: encodeBase64(JSON.stringify( { msg: "call_12_1" } )),
+                gas: "5000000000000",
+                depo: "0"
+              }
+            ]
+          }
+        ],
+        [
+          {
+            address: testHelper.accountId,
+            actions: [
+              {
+                func: "log",
+                args: encodeBase64(JSON.stringify( { msg: "call_21_1" } )),
+                gas: "5000000000000",
+                depo: "0"
+              }
+            ]
+          }
+        ]
+      ]
+    }
+    const storage_deposit_bounds: any = await testToken.view("storage_balance_bounds", {});
+
+    
+    /**
+     * test plan:
+     * 1- test token is not whitelisted:
+     *   a/ do multicall with bob (non-admin) => should fail because token not whitelisted
+     * 2- whitelist the test token
+     *   a/ do multicall with bob (non-admin) => should fail because bob is not an admin
+     *   b/ do multicall with alice (admin) => should succeed
+     */
+
+    // test case: 1- a/
+    txReturn = await bob.createTransaction(testToken.accountId).functionCall(
+      "mint",
+      { account_id: bob.accountId, amount: mintAmount }
+    ).functionCall(
+      "storage_deposit",
+      { account_id: multicall.accountId },
+      { attachedDeposit: storage_deposit_bounds.max }
+    ).functionCall(
+      "ft_transfer_call",
+      { 
+        receiver_id: multicall.accountId,
+        amount: "1",
+        msg: `{"function_id":"multicall","args":"${encodeBase64(JSON.stringify( multicallArgs ))}"}`
+      },
+      { gas: Gas.parse('150 Tgas'), attachedDeposit: NEAR.from('1') } // 1 yocto
+    ).signAndSend();
+
+    // check bob's balance for sanity checks
+    const bob_balance_1: string = await testToken.view("ft_balance_of", { account_id: bob.accountId });
+    test.true( bob_balance_1 === mintAmount );
+    test.log(`bob_balance_1: "${bob_balance_1}"`);
+    test.true(
+      txReturn.result.receipts_outcome[1].outcome.logs[0].includes(`${testToken.accountId} not on token whitelist`)
+    );
+    test.log(`logs 1-a: [${txReturn.result.receipts_outcome[1].outcome.logs}]`);
+
+
+    // test case: 2- a/
+    // whitelist test token on multicall, alice should do it because she's admin
+    await alice.call(
+      multicall.accountId,
+      'tokens_add',
+      {
+        addresses: [testToken.accountId]
+      },
+      {
+        gas: Gas.parse('5 Tgas'),
+        attachedDeposit: NEAR.from('1') // 1 yocto
+      }
+    );
+    txReturn = await bob.createTransaction(testToken.accountId).functionCall(
+      "ft_transfer_call",
+      { 
+        receiver_id: multicall.accountId,
+        amount: "1",
+        msg: `{"function_id":"multicall","args":"${encodeBase64(JSON.stringify( multicallArgs ))}"}`
+      },
+      { gas: Gas.parse('150 Tgas'), attachedDeposit: NEAR.from('1') } // 1 yocto
+    ).signAndSend();
+
+    // check bob's balance for sanity checks
+    const bob_balance_2: string = await testToken.view("ft_balance_of", { account_id: bob.accountId });
+    test.true( bob_balance_1 === bob_balance_2 )
+    test.log(`bob_balance_2: "${bob_balance_2}"`);
+    test.true(
+      txReturn.result.receipts_outcome[1].outcome.logs[0].includes(`${bob.accountId} must be admin to call this function`)
+    );
+    test.log(`logs 2-a: [${txReturn.result.receipts_outcome[1].outcome.logs}]`);
+
+    
+    // test case: 2- b/
+    txReturn = await alice.createTransaction(testToken.accountId).functionCall(
+      "mint",
+      { account_id: alice.accountId, amount: mintAmount }
+    ).functionCall(
+      "ft_transfer_call",
+      { 
+        receiver_id: multicall.accountId,
+        amount: "1",
+        msg: `{"function_id":"multicall","args":"${encodeBase64(JSON.stringify( multicallArgs ))}"}`
+      },
+      { gas: Gas.parse('150 Tgas'), attachedDeposit: NEAR.from('1') } // 1 yocto
+    ).signAndSend();
+
+    // check alice's balance for sanity checks
+    const alice_balance: string = await testToken.view("ft_balance_of", { account_id: bob.accountId });
+    test.true( alice_balance === mintAmount );
+    test.log(`alice_balance: "${alice_balance}"`);
+    // check multicall correctly executed
+    const map_entries: {key: string, value: string}[] = await testHelper.view("get_logs", {});
+    const logs = {};
+    for (let i = 0; i < map_entries.length; i++) {
+      logs[map_entries[i].key] = map_entries[i].value;
+    }
+
+    const call_11_1_block: bigint = BigInt( logs["call_11_1"] );
+    const call_11_2_block: bigint = BigInt( logs["call_11_2"] );
+    const call_12_1_block: bigint = BigInt( logs["call_12_1"] );
+    const call_21_1_block: bigint = BigInt( logs["call_21_1"] );
+
+    test.true(
+      ( call_11_1_block === call_11_2_block )
+      && ( call_11_1_block === call_21_1_block )
+      && ( call_11_1_block < call_12_1_block )
+    );
+    test.log(`call_11_1_block: ${call_11_1_block}`);
+    test.log(`call_11_2_block: ${call_11_2_block}`);
+    test.log(`call_12_1_block: ${call_12_1_block}`);
+    test.log(`call_21_1_block: ${call_21_1_block}`);
   });
 
 }
