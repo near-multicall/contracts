@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-near-workspaces-ava "**/main*/" $@ # pass along any CLI flags, such as `--verbose`
+near-workspaces-ava "./__tests__/main.ava.ts" $@ # pass along any CLI flags, such as `--verbose`
 
 
 # To run only one test file:
