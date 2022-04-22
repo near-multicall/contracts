@@ -21,8 +21,8 @@ function compile_contracts {
   done
 }
 
+compile_contracts "test_helper" &
 compile_contracts "multicall" "factory" &
-compile_contracts "test_helper"
 wait
 
 echo "finished compiling contracts"
