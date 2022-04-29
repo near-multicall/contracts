@@ -1,5 +1,5 @@
 import { context, ContractPromiseBatch, ContractPromise, storage, PersistentSet, u128, base64, util } from 'near-sdk-as';
-import { BatchCall, JobSchema, FtOnTransferArgs, MulticallArgs, JobActivateArgs } from './model';
+import { BatchCall, FtOnTransferArgs, MulticallArgs, JobActivateArgs, JobEntry } from './model';
 import { _internal_multicall } from './internal';
 import { Jobs } from './jobs';
 import { StorageCostUtils } from './utils';
@@ -281,7 +281,7 @@ export function job_get_bond (): u128 {
  * @param start 
  * @param end 
  */
-export function get_jobs (start: i32 = 0, end: i32 = _jobs.jobMap.length): JobSchema[] {
+export function get_jobs (start: i32 = 0, end: i32 = _jobs.jobMap.length): JobEntry[] {
   return _jobs.get_jobs(start, end);
 }
 

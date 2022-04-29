@@ -54,7 +54,6 @@ export class CroncatCreateTaskArgs {
 
 @nearBindgen
 export class JobSchema {
-  id: u32;
   croncat_hash: string;
   creator: string;
   bond: u128;
@@ -65,4 +64,10 @@ export class JobSchema {
   run_count: i32;
   is_active: boolean;
   multicalls: MulticallArgs[];
+}
+
+@nearBindgen
+export class JobEntry {
+  id: u32;
+  job: JobSchema;
 }
