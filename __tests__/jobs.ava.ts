@@ -1,4 +1,4 @@
-import { Workspace, NEAR, Gas, TransactionResult } from 'near-workspaces-ava';
+import { Workspace, NEAR, Gas } from 'near-workspaces-ava';
 import { getFunctionCallError, encodeBase64 } from './helpers';
 
 
@@ -10,121 +10,155 @@ export function tests(workspace: Workspace) {
   /**
    * add a new job
    */
-  workspace.test('anyone can add jobs', async (test, {alice, bob, multicall, testHelper, root}) => {
+  workspace.test('anyone can add jobs', async (test, {bob, multicall, testHelper}) => {
     let callError: any;
-    // bob isn't admin so he can't call multicall
-    bob.call(
+    // args to be used in job_add
+    const job_add_args = {
+      job_multicalls: [
+        {
+          calls: [
+            [
+              {
+                address: "hello.lennczar.testnet",
+                actions: [
+                  {
+                    func: "hello",
+                    args: "eyJ0aGluZyI6Im11bHRpY2FsbCAxIn0=",
+                    gas: "10000000000000",
+                    depo: "0"
+                  },
+                  {
+                    func: "hello",
+                    args: "eyJ0aGluZyI6Im11bHRpY2FsbCAxIn0=",
+                    gas: "10000000000000",
+                    depo: "0"
+                  }
+                ]
+              },
+              {
+                address: "hello.lennczar.testnet",
+                actions: [
+                  {
+                    func: "hello",
+                    args: "eyJ0aGluZyI6Im11bHRpY2FsbCAxIn0=",
+                    gas: "10000000000000",
+                    depo: "0"
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                address: "hello.lennczar.testnet",
+                actions: [
+                  {
+                    func: "hello",
+                    args: "eyJ0aGluZyI6Im11bHRpY2FsbCAxIn0=",
+                    gas: "10000000000000",
+                    depo: "0"
+                  }
+                ]
+              }
+            ]
+          ]
+        },
+        {
+          calls: [
+            [
+              {
+                address: "hello.lennczar.testnet",
+                actions: [
+                  {
+                    func: "hello",
+                    args: "eyJ0aGluZyI6Im11bHRpY2FsbCAyIn0=",
+                    gas: "10000000000000",
+                    depo: "0"
+                  },
+                  {
+                    func: "hello",
+                    args: "eyJ0aGluZyI6Im11bHRpY2FsbCAyIn0=",
+                    gas: "10000000000000",
+                    depo: "0"
+                  }
+                ]
+              },
+              {
+                address: "hello.lennczar.testnet",
+                actions: [
+                  {
+                    func: "hello",
+                    args: "eyJ0aGluZyI6Im11bHRpY2FsbCAyIn0=",
+                    gas: "10000000000000",
+                    depo: "0"
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                address: "hello.lennczar.testnet",
+                actions: [
+                  {
+                    func: "hello",
+                    args: "eyJ0aGluZyI6Im11bHRpY2FsbCAyIn0=",
+                    gas: "10000000000000",
+                    depo: "0"
+                  }
+                ]
+              }
+            ]
+          ]
+        }
+      ],
+      job_cadence: "0 * * * * *",
+      job_trigger_gas: "70000000000000",
+      job_total_budget: "1000000000000000000000000"
+    }
+
+    // get all jobs, and required job bond amount
+    const [before_jobs, bond_amount]: any[] = await Promise.all([
+      multicall.view("get_jobs"),
+      multicall.view("get_job_bond")
+    ]);
+    
+    // bob isn't admin but should be able to add new jobs
+    // 1. try with invalid bond amount => should fail
+    try {
+      const job_id: number = await bob.call(
         multicall.accountId,
         "job_add",
+        job_add_args,
         {
-            job_multicalls: [
-                {
-                calls: [
-                    [
-                        {
-                            address: "hello.lennczar.testnet",
-                            actions: [
-                            {
-                                func: "hello",
-                                args: "eyJ0aGluZyI6Im11bHRpY2FsbCAxIn0=",
-                                gas: "10000000000000",
-                                depo: "0"
-                            },
-                            {
-                                func: "hello",
-                                args: "eyJ0aGluZyI6Im11bHRpY2FsbCAxIn0=",
-                                gas: "10000000000000",
-                                depo: "0"
-                            }
-                            ]
-                        },
-                        {
-                            address: "hello.lennczar.testnet",
-                            actions: [
-                            {
-                                func: "hello",
-                                args: "eyJ0aGluZyI6Im11bHRpY2FsbCAxIn0=",
-                                gas: "10000000000000",
-                                depo: "0"
-                            }
-                            ]
-                        }
-                        ],
-                        [
-                        {
-                            address: "hello.lennczar.testnet",
-                            actions: [
-                            {
-                                func: "hello",
-                                args: "eyJ0aGluZyI6Im11bHRpY2FsbCAxIn0=",
-                                gas: "10000000000000",
-                                depo: "0"
-                            }
-                            ]
-                        }
-                    ]
-                ]
-                },
-                {
-                calls: [
-                    [
-                    {
-                        address: "hello.lennczar.testnet",
-                        actions: [
-                        {
-                            func: "hello",
-                            args: "eyJ0aGluZyI6Im11bHRpY2FsbCAyIn0=",
-                            gas: "10000000000000",
-                            depo: "0"
-                        },
-                        {
-                            func: "hello",
-                            args: "eyJ0aGluZyI6Im11bHRpY2FsbCAyIn0=",
-                            gas: "10000000000000",
-                            depo: "0"
-                        }
-                        ]
-                    },
-                    {
-                        address: "hello.lennczar.testnet",
-                        actions: [
-                        {
-                            func: "hello",
-                            args: "eyJ0aGluZyI6Im11bHRpY2FsbCAyIn0=",
-                            gas: "10000000000000",
-                            depo: "0"
-                        }
-                        ]
-                    }
-                    ],
-                    [
-                    {
-                        address: "hello.lennczar.testnet",
-                        actions: [
-                        {
-                            func: "hello",
-                            args: "eyJ0aGluZyI6Im11bHRpY2FsbCAyIn0=",
-                            gas: "10000000000000",
-                            depo: "0"
-                        }
-                        ]
-                    }
-                    ]
-                ]
-                }
-            ],
-            job_cadence: "0 * * * * *",
-            job_trigger_gas: "70000000000000",
-            job_total_budget: "1000000000000000000000000"
-            }
-    );
+          gas: Gas.parse('15 Tgas'),
+          attachedDeposit: new NEAR.BN(bond_amount).sub( new NEAR.BN("1" ) ) // 1 yocto less than bond amount
+        }
+      ); 
+    } catch (error) { callError = getFunctionCallError(error) }
+
+    test.true( callError.includes("attached deposit must be greater or equal than the required bond") );
+    test.log(`invalid job bond error: [${callError}]`);
+
+    // 2. try with valid bond amount => should succeed
+    const job_id: number = await bob.call(
+      multicall.accountId,
+      "job_add",
+      job_add_args,
+      {
+        gas: Gas.parse('15 Tgas'),
+        attachedDeposit: bond_amount
+      }
+    ); 
+
+    // get all jobs
+    const after_jobs: object[] = await multicall.view("get_jobs");
     
     test.true(
-      callError.includes("must be admin to call this function")
+      job_id >= 0
+      && ( after_jobs.length === (before_jobs.length + 1) )
     );
-    test.log(`type: "${callError.type}"`);
+    test.log(`returned job_id: ${job_id}`);
   });
-  workspace.test('multicall by admin', async (test, {alice, bob, multicall, testHelper, root}) => {
+  workspace.test('multicall by admin TODO', async (test, {alice, bob, multicall, testHelper}) => {
     // alice is admin so she can call multicall
     /**
      * do a multicall with 3 batches as following (Pseudocode):
@@ -220,389 +254,99 @@ export function tests(workspace: Workspace) {
     test.log(`call_12_1_block: ${call_12_1_block}`);
     test.log(`call_21_1_block: ${call_21_1_block}`);
   });
-  workspace.test('multicall with safe_then chain', async (test, {alice, bob, multicall, testHelper, root}) => {
-    // alice is admin so she can call multicall
-    /**
-     * do a multicall with 5 batches as following (Pseudocode):
-     *   calls = [
-     *     [ Batch_11, Batch_12, Batch_13, Batch_14, Batch_15 ],
-     *   ]
-     * where each batch is a single call to "safe_then", which will trigger other actions depending
-     * on whether previous call in the promise chain succeeded or failed:
-     *   Batch_11: - wrapped actions: [ "call_11_1 on_success", "call_11_2 on_success" ]
-     *             - should succeed and execute both actions
-     *   Batch_12: - wrapped actions: [ "call_12_1 on_success", "do_fail" ]
-     *             - should call both actions. "do_fail" should panic
-     *   Batch_13: - wrapped actions: [ "call_13_1 on_success" ]
-     *             - should panic and not call the action, since no fallback actions supplied
-     *   Batch_14: - wrapped actions: [ "call_14_1 on_success", "call_14_1 on_fail", "call_14_2 on_fail" ]
-     *             - should only call actions 2 and 3, since previous batch failed and those 2 actions are the fallback
-     *   Batch_15: - wrapped actions: [ "call_15_1 on_success", "call_15_1 on_fail" ]
-     *             - should only call action 2, since previous batch executes a successful fallback
-     * 
-     * 
-     * test:
-     * 1- batch
-     * 2- Batch_21 runs parallel to Batch_11
-     * 3- Batch_12 runs after to Batch_11
-     */
-    await alice.call(
-      multicall.accountId,
-      'multicall',
-      {
-        calls: [
-          [ 
-            {
-              address: multicall.accountId,
-              actions: [
-                {
-                  func: "safe_then",
-                  args: encodeBase64(JSON.stringify( { 
-                    on_success: {
-                      address: testHelper.accountId,
-                      actions: [
-                        {
-                          func: "log",
-                          args: encodeBase64(JSON.stringify( { msg: "call_11_1 on_success" } )),
-                          gas: "5000000000000",
-                          depo: "0"
-                        },
-                        {
-                          func: "log",
-                          args: encodeBase64(JSON.stringify( { msg: "call_11_2 on_success" } )),
-                          gas: "5000000000000",
-                          depo: "0"
-                        }
-                      ]
-                    }
-                  } )),
-                  gas: "20000000000000",
-                  depo: "0"
-                }
-              ]
-            },
-            {
-              address: multicall.accountId,
-              actions: [
-                {
-                  func: "safe_then",
-                  args: encodeBase64(JSON.stringify( { 
-                    on_success: {
-                      address: testHelper.accountId,
-                      actions: [
-                        {
-                          func: "log",
-                          args: encodeBase64(JSON.stringify( { msg: "call_12_1 on_success" } )),
-                          gas: "5000000000000",
-                          depo: "0"
-                        },
-                        {
-                          func: "do_fail",
-                          args: encodeBase64(JSON.stringify( {} )),
-                          gas: "5000000000000",
-                          depo: "0"
-                        }
-                      ]
-                    }
-                  } )),
-                  gas: "20000000000000",
-                  depo: "0"
-                }
-              ]
-            },
-            {
-              address: multicall.accountId,
-              actions: [
-                {
-                  func: "safe_then",
-                  args: encodeBase64(JSON.stringify( { 
-                    on_success: {
-                      address: testHelper.accountId,
-                      actions: [
-                        {
-                          func: "log",
-                          args: encodeBase64(JSON.stringify( { msg: "call_13_1 on_success" } )),
-                          gas: "5000000000000",
-                          depo: "0"
-                        }
-                      ]
-                    }
-                  } )),
-                  gas: "15000000000000",
-                  depo: "0"
-                }
-              ]
-            },
-            {
-              address: multicall.accountId,
-              actions: [
-                {
-                  func: "safe_then",
-                  args: encodeBase64(JSON.stringify( { 
-                    on_success: {
-                      address: testHelper.accountId,
-                      actions: [
-                        {
-                          func: "log",
-                          args: encodeBase64(JSON.stringify( { msg: "call_14_1 on_success" } )),
-                          gas: "5000000000000",
-                          depo: "0"
-                        }
-                      ]
-                    },
-                    on_fail: {
-                      address: testHelper.accountId,
-                      actions: [
-                        {
-                          func: "log",
-                          args: encodeBase64(JSON.stringify( { msg: "call_14_1 on_fail" } )),
-                          gas: "5000000000000",
-                          depo: "0"
-                        },
-                        {
-                          func: "log",
-                          args: encodeBase64(JSON.stringify( { msg: "call_14_2 on_fail" } )),
-                          gas: "5000000000000",
-                          depo: "0"
-                        }
-                      ]
-                    }
-                  } )),
-                  gas: "25000000000000",
-                  depo: "0"
-                }
-              ]
-            },
-            {
-              address: multicall.accountId,
-              actions: [
-                {
-                  func: "safe_then",
-                  args: encodeBase64(JSON.stringify( { 
-                    on_success: {
-                      address: testHelper.accountId,
-                      actions: [
-                        {
-                          func: "log",
-                          args: encodeBase64(JSON.stringify( { msg: "call_15_1 on_success" } )),
-                          gas: "5000000000000",
-                          depo: "0"
-                        }
-                      ]
-                    },
-                    on_fail: {
-                      address: testHelper.accountId,
-                      actions: [
-                        {
-                          func: "log",
-                          args: encodeBase64(JSON.stringify( { msg: "call_15_1 on_fail" } )),
-                          gas: "5000000000000",
-                          depo: "0"
-                        }
-                      ]
-                    }
-                  } )),
-                  gas: "15000000000000",
-                  depo: "0"
-                }
-              ]
-            }
-          ]
-        ]
-      },
-      {
-        gas: Gas.parse('180 Tgas'),
-        attachedDeposit: NEAR.from('1') // 1 yocto
-      }
-    );
+  workspace.test('prohibited job methods for non-admin', async (test, {bob, multicall}) => {
 
-    const map_entries: {key: string, value: string}[] = await testHelper.view("get_logs", {});
+    // bob isn't admin so he can't do the following with jobs:
+    // activate, pause, resume, edit, delete
+    // set_job_bond, set_croncat_manager
+    const results = await Promise.allSettled([
+      // activate jobs
+      bob.call(
+        multicall.accountId,
+        'job_activate',
+        { job_id: 0 },  // it's okay if job doesn't exist, since we check for caller permissions first
+        {
+          gas: Gas.parse('5 Tgas'),
+          attachedDeposit: NEAR.from('1') // 1 yocto
+        }
+      ),
+      // pause jobs
+      bob.call(
+        multicall.accountId,
+        'jobs_pause',
+        { job_ids: [0, 1] },  // it's okay if job doesn't exist, since we check for caller permissions first
+        {
+          gas: Gas.parse('5 Tgas'),
+          attachedDeposit: NEAR.from('1') // 1 yocto
+        }
+      ),
+      // resume paused jobs
+      bob.call(
+        multicall.accountId,
+        'jobs_resume',
+        { job_ids: [0, 1] },  // it's okay if job doesn't exist, since we check for caller permissions first
+        {
+          gas: Gas.parse('5 Tgas'),
+          attachedDeposit: NEAR.from('1') // 1 yocto
+        }
+      ),
+      // edit an existing job
+      bob.call(
+        multicall.accountId,
+        'job_edit',
+        {
+          job_id: 0,  // it's okay if job doesn't exist, since we check for caller permissions first
+          job_multicalls: [],
+          job_total_budget: "1",
+          job_start_at: "1654539058077000000", // some timestamp (nanoseconds)
+          job_is_active: true
+        },
+        {
+          gas: Gas.parse('5 Tgas'),
+          attachedDeposit: NEAR.from('1') // 1 yocto
+        }
+      ),
+      // delete a job
+      bob.call(
+        multicall.accountId,
+        'job_delete',
+        { job_id: 0 },  // it's okay if job doesn't exist, since we check for caller permissions first
+        {
+          gas: Gas.parse('5 Tgas'),
+          attachedDeposit: NEAR.from('1') // 1 yocto
+        }
+      ),
+      // change job bond amount
+      bob.call(
+        multicall.accountId,
+        'set_job_bond',
+        { amount: "0" },
+        {
+          gas: Gas.parse('5 Tgas'),
+          attachedDeposit: NEAR.from('1') // 1 yocto
+        }
+      ),
+      // change croncat's manager address
+      bob.call(
+        multicall.accountId,
+        'set_croncat_manager',
+        { address: bob.accountId },
+        {
+          gas: Gas.parse('5 Tgas'),
+          attachedDeposit: NEAR.from('1') // 1 yocto
+        }
+      )
+    ]);
 
-    const logs = {};
-    for (let i = 0; i < map_entries.length; i++) {
-      logs[map_entries[i].key] = map_entries[i].value;
-    }
+    results.forEach( res => {
+      test.true(
+        res.status === "rejected" 
+        && getFunctionCallError(res.reason).includes("must be admin to call this function") 
+      );
+    });
 
-    const call_11_1_block: bigint = BigInt( logs["call_11_1 on_success"] );
-    const call_11_2_block: bigint = BigInt( logs["call_11_2 on_success"] );
-    const call_14_1_block: bigint = BigInt( logs["call_14_1 on_fail"] );
-    const call_14_2_block: bigint = BigInt( logs["call_14_2 on_fail"] );
-
-
-    test.true(
-      ( call_11_1_block === call_11_2_block )
-      && ( call_14_1_block === call_14_2_block )
-      && ( !logs.hasOwnProperty("call_12_1 on_success") )
-      && ( !logs.hasOwnProperty("call_13_1 on_success") )
-      && ( !logs.hasOwnProperty("call_14_1 on_success") )
-      && ( !logs.hasOwnProperty("call_15_1 on_fail") )
-      && ( logs.hasOwnProperty("call_14_1 on_fail") && logs.hasOwnProperty("call_14_2 on_fail") )
-      && ( logs.hasOwnProperty("call_15_1 on_success") )
-    );
-    test.log(logs);
+    test.log(`non-admin prohibited job methods return: [${results}]`);
   });
-  workspace.test('multicall by ft_transfer_call', async (test, {alice, bob, multicall, testHelper, testToken, root}) => {
-    let txReturn: TransactionResult;
-    const mintAmount: string = "10";
-    const multicallArgs: any = {
-      calls: [
-        [ 
-          {
-            address: testHelper.accountId,
-            actions: [
-              {
-                func: "log",
-                args: encodeBase64(JSON.stringify( { msg: "call_11_1" } )),
-                gas: "5000000000000",
-                depo: "0"
-              },
-              {
-                func: "log",
-                args: encodeBase64(JSON.stringify( { msg: "call_11_2" } )),
-                gas: "5000000000000",
-                depo: "0"
-              }
-            ]
-          },
-          {
-            address: testHelper.accountId,
-            actions: [
-              {
-                func: "log",
-                args: encodeBase64(JSON.stringify( { msg: "call_12_1" } )),
-                gas: "5000000000000",
-                depo: "0"
-              }
-            ]
-          }
-        ],
-        [
-          {
-            address: testHelper.accountId,
-            actions: [
-              {
-                func: "log",
-                args: encodeBase64(JSON.stringify( { msg: "call_21_1" } )),
-                gas: "5000000000000",
-                depo: "0"
-              }
-            ]
-          }
-        ]
-      ]
-    }
-    const storage_deposit_bounds: any = await testToken.view("storage_balance_bounds", {});
-
-    
-    /**
-     * test plan:
-     * 1- test token is not whitelisted:
-     *   a/ do multicall with bob (non-admin) => should fail because token not whitelisted
-     * 2- whitelist the test token
-     *   a/ do multicall with bob (non-admin) => should fail because bob is not an admin
-     *   b/ do multicall with alice (admin) => should succeed
-     */
-
-    // test case: 1- a/
-    txReturn = await bob.createTransaction(testToken.accountId).functionCall(
-      "mint",
-      { account_id: bob.accountId, amount: mintAmount }
-    ).functionCall(
-      "storage_deposit",
-      { account_id: multicall.accountId },
-      { attachedDeposit: storage_deposit_bounds.max }
-    ).functionCall(
-      "ft_transfer_call",
-      { 
-        receiver_id: multicall.accountId,
-        amount: "1",
-        msg: `{"function_id":"multicall","args":"${encodeBase64(JSON.stringify( multicallArgs ))}"}`
-      },
-      { gas: Gas.parse('150 Tgas'), attachedDeposit: NEAR.from('1') } // 1 yocto
-    ).signAndSend();
-
-    // check bob's balance for sanity checks
-    const bob_balance_1: string = await testToken.view("ft_balance_of", { account_id: bob.accountId });
-    test.true( bob_balance_1 === mintAmount );
-    test.log(`bob_balance_1: "${bob_balance_1}"`);
-    test.true(
-      txReturn.result.receipts_outcome[1].outcome.logs[0].includes(`${testToken.accountId} not on token whitelist`)
-    );
-    test.log(`logs 1-a: [${txReturn.result.receipts_outcome[1].outcome.logs}]`);
-
-
-    // test case: 2- a/
-    // whitelist test token on multicall, alice should do it because she's admin
-    await alice.call(
-      multicall.accountId,
-      'tokens_add',
-      {
-        addresses: [testToken.accountId]
-      },
-      {
-        gas: Gas.parse('5 Tgas'),
-        attachedDeposit: NEAR.from('1') // 1 yocto
-      }
-    );
-    txReturn = await bob.createTransaction(testToken.accountId).functionCall(
-      "ft_transfer_call",
-      { 
-        receiver_id: multicall.accountId,
-        amount: "1",
-        msg: `{"function_id":"multicall","args":"${encodeBase64(JSON.stringify( multicallArgs ))}"}`
-      },
-      { gas: Gas.parse('150 Tgas'), attachedDeposit: NEAR.from('1') } // 1 yocto
-    ).signAndSend();
-
-    // check bob's balance for sanity checks
-    const bob_balance_2: string = await testToken.view("ft_balance_of", { account_id: bob.accountId });
-    test.true( bob_balance_1 === bob_balance_2 )
-    test.log(`bob_balance_2: "${bob_balance_2}"`);
-    test.true(
-      txReturn.result.receipts_outcome[1].outcome.logs[0].includes(`${bob.accountId} must be admin to call this function`)
-    );
-    test.log(`logs 2-a: [${txReturn.result.receipts_outcome[1].outcome.logs}]`);
-
-    
-    // test case: 2- b/
-    txReturn = await alice.createTransaction(testToken.accountId).functionCall(
-      "mint",
-      { account_id: alice.accountId, amount: mintAmount }
-    ).functionCall(
-      "ft_transfer_call",
-      { 
-        receiver_id: multicall.accountId,
-        amount: "1",
-        msg: `{"function_id":"multicall","args":"${encodeBase64(JSON.stringify( multicallArgs ))}"}`
-      },
-      { gas: Gas.parse('150 Tgas'), attachedDeposit: NEAR.from('1') } // 1 yocto
-    ).signAndSend();
-
-    // check alice's balance for sanity checks
-    const alice_balance: string = await testToken.view("ft_balance_of", { account_id: bob.accountId });
-    test.true( alice_balance === mintAmount );
-    test.log(`alice_balance: "${alice_balance}"`);
-    // check multicall correctly executed
-    const map_entries: {key: string, value: string}[] = await testHelper.view("get_logs", {});
-    const logs = {};
-    for (let i = 0; i < map_entries.length; i++) {
-      logs[map_entries[i].key] = map_entries[i].value;
-    }
-
-    const call_11_1_block: bigint = BigInt( logs["call_11_1"] );
-    const call_11_2_block: bigint = BigInt( logs["call_11_2"] );
-    const call_12_1_block: bigint = BigInt( logs["call_12_1"] );
-    const call_21_1_block: bigint = BigInt( logs["call_21_1"] );
-
-    test.true(
-      ( call_11_1_block === call_11_2_block )
-      && ( call_11_1_block === call_21_1_block )
-      && ( call_11_1_block < call_12_1_block )
-    );
-    test.log(`call_11_1_block: ${call_11_1_block}`);
-    test.log(`call_11_2_block: ${call_11_2_block}`);
-    test.log(`call_12_1_block: ${call_12_1_block}`);
-    test.log(`call_21_1_block: ${call_21_1_block}`);
-  });
+  // TODO: test callbacks not callable by bob nor alice
 
 }

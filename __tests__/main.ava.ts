@@ -3,6 +3,7 @@ import { tests as adminsTests } from './admins.ava';
 import { tests as tokensTests } from './tokens.ava';
 import { tests as nearAPITests } from './nearAPI.ava';
 import { tests as multicallTests } from './multicall.ava';
+import { tests as jobTests } from './jobs.ava';
 
 const nusdc_address: string = "nusdc.ft-fin.testnet";
 const ndai_address: string = "ndai.ft-fin.testnet";
@@ -64,23 +65,37 @@ const workspace = Workspace.init(async ({root}) => {
     )
   ]);
 
-  // create a multicall instance for alice. Alice will be admin
-  // pre-load multicall contract with 2 NEAR (minus factory fee) for state storage
-  await alice.call(
-    multicallFactory.accountId,
-    "create",
-    { 
-      multicall_init_args: {
-        admin_accounts: [alice.accountId],
-        croncat_manager: croncat.accountId,
-        job_bond: job_bond_amount
+
+  // further contract initializations
+  await Promise.all([
+    // create a multicall instance for alice. Alice will be admin
+    // pre-load multicall contract with 2 NEAR (minus factory fee) for state storage
+    alice.call(
+      multicallFactory.accountId,
+      "create",
+      { 
+        multicall_init_args: {
+          admin_accounts: [alice.accountId],
+          croncat_manager: croncat.accountId,
+          job_bond: job_bond_amount
+        }
+      },
+      {
+        gas: Gas.parse("70 Tgas"),
+        attachedDeposit: NEAR.parse('2') // 2 NEAR
       }
-    },
-    {
-      gas: Gas.parse("70 Tgas"),
-      attachedDeposit: NEAR.parse('2') // 2 NEAR
-    }
-  );
+    ),
+    // register croncat account to be agent, too.
+    croncat.call(
+      croncat.accountId,
+      "register_agent",
+      {},
+      {
+        gas: Gas.parse("10 Tgas"),
+        attachedDeposit: NEAR.parse('1') // 1 NEAR
+      }
+    )
+  ]);
 
   const multicall = multicallFactory.getAccount("alice");
 
@@ -104,3 +119,4 @@ adminsTests(workspace);
 tokensTests(workspace);
 nearAPITests(workspace);
 multicallTests(workspace);
+jobTests(workspace);

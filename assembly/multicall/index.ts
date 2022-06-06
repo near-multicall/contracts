@@ -264,14 +264,14 @@ export function get_croncat_manager (): string {
  * 
  * @param amount
  */
- export function job_set_bond (amount: u128): void {
+ export function set_job_bond (amount: u128): void {
   _is_admin(context.predecessor);
   _assert_deposit();
 
   _jobs.set_bond(amount);  
 }
 
-export function job_get_bond (): u128 {
+export function get_job_bond (): u128 {
   return _jobs.get_bond();
 }
 

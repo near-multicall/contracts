@@ -610,8 +610,8 @@
  (export "init" (func $assembly/multicall/index/__wrapper_init))
  (export "set_croncat_manager" (func $assembly/multicall/index/__wrapper_set_croncat_manager))
  (export "get_croncat_manager" (func $assembly/multicall/index/__wrapper_get_croncat_manager))
- (export "job_set_bond" (func $assembly/multicall/index/__wrapper_job_set_bond))
- (export "job_get_bond" (func $assembly/multicall/index/__wrapper_job_get_bond))
+ (export "set_job_bond" (func $assembly/multicall/index/__wrapper_set_job_bond))
+ (export "get_job_bond" (func $assembly/multicall/index/__wrapper_get_job_bond))
  (export "get_jobs" (func $assembly/multicall/index/__wrapper_get_jobs))
  (export "job_add" (func $assembly/multicall/index/__wrapper_job_add))
  (export "job_activate" (func $assembly/multicall/index/__wrapper_job_activate))
@@ -19827,7 +19827,7 @@
   i64.extend_i32_u
   call $~lib/near-sdk-core/env/env/env.value_return
  )
- (func $assembly/multicall/index/__wrapper_job_set_bond
+ (func $assembly/multicall/index/__wrapper_set_job_bond
   (local $0 i32)
   (local $1 i32)
   call $~lib/near-sdk-bindgen/index/getInput
@@ -20172,7 +20172,7 @@
   local.get $0
   call $~lib/near-sdk-bindgen/index/decode<~lib/as-bignum/integer/safe/u128/u128,~lib/typedarray/Uint8Array>
  )
- (func $assembly/multicall/index/__wrapper_job_get_bond
+ (func $assembly/multicall/index/__wrapper_get_job_bond
   (local $0 i32)
   global.get $assembly/multicall/index/_jobs
   i32.load
