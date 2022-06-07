@@ -147,7 +147,14 @@ export function tests(workspace: Workspace) {
         gas: Gas.parse('15 Tgas'),
         attachedDeposit: bond_amount
       }
-    ); 
+    );
+    
+    // 3. TODO: add other jobs 1 & 2
+    // 3. TODO: test deleting job 0
+    // 4. TODO: test edit job 1
+    // 5. TODO: test activate job 1 & 2
+    // 6. TODO: test delete job 1 (from croncat as well)
+    // 7. TODO: trigger job 2
 
     // get all jobs
     const after_jobs: object[] = await multicall.view("get_jobs");
@@ -254,99 +261,7 @@ export function tests(workspace: Workspace) {
     test.log(`call_12_1_block: ${call_12_1_block}`);
     test.log(`call_21_1_block: ${call_21_1_block}`);
   });
-  workspace.test('prohibited job methods for non-admin', async (test, {bob, multicall}) => {
 
-    // bob isn't admin so he can't do the following with jobs:
-    // activate, pause, resume, edit, delete
-    // set_job_bond, set_croncat_manager
-    const results = await Promise.allSettled([
-      // activate jobs
-      bob.call(
-        multicall.accountId,
-        'job_activate',
-        { job_id: 0 },  // it's okay if job doesn't exist, since we check for caller permissions first
-        {
-          gas: Gas.parse('5 Tgas'),
-          attachedDeposit: NEAR.from('1') // 1 yocto
-        }
-      ),
-      // pause jobs
-      bob.call(
-        multicall.accountId,
-        'jobs_pause',
-        { job_ids: [0, 1] },  // it's okay if job doesn't exist, since we check for caller permissions first
-        {
-          gas: Gas.parse('5 Tgas'),
-          attachedDeposit: NEAR.from('1') // 1 yocto
-        }
-      ),
-      // resume paused jobs
-      bob.call(
-        multicall.accountId,
-        'jobs_resume',
-        { job_ids: [0, 1] },  // it's okay if job doesn't exist, since we check for caller permissions first
-        {
-          gas: Gas.parse('5 Tgas'),
-          attachedDeposit: NEAR.from('1') // 1 yocto
-        }
-      ),
-      // edit an existing job
-      bob.call(
-        multicall.accountId,
-        'job_edit',
-        {
-          job_id: 0,  // it's okay if job doesn't exist, since we check for caller permissions first
-          job_multicalls: [],
-          job_total_budget: "1",
-          job_start_at: "1654539058077000000", // some timestamp (nanoseconds)
-          job_is_active: true
-        },
-        {
-          gas: Gas.parse('5 Tgas'),
-          attachedDeposit: NEAR.from('1') // 1 yocto
-        }
-      ),
-      // delete a job
-      bob.call(
-        multicall.accountId,
-        'job_delete',
-        { job_id: 0 },  // it's okay if job doesn't exist, since we check for caller permissions first
-        {
-          gas: Gas.parse('5 Tgas'),
-          attachedDeposit: NEAR.from('1') // 1 yocto
-        }
-      ),
-      // change job bond amount
-      bob.call(
-        multicall.accountId,
-        'set_job_bond',
-        { amount: "0" },
-        {
-          gas: Gas.parse('5 Tgas'),
-          attachedDeposit: NEAR.from('1') // 1 yocto
-        }
-      ),
-      // change croncat's manager address
-      bob.call(
-        multicall.accountId,
-        'set_croncat_manager',
-        { address: bob.accountId },
-        {
-          gas: Gas.parse('5 Tgas'),
-          attachedDeposit: NEAR.from('1') // 1 yocto
-        }
-      )
-    ]);
-
-    results.forEach( res => {
-      test.true(
-        res.status === "rejected" 
-        && getFunctionCallError(res.reason).includes("must be admin to call this function") 
-      );
-    });
-
-    test.log(`non-admin prohibited job methods return: [${results}]`);
-  });
   // TODO: test callbacks not callable by bob nor alice
 
 }

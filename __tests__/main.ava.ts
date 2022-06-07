@@ -1,4 +1,5 @@
 import { Workspace, NEAR, Gas, NearAccount } from 'near-workspaces-ava';
+import { tests as onlyAdminMethodsTests } from './onlyAdminMethods.ava';
 import { tests as adminsTests } from './admins.ava';
 import { tests as tokensTests } from './tokens.ava';
 import { tests as nearAPITests } from './nearAPI.ava';
@@ -115,6 +116,7 @@ const workspace = Workspace.init(async ({root}) => {
 });
 
 // run tests
+onlyAdminMethodsTests(workspace);
 adminsTests(workspace);
 tokensTests(workspace);
 nearAPITests(workspace);
