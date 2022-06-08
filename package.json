@@ -8,7 +8,7 @@
     "build:debug": "./scripts/build.sh debug",
     "test": "./scripts/test.sh",
     "test:verbose": "./scripts/test.sh --verbose",
-    "test:testnet": "near-workspaces-ava --config ./ava.testnet.config.cjs"
+    "test:testnet": "ava --config ./ava.testnet.config.cjs"
   },
   "dependencies": {
     "near-sdk-as": "^3.2.3",
@@ -16,7 +16,9 @@
     "postinstall-postinstall": "^2.1.0"
   },
   "devDependencies": {
-    "near-workspaces-ava": "^1.0.0",
-    "ts-node": "^10.4.0"
+    "ava": "^4.3.0",
+    "near-workspaces": "^2.0.0",
+    "ts-node": "^10.4.0",
+    "typescript": "^4.7.3"
   }
 }

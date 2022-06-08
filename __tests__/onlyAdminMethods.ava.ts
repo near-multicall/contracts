@@ -1,17 +1,18 @@
-import { Workspace, NEAR, Gas } from 'near-workspaces-ava';
-import { getFunctionCallError } from './helpers';
+import { NEAR, Gas } from 'near-workspaces';
+import { getFunctionCallError, NearWorkspacesTest } from './helpers';
 
 
 /**
  * function to run all tests
  */
-export function tests(workspace: Workspace) {
+export function tests(test: NearWorkspacesTest) {
 
   /**
    * call all only-admin methods with a non-admin account
    * all tests should fail with the same error message
    */
-  workspace.test('call only-admin methods with non-admin', async (test, {alice, bob, multicall, testToken}) => {
+  test('call only-admin methods with non-admin', async t => {
+    const { alice, bob, multicall, testToken } = t.context.accounts;
 
     // All function calls to test go here
     // bob isn't admin so he can't do the following:
@@ -166,13 +167,13 @@ export function tests(workspace: Workspace) {
     const promiseResults = await Promise.allSettled(TXs);
 
     promiseResults.forEach( res => {
-      test.true(
+      t.true(
         res.status === "rejected" 
         && getFunctionCallError(res.reason).includes("must be admin to call this function") 
       );
     });
 
-    test.log(`non-admin prohibited methods return: [${promiseResults}]`);
+    t.log(`non-admin prohibited methods return: [${promiseResults}]`);
   });
 
 }

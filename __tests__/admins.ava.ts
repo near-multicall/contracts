@@ -1,13 +1,14 @@
-import { NEAR, Gas, Workspace } from 'near-workspaces-ava';
-import { getFunctionCallError } from './helpers';
+import { NEAR, Gas } from 'near-workspaces';
+import { getFunctionCallError, NearWorkspacesTest } from './helpers';
 
 
-export function tests(workspace: Workspace) {
+export function tests(test: NearWorkspacesTest) {
 
   /**
    * add admins
    */
-  workspace.test('add admins by admin', async (test, {alice, bob, multicall, root}) => {
+  test('add admins by admin', async t => {
+    const { alice, bob, multicall } = t.context.accounts;
     // alice is admin so she can add bob
     await alice.call(
       multicall.accountId,
@@ -16,21 +17,22 @@ export function tests(workspace: Workspace) {
         account_ids: [bob.accountId]
       },
       {
-        gas: Gas.parse('20 Tgas'),
-        attachedDeposit: NEAR.from('1') // 1 yocto
+        gas: Gas.parse('20 Tgas').toJSON(),
+        attachedDeposit: NEAR.from('1').toJSON() // 1 yocto
       }
     );
     const admins: string[] = await multicall.view('get_admins', {})
-    test.true(
+    t.true(
       admins.includes(alice.accountId) && admins.includes(bob.accountId)
     );
-    test.log(`admins: [${admins}]`);
+    t.log(`admins: [${admins}]`);
   });
 
   /**
    * remove admins
    */
-  workspace.test('remove admins by admin', async (test, {alice, multicall, root}) => {
+  test('remove admins by admin', async t => {
+    const { alice, multicall } = t.context.accounts;
     let callError: any;
     /**
      * Three cases to test here:
@@ -58,19 +60,19 @@ export function tests(workspace: Workspace) {
         'admins_remove',
         { account_ids: initial_admins },
         {
-          gas: Gas.parse('200 Tgas'),
-          attachedDeposit: NEAR.from('1') // 1 yocto
+          gas: Gas.parse('200 Tgas').toJSON(),
+          attachedDeposit: NEAR.from('1').toJSON() // 1 yocto
         }
       );
-    } catch (error) { callError = getFunctionCallError(error) }
+    } catch (error: any) { callError = getFunctionCallError(error) }
 
     let test_1_admins: string[] = await multicall.view('get_admins', {});
 
-    test.true(
+    t.true(
       ( test_1_admins.toString() === initial_admins.toString() )
       && ( callError.includes("contract must have at least one admin") )
     );
-    test.log(`admins after test 1: "[${test_1_admins}]"`);
+    t.log(`admins after test 1: "[${test_1_admins}]"`);
 
     // test 2
     let deleted_admin: string = multicall.accountId;
@@ -80,16 +82,16 @@ export function tests(workspace: Workspace) {
       'admins_remove',
       { account_ids: [deleted_admin] },
       {
-        gas: Gas.parse('20 Tgas'),
-        attachedDeposit: NEAR.from('1') // 1 yocto
+        gas: Gas.parse('20 Tgas').toJSON(),
+        attachedDeposit: NEAR.from('1').toJSON() // 1 yocto
       }
     );
     let test_2_admins: string[] = await multicall.view('get_admins', {});
 
-    test.true(
+    t.true(
       ! test_2_admins.includes(deleted_admin)
     );
-    test.log(`admins: [${test_2_admins}]`);
+    t.log(`admins: [${test_2_admins}]`);
 
     // test 3
     try {
@@ -98,18 +100,18 @@ export function tests(workspace: Workspace) {
         'admins_remove',
         { account_ids: [deleted_admin] },
         {
-          gas: Gas.parse('20 Tgas'),
-          attachedDeposit: NEAR.from('1') // 1 yocto
+          gas: Gas.parse('20 Tgas').toJSON(),
+          attachedDeposit: NEAR.from('1').toJSON() // 1 yocto
         }
       ); 
-    } catch (error) { callError = getFunctionCallError(error) }
+    } catch (error: any) { callError = getFunctionCallError(error) }
     let test_3_admins: string[] = await multicall.view('get_admins', {});
 
-    test.true(
+    t.true(
       ( test_3_admins.toString() === test_2_admins.toString() )
       && ( callError.includes("The item was not found in the set") )
     );
-    test.log(`admins: [${test_3_admins}]`);
+    t.log(`admins: [${test_3_admins}]`);
 
   });
 

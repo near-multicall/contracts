@@ -1,16 +1,17 @@
-import { Workspace, NEAR, Gas } from 'near-workspaces-ava';
-import { getFunctionCallError, encodeBase64 } from './helpers';
+import { NEAR, Gas } from 'near-workspaces';
+import { getFunctionCallError, NearWorkspacesTest, encodeBase64 } from './helpers';
 
 
 /**
  * function to run all tests
  */
-export function tests(workspace: Workspace) {
+export function tests(test: NearWorkspacesTest) {
 
   /**
    * add a new job
    */
-  workspace.test('anyone can add jobs', async (test, {bob, multicall, testHelper}) => {
+  test('anyone can add jobs', async t => {
+    const { bob, multicall } = t.context.accounts;
     let callError: any;
     // args to be used in job_add
     const job_add_args = {
@@ -130,13 +131,13 @@ export function tests(workspace: Workspace) {
         job_add_args,
         {
           gas: Gas.parse('15 Tgas'),
-          attachedDeposit: new NEAR.BN(bond_amount).sub( new NEAR.BN("1" ) ) // 1 yocto less than bond amount
+          attachedDeposit: (BigInt(bond_amount) - BigInt("1")).toString() // 1 yocto less than bond amount
         }
       ); 
-    } catch (error) { callError = getFunctionCallError(error) }
+    } catch (error: any) { callError = getFunctionCallError(error) }
 
-    test.true( callError.includes("attached deposit must be greater or equal than the required bond") );
-    test.log(`invalid job bond error: [${callError}]`);
+    t.true( callError.includes("attached deposit must be greater or equal than the required bond") );
+    t.log(`invalid job bond error: [${callError}]`);
 
     // 2. try with valid bond amount => should succeed
     const job_id: number = await bob.call(
@@ -159,13 +160,14 @@ export function tests(workspace: Workspace) {
     // get all jobs
     const after_jobs: object[] = await multicall.view("get_jobs");
     
-    test.true(
+    t.true(
       job_id >= 0
       && ( after_jobs.length === (before_jobs.length + 1) )
     );
-    test.log(`returned job_id: ${job_id}`);
+    t.log(`returned job_id: ${job_id}`);
   });
-  workspace.test('multicall by admin TODO', async (test, {alice, bob, multicall, testHelper}) => {
+  test('multicall by admin TODO', async t => {
+    const { alice, multicall, testHelper } = t.context.accounts;
     // alice is admin so she can call multicall
     /**
      * do a multicall with 3 batches as following (Pseudocode):
@@ -241,7 +243,7 @@ export function tests(workspace: Workspace) {
     );
 
     const map_entries: {key: string, value: string}[] = await testHelper.view("get_logs", {});
-    const logs = {};
+    const logs: {[index: string]: any} = {};
     for (let i = 0; i < map_entries.length; i++) {
       logs[map_entries[i].key] = map_entries[i].value;
     }
@@ -251,15 +253,15 @@ export function tests(workspace: Workspace) {
     const call_12_1_block: bigint = BigInt( logs["call_12_1"] );
     const call_21_1_block: bigint = BigInt( logs["call_21_1"] );
 
-    test.true(
+    t.true(
       ( call_11_1_block === call_11_2_block )
       && ( call_11_1_block === call_21_1_block )
       && ( call_11_1_block < call_12_1_block )
     );
-    test.log(`call_11_1_block: ${call_11_1_block}`);
-    test.log(`call_11_2_block: ${call_11_2_block}`);
-    test.log(`call_12_1_block: ${call_12_1_block}`);
-    test.log(`call_21_1_block: ${call_21_1_block}`);
+    t.log(`call_11_1_block: ${call_11_1_block}`);
+    t.log(`call_11_2_block: ${call_11_2_block}`);
+    t.log(`call_12_1_block: ${call_12_1_block}`);
+    t.log(`call_21_1_block: ${call_21_1_block}`);
   });
 
   // TODO: test callbacks not callable by bob nor alice

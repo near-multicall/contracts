@@ -1,18 +1,19 @@
-import { Workspace, NEAR, Gas } from 'near-workspaces-ava';
-import { getFunctionCallError } from './helpers';
+import { NEAR, Gas, BN } from 'near-workspaces';
+import { NearWorkspacesTest } from './helpers';
 
 
 /**
  * function to run all tests
  */
-export function tests(workspace: Workspace) {
+export function tests(test: NearWorkspacesTest) {
 
   /**
    * transfer NEAR
    */
-  workspace.test('transfer near by admin', async (test, {alice, bob, multicall, root}) => {
+  test('transfer near by admin', async t => {
+    const { alice, multicall } = t.context.accounts;
     const oldBalance = await multicall.balance();
-    test.log(`initial balance: ${oldBalance.total.toHuman()}`);
+    t.log(`initial balance: ${oldBalance.total.toHuman()}`);
     // alice is admin so she can transfer near from multicall
     await alice.call(
       multicall.accountId,
@@ -27,16 +28,17 @@ export function tests(workspace: Workspace) {
       }
     );
     const balance  = await multicall.balance();
-    test.true(
+    t.true(
       // balance will decrease by ~1N (and increase by 30% of gas fees)
       // make sure balance decreased by at least 0.9 $NEAR
-      ( oldBalance.total.sub( balance.total ) ).gte( NEAR.parse("900 mN") )
+      BigInt( oldBalance.total.sub( balance.total ).toString() ) >= BigInt( NEAR.parse("900 mN").toString() )
     );
-    test.log(`balance: ${balance.total.toHuman()}`);
+    t.log(`balance: ${balance.total.toHuman()}`);
   });
-  workspace.test('transfer all available near by admin', async (test, {alice, bob, multicall, root}) => {
+  test('transfer all available near by admin', async t => {
+    const { alice, multicall } = t.context.accounts;
     const oldBalance = await multicall.balance();
-    test.log(`initial balance: ${oldBalance.total.toHuman()}`);
+    t.log(`initial balance: ${oldBalance.total.toHuman()}`);
     // test if alice can transfer all available balance
     await alice.call(
       multicall.accountId,
@@ -50,12 +52,12 @@ export function tests(workspace: Workspace) {
       }
     );
     const balance  = await multicall.balance();
-    test.true(
+    t.true(
       // only $NEAR reserved for state will remain (and 30% from gas fee)
       // total balance is only slightly more than state staked balance (0.1 NEAR tolerance)
-      ( balance.total.sub( balance.stateStaked ) ).lte( NEAR.parse("100 mN") )
+      BigInt( balance.total.sub( balance.stateStaked ).toString() ) <= BigInt( NEAR.parse("100 mN").toString() )
     );
-    test.log(`balance: ${balance.total.toHuman()}`);
+    t.log(`balance: ${balance.total.toHuman()}`);
   });
 
 }

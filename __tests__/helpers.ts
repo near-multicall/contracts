@@ -1,9 +1,15 @@
 // helper methods for tests
+import { Worker, NearAccount } from 'near-workspaces';
+import { TestFn } from 'ava';
 
+type NearWorkspacesTest = TestFn<{
+    worker: Worker;
+    accounts: Record<string, NearAccount>;
+}>;
 
 class ErrObj {
-    message: string;
-    stack: string;
+    message!: string;
+    stack!: string;
 }
 
 function getFunctionCallError (errObj: ErrObj): string {
@@ -18,5 +24,6 @@ function encodeBase64 (inputStr: string): string {
 
 export {
     getFunctionCallError,
-    encodeBase64
+    encodeBase64,
+    NearWorkspacesTest,
 };

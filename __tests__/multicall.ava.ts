@@ -1,16 +1,17 @@
-import { Workspace, NEAR, Gas, TransactionResult } from 'near-workspaces-ava';
-import { getFunctionCallError, encodeBase64 } from './helpers';
+import { NEAR, Gas, TransactionResult } from 'near-workspaces';
+import { encodeBase64, NearWorkspacesTest } from './helpers';
 
 
 /**
  * function to run all tests
  */
-export function tests(workspace: Workspace) {
+export function tests(test: NearWorkspacesTest) {
 
   /**
    * call multicall
    */
-  workspace.test('multicall by admin', async (test, {alice, bob, multicall, testHelper, root}) => {
+  test('multicall by admin', async t => {
+    const { alice, multicall, testHelper } = t.context.accounts;
     // alice is admin so she can call multicall
     /**
      * do a multicall with 3 batches as following (Pseudocode):
@@ -86,7 +87,7 @@ export function tests(workspace: Workspace) {
     );
 
     const map_entries: {key: string, value: string}[] = await testHelper.view("get_logs", {});
-    const logs = {};
+    const logs: {[index: string]: any} = {};
     for (let i = 0; i < map_entries.length; i++) {
       logs[map_entries[i].key] = map_entries[i].value;
     }
@@ -96,17 +97,18 @@ export function tests(workspace: Workspace) {
     const call_12_1_block: bigint = BigInt( logs["call_12_1"] );
     const call_21_1_block: bigint = BigInt( logs["call_21_1"] );
 
-    test.true(
+    t.true(
       ( call_11_1_block === call_11_2_block )
       && ( call_11_1_block === call_21_1_block )
       && ( call_11_1_block < call_12_1_block )
     );
-    test.log(`call_11_1_block: ${call_11_1_block}`);
-    test.log(`call_11_2_block: ${call_11_2_block}`);
-    test.log(`call_12_1_block: ${call_12_1_block}`);
-    test.log(`call_21_1_block: ${call_21_1_block}`);
+    t.log(`call_11_1_block: ${call_11_1_block}`);
+    t.log(`call_11_2_block: ${call_11_2_block}`);
+    t.log(`call_12_1_block: ${call_12_1_block}`);
+    t.log(`call_21_1_block: ${call_21_1_block}`);
   });
-  workspace.test('multicall with safe_then chain', async (test, {alice, bob, multicall, testHelper, root}) => {
+  test('multicall with safe_then chain', async t => {
+    const { alice, multicall, testHelper } = t.context.accounts;
     // alice is admin so she can call multicall
     /**
      * do a multicall with 5 batches as following (Pseudocode):
@@ -304,7 +306,7 @@ export function tests(workspace: Workspace) {
 
     const map_entries: {key: string, value: string}[] = await testHelper.view("get_logs", {});
 
-    const logs = {};
+    const logs: {[index: string]: any} = {};
     for (let i = 0; i < map_entries.length; i++) {
       logs[map_entries[i].key] = map_entries[i].value;
     }
@@ -315,7 +317,7 @@ export function tests(workspace: Workspace) {
     const call_14_2_block: bigint = BigInt( logs["call_14_2 on_fail"] );
 
 
-    test.true(
+    t.true(
       ( call_11_1_block === call_11_2_block )
       && ( call_14_1_block === call_14_2_block )
       && ( !logs.hasOwnProperty("call_12_1 on_success") )
@@ -325,9 +327,10 @@ export function tests(workspace: Workspace) {
       && ( logs.hasOwnProperty("call_14_1 on_fail") && logs.hasOwnProperty("call_14_2 on_fail") )
       && ( logs.hasOwnProperty("call_15_1 on_success") )
     );
-    test.log(logs);
+    t.log(logs);
   });
-  workspace.test('multicall by ft_transfer_call', async (test, {alice, bob, multicall, testHelper, testToken, root}) => {
+  test('multicall by ft_transfer_call', async t => {
+    const { alice, bob, multicall, testHelper, testToken } = t.context.accounts;
     let txReturn: TransactionResult;
     const mintAmount: string = "10";
     const multicallArgs: any = {
@@ -390,7 +393,7 @@ export function tests(workspace: Workspace) {
      */
 
     // test case: 1- a/
-    txReturn = await bob.createTransaction(testToken.accountId).functionCall(
+    txReturn = await bob.batch(testToken.accountId).functionCall(
       "mint",
       { account_id: bob.accountId, amount: mintAmount }
     ).functionCall(
@@ -405,16 +408,16 @@ export function tests(workspace: Workspace) {
         msg: `{"function_id":"multicall","args":"${encodeBase64(JSON.stringify( multicallArgs ))}"}`
       },
       { gas: Gas.parse('150 Tgas'), attachedDeposit: NEAR.from('1') } // 1 yocto
-    ).signAndSend();
+    ).transact();
 
     // check bob's balance for sanity checks
     const bob_balance_1: string = await testToken.view("ft_balance_of", { account_id: bob.accountId });
-    test.true( bob_balance_1 === mintAmount );
-    test.log(`bob_balance_1: "${bob_balance_1}"`);
-    test.true(
+    t.true( bob_balance_1 === mintAmount );
+    t.log(`bob_balance_1: "${bob_balance_1}"`);
+    t.true(
       txReturn.result.receipts_outcome[1].outcome.logs[0].includes(`${testToken.accountId} not on token whitelist`)
     );
-    test.log(`logs 1-a: [${txReturn.result.receipts_outcome[1].outcome.logs}]`);
+    t.log(`logs 1-a: [${txReturn.result.receipts_outcome[1].outcome.logs}]`);
 
 
     // test case: 2- a/
@@ -430,7 +433,7 @@ export function tests(workspace: Workspace) {
         attachedDeposit: NEAR.from('1') // 1 yocto
       }
     );
-    txReturn = await bob.createTransaction(testToken.accountId).functionCall(
+    txReturn = await bob.batch(testToken.accountId).functionCall(
       "ft_transfer_call",
       { 
         receiver_id: multicall.accountId,
@@ -438,20 +441,20 @@ export function tests(workspace: Workspace) {
         msg: `{"function_id":"multicall","args":"${encodeBase64(JSON.stringify( multicallArgs ))}"}`
       },
       { gas: Gas.parse('150 Tgas'), attachedDeposit: NEAR.from('1') } // 1 yocto
-    ).signAndSend();
+    ).transact();
 
     // check bob's balance for sanity checks
     const bob_balance_2: string = await testToken.view("ft_balance_of", { account_id: bob.accountId });
-    test.true( bob_balance_1 === bob_balance_2 )
-    test.log(`bob_balance_2: "${bob_balance_2}"`);
-    test.true(
+    t.true( bob_balance_1 === bob_balance_2 )
+    t.log(`bob_balance_2: "${bob_balance_2}"`);
+    t.true(
       txReturn.result.receipts_outcome[1].outcome.logs[0].includes(`${bob.accountId} must be admin to call this function`)
     );
-    test.log(`logs 2-a: [${txReturn.result.receipts_outcome[1].outcome.logs}]`);
+    t.log(`logs 2-a: [${txReturn.result.receipts_outcome[1].outcome.logs}]`);
 
     
     // test case: 2- b/
-    txReturn = await alice.createTransaction(testToken.accountId).functionCall(
+    txReturn = await alice.batch(testToken.accountId).functionCall(
       "mint",
       { account_id: alice.accountId, amount: mintAmount }
     ).functionCall(
@@ -462,15 +465,15 @@ export function tests(workspace: Workspace) {
         msg: `{"function_id":"multicall","args":"${encodeBase64(JSON.stringify( multicallArgs ))}"}`
       },
       { gas: Gas.parse('150 Tgas'), attachedDeposit: NEAR.from('1') } // 1 yocto
-    ).signAndSend();
+    ).transact();
 
     // check alice's balance for sanity checks
     const alice_balance: string = await testToken.view("ft_balance_of", { account_id: bob.accountId });
-    test.true( alice_balance === mintAmount );
-    test.log(`alice_balance: "${alice_balance}"`);
+    t.true( alice_balance === mintAmount );
+    t.log(`alice_balance: "${alice_balance}"`);
     // check multicall correctly executed
     const map_entries: {key: string, value: string}[] = await testHelper.view("get_logs", {});
-    const logs = {};
+    const logs: {[index: string]: any} = {};
     for (let i = 0; i < map_entries.length; i++) {
       logs[map_entries[i].key] = map_entries[i].value;
     }
@@ -480,15 +483,15 @@ export function tests(workspace: Workspace) {
     const call_12_1_block: bigint = BigInt( logs["call_12_1"] );
     const call_21_1_block: bigint = BigInt( logs["call_21_1"] );
 
-    test.true(
+    t.true(
       ( call_11_1_block === call_11_2_block )
       && ( call_11_1_block === call_21_1_block )
       && ( call_11_1_block < call_12_1_block )
     );
-    test.log(`call_11_1_block: ${call_11_1_block}`);
-    test.log(`call_11_2_block: ${call_11_2_block}`);
-    test.log(`call_12_1_block: ${call_12_1_block}`);
-    test.log(`call_21_1_block: ${call_21_1_block}`);
+    t.log(`call_11_1_block: ${call_11_1_block}`);
+    t.log(`call_11_2_block: ${call_11_2_block}`);
+    t.log(`call_12_1_block: ${call_12_1_block}`);
+    t.log(`call_21_1_block: ${call_21_1_block}`);
   });
 
 }
