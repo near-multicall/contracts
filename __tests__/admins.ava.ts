@@ -17,8 +17,8 @@ export function tests(test: NearWorkspacesTest) {
         account_ids: [bob.accountId]
       },
       {
-        gas: Gas.parse('20 Tgas').toJSON(),
-        attachedDeposit: NEAR.from('1').toJSON() // 1 yocto
+        gas: Gas.parse('20 Tgas'),
+        attachedDeposit: NEAR.from('1') // 1 yocto
       }
     );
     const admins: string[] = await multicall.view('get_admins', {})
@@ -60,8 +60,8 @@ export function tests(test: NearWorkspacesTest) {
         'admins_remove',
         { account_ids: initial_admins },
         {
-          gas: Gas.parse('200 Tgas').toJSON(),
-          attachedDeposit: NEAR.from('1').toJSON() // 1 yocto
+          gas: Gas.parse('200 Tgas'),
+          attachedDeposit: NEAR.from('1') // 1 yocto
         }
       );
     } catch (error: any) { callError = getFunctionCallError(error) }
@@ -82,8 +82,8 @@ export function tests(test: NearWorkspacesTest) {
       'admins_remove',
       { account_ids: [deleted_admin] },
       {
-        gas: Gas.parse('20 Tgas').toJSON(),
-        attachedDeposit: NEAR.from('1').toJSON() // 1 yocto
+        gas: Gas.parse('20 Tgas'),
+        attachedDeposit: NEAR.from('1') // 1 yocto
       }
     );
     let test_2_admins: string[] = await multicall.view('get_admins', {});
@@ -100,8 +100,8 @@ export function tests(test: NearWorkspacesTest) {
         'admins_remove',
         { account_ids: [deleted_admin] },
         {
-          gas: Gas.parse('20 Tgas').toJSON(),
-          attachedDeposit: NEAR.from('1').toJSON() // 1 yocto
+          gas: Gas.parse('20 Tgas'),
+          attachedDeposit: NEAR.from('1') // 1 yocto
         }
       ); 
     } catch (error: any) { callError = getFunctionCallError(error) }

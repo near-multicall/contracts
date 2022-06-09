@@ -17,6 +17,8 @@
   },
   "devDependencies": {
     "ava": "^4.3.0",
+    "js-sha256": "^0.9.0",
+    "near-api-js": "^0.45.1",
     "near-workspaces": "^2.0.0",
     "ts-node": "^10.4.0",
     "typescript": "^4.7.3"
