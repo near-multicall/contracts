@@ -11,8 +11,9 @@ export function tests(test: NearWorkspacesTest) {
    * add a new job
    */
   test('anyone can add jobs', async t => {
-    const { bob, multicall } = t.context.accounts;
+    const { alice, bob, multicall, testHelper } = t.context.accounts;
     let callError: any;
+    let current_jobs: any[];
     // args to be used in job_add
     const job_add_args = {
       job_multicalls: [
@@ -117,10 +118,7 @@ export function tests(test: NearWorkspacesTest) {
     }
 
     // get all jobs, and required job bond amount
-    const [before_jobs, bond_amount]: any[] = await Promise.all([
-      multicall.view("get_jobs"),
-      multicall.view("get_job_bond")
-    ]);
+    const bond_amount: string = await multicall.view("get_job_bond");
     
     // bob isn't admin but should be able to add new jobs
     // 1. try with invalid bond amount => should fail
@@ -140,128 +138,162 @@ export function tests(test: NearWorkspacesTest) {
     t.log(`invalid job bond error: [${callError}]`);
 
     // 2. try with valid bond amount => should succeed
-    const job_id: number = await bob.call(
-      multicall.accountId,
-      "job_add",
-      job_add_args,
-      {
-        gas: Gas.parse('15 Tgas'),
-        attachedDeposit: bond_amount
-      }
-    );
-    
-    // 3. TODO: add other jobs 1 & 2
-    // 3. TODO: test deleting job 0
-    // 4. TODO: test edit job 1
-    // 5. TODO: test activate job 1 & 2
-    // 6. TODO: test delete job 1 (from croncat as well)
-    // 7. TODO: trigger job 2
+    // we add 3 jobs by 3 different accounts
+    const job_ids: any[] = await Promise.all([
+      alice.call(
+        multicall.accountId,
+        "job_add",
+        job_add_args,
+        {
+          gas: Gas.parse('15 Tgas'),
+          attachedDeposit: bond_amount
+        }
+      ),
+      testHelper.call(
+        multicall.accountId,
+        "job_add",
+        job_add_args,
+        {
+          gas: Gas.parse('15 Tgas'),
+          attachedDeposit: bond_amount
+        }
+      ),
+      bob.call(
+        multicall.accountId,
+        "job_add",
+        job_add_args,
+        {
+          gas: Gas.parse('15 Tgas'),
+          attachedDeposit: bond_amount
+        }
+      )
+    ]);
 
-    // get all jobs
-    const after_jobs: object[] = await multicall.view("get_jobs");
-    
     t.true(
-      job_id >= 0
-      && ( after_jobs.length === (before_jobs.length + 1) )
+      // make sure job IDs includes 0, 1 and 2
+      job_ids.length === 3
+      && job_ids.every((job_id, i) => job_ids.includes(i))
     );
-    t.log(`returned job_id: ${job_id}`);
-  });
-  test('multicall by admin TODO', async t => {
-    const { alice, multicall, testHelper } = t.context.accounts;
-    // alice is admin so she can call multicall
-    /**
-     * do a multicall with 3 batches as following (Pseudocode):
-     *   calls = [
-     *     [ Batch_11, Batch_12 ],
-     *     [ Batch_21 ]
-     *   ]
-     * where:
-     *   Batch_11 = { address: testHelper.accountId, actions: [ call_11_1, call_11_2 ] }
-     *   Batch_12 = { address: testHelper.accountId, actions: [ call_12_1 ] }
-     *   Batch_21 = { address: testHelper.accountId, actions: [ call_21_1 ] }
-     * 
-     * 
-     * test:
-     * 1- calls in the same batch run in the same block, here: call_11_1 & call_11_2
-     * 2- Batch_21 runs parallel to Batch_11
-     * 3- Batch_12 runs after to Batch_11
-     */
+    t.log(`job_ids: [${job_ids}]`);
+
+    // delete job 0
     await alice.call(
       multicall.accountId,
-      'multicall',
+      "job_delete",
       {
-        calls: [
-          [ 
-            {
-              address: testHelper.accountId,
-              actions: [
-                {
-                  func: "log",
-                  args: encodeBase64(JSON.stringify( { msg: "call_11_1" } )),
-                  gas: "5000000000000",
-                  depo: "0"
-                },
-                {
-                  func: "log",
-                  args: encodeBase64(JSON.stringify( { msg: "call_11_2" } )),
-                  gas: "5000000000000",
-                  depo: "0"
-                }
-              ]
-            },
-            {
-              address: testHelper.accountId,
-              actions: [
-                {
-                  func: "log",
-                  args: encodeBase64(JSON.stringify( { msg: "call_12_1" } )),
-                  gas: "5000000000000",
-                  depo: "0"
-                }
-              ]
-            }
-          ],
-          [
-            {
-              address: testHelper.accountId,
-              actions: [
-                {
-                  func: "log",
-                  args: encodeBase64(JSON.stringify( { msg: "call_21_1" } )),
-                  gas: "5000000000000",
-                  depo: "0"
-                }
-              ]
-            }
-          ]
-        ]
+        job_id: 0,
+        delete_on_croncat: false
       },
       {
-        gas: Gas.parse('70 Tgas'),
+        gas: Gas.parse('30 Tgas'),
         attachedDeposit: NEAR.from('1') // 1 yocto
       }
     );
 
-    const map_entries: {key: string, value: string}[] = await testHelper.view("get_logs", {});
-    const logs: {[index: string]: any} = {};
-    for (let i = 0; i < map_entries.length; i++) {
-      logs[map_entries[i].key] = map_entries[i].value;
-    }
+    current_jobs = await multicall.view("get_jobs");
+    const current_job_ids: number[] = current_jobs.map(job => job.id);
+    // make sure job IDs are 1 and 2 (we deleted 0)
+    t.true(
+      current_job_ids.length === 2
+      && (current_job_ids.includes(1) && current_job_ids.includes(2))
+    );
+    t.log(`job_ids: [${job_ids}]`);
 
-    const call_11_1_block: bigint = BigInt( logs["call_11_1"] );
-    const call_11_2_block: bigint = BigInt( logs["call_11_2"] );
-    const call_12_1_block: bigint = BigInt( logs["call_12_1"] );
-    const call_21_1_block: bigint = BigInt( logs["call_21_1"] );
+    // Try re-deleting job 0
+    try {
+      await alice.call(
+        multicall.accountId,
+        "job_delete",
+        {
+          job_id: 0,
+          delete_on_croncat: false
+        },
+        {
+          gas: Gas.parse('15 Tgas'),
+          attachedDeposit: NEAR.from('1') // 1 yocto
+        }
+      );
+    } catch (error: any) { callError = getFunctionCallError(error) }
 
     t.true(
-      ( call_11_1_block === call_11_2_block )
-      && ( call_11_1_block === call_21_1_block )
-      && ( call_11_1_block < call_12_1_block )
+      // failed because job 0 already deleted in previous step
+      callError.includes("is not present in the storage")
     );
-    t.log(`call_11_1_block: ${call_11_1_block}`);
-    t.log(`call_11_2_block: ${call_11_2_block}`);
-    t.log(`call_12_1_block: ${call_12_1_block}`);
-    t.log(`call_21_1_block: ${call_21_1_block}`);
+    t.log(`callError re-deleting job 0: "${callError}"`);
+
+    // edit job 1, increase number of multicalls
+    const job_1 = current_jobs.filter(jobEntry => jobEntry.id === 1).map(jobEntry => jobEntry.job)[0];
+    await alice.call(
+      multicall.accountId,
+      "job_edit",
+      { 
+        job_id: 1,
+        job_multicalls: [job_1.multicalls[0], ...job_1.multicalls], // now job has 2 multicalls
+        job_total_budget: job_1.croncat_budget,
+        job_start_at: job_1.start_at,
+        job_is_active: false
+      },
+      {
+        gas: Gas.parse('30 Tgas'),
+        attachedDeposit: NEAR.from('1') // 1 yocto
+      }
+    );
+    current_jobs = await multicall.view("get_jobs");
+    const job_1_multicalls = current_jobs.filter(jobEntry => jobEntry.id === 1).map(jobEntry => jobEntry.job.multicalls)[0];
+    t.true( job_1_multicalls.length === 3 );
+    t.log(`post-edit job 1 multicalls: [${job_1_multicalls}]`);
+
+    // 5. activate job 1 & 2
+    // Problem: gas cost on Sandbox is higher than mainnet & testnet
+    // some functions with hardcoded gas allowance are impossible to run
+    /*
+    const result = await Promise.all([
+      alice.call(
+        multicall.accountId,
+        "job_activate",
+        { job_id: 1 }, // activate job 1
+        {
+          gas: Gas.parse('300 Tgas'),
+          attachedDeposit: NEAR.from('1') // 1 yocto
+        }
+      ),
+      alice.call(
+        multicall.accountId,
+        "job_activate",
+        { job_id: 2 }, // activate job 1
+        {
+          gas: Gas.parse('300 Tgas'),
+          attachedDeposit: NEAR.from('1') // 1 yocto
+        }
+      )
+    ]);
+
+    current_jobs = await multicall.view("get_jobs");
+    t.true(
+      current_jobs.every(jobEntry => {
+        const job = jobEntry.job;
+        // make sure jobs are active and have correspondant tasks on croncat
+        return (job.is_active === true) && (job.croncat_hash !== "")
+      }) 
+    );
+    t.log(`current_jobs: [${current_jobs}]`);
+    */
+
+    // 6. TODO: delete job 1 (from croncat as well)
+    /*
+    await alice.call(
+      multicall.accountId,
+      "job_delete",
+      { job_id: 1 },
+      {
+        gas: Gas.parse('150 Tgas'),
+        attachedDeposit: NEAR.from('1') // 1 yocto
+      }
+    );
+    */
+
+    // 7. TODO: trigger job 2
+
   });
 
   // TODO: test callbacks not callable by bob nor alice

@@ -53,7 +53,6 @@ async function signAndSendTransactions (
   let recentBlockHash: Buffer = serialize.base_decode(accessKey.block_hash);
 
   // sign & send every transaction
-  // returns TX hashes to query results from RPC later
   const txResults = await Promise.all( TXs.map( async (tx, i) => {
     // increment nonce
     let txNonce = nonce + i + 1;
