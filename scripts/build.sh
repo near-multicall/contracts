@@ -6,7 +6,7 @@ targetConfig=${1}
 
 # local function to compile contracts sequentially.
 # we use it to compile contracts that depend on each other.
-# but we run mulitple instances of it in parallel so unrealted contracts are compiled in parallel.
+# but we run multiple instances of it in parallel so unrealted contracts are compiled in parallel.
 function compile_contracts {
   for contract in "$@";
   do 

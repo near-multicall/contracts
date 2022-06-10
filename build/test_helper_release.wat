@@ -1,17 +1,17 @@
 (module
  (type $i32_=>_i32 (func (param i32) (result i32)))
  (type $i32_i32_=>_i32 (func (param i32 i32) (result i32)))
- (type $i32_i32_=>_none (func (param i32 i32)))
  (type $none_=>_none (func))
+ (type $i32_i32_=>_none (func (param i32 i32)))
  (type $i32_i32_i32_=>_none (func (param i32 i32 i32)))
  (type $i32_=>_none (func (param i32)))
  (type $none_=>_i32 (func (result i32)))
  (type $i32_i32_i32_=>_i32 (func (param i32 i32 i32) (result i32)))
  (type $i64_i64_=>_none (func (param i64 i64)))
- (type $i64_=>_none (func (param i64)))
- (type $i32_i32_i32_i32_=>_none (func (param i32 i32 i32 i32)))
  (type $i64_=>_i32 (func (param i64) (result i32)))
  (type $none_=>_i64 (func (result i64)))
+ (type $i64_=>_none (func (param i64)))
+ (type $i32_i32_i32_i32_=>_none (func (param i32 i32 i32 i32)))
  (type $i32_=>_i64 (func (param i32) (result i64)))
  (type $i64_=>_i64 (func (param i64) (result i64)))
  (type $i64_i64_=>_i64 (func (param i64 i64) (result i64)))
@@ -29,6 +29,7 @@
  (import "env" "storage_read" (func $~lib/near-sdk-core/env/env/env.storage_read (param i64 i64 i64) (result i64)))
  (import "env" "storage_write" (func $~lib/near-sdk-core/env/env/env.storage_write (param i64 i64 i64 i64 i64) (result i64)))
  (import "env" "value_return" (func $~lib/near-sdk-core/env/env/env.value_return (param i64 i64)))
+ (import "env" "block_timestamp" (func $~lib/near-sdk-core/env/env/env.block_timestamp (result i64)))
  (global $~lib/rt/stub/offset (mut i32) (i32.const 0))
  (global $assembly/test_helper/index/call_logs (mut i32) (i32.const 0))
  (global $~lib/assemblyscript-json/JSON/_JSON.handler (mut i32) (i32.const 0))
@@ -244,6 +245,8 @@
  (export "log" (func $assembly/test_helper/index/__wrapper_log))
  (export "get_logs" (func $assembly/test_helper/index/__wrapper_get_logs))
  (export "get_log_block" (func $assembly/test_helper/index/__wrapper_get_log_block))
+ (export "get_block_timestamp" (func $assembly/test_helper/index/__wrapper_get_block_timestamp))
+ (export "get_block_index" (func $assembly/test_helper/index/__wrapper_get_block_index))
  (export "memory" (memory $0))
  (start $~start)
  (func $~lib/rt/stub/__alloc (param $0 i32) (result i32)
@@ -8983,6 +8986,34 @@
   i64.extend_i32_u
   call $~lib/near-sdk-core/env/env/env.value_return
  )
+ (func $~lib/near-sdk-bindgen/index/encode<u64,~lib/typedarray/Uint8Array>@varargs (param $0 i64) (result i32)
+  (local $1 i32)
+  (local $2 i32)
+  block $2of2
+   block $1of2
+    block $outOfRange
+     global.get $~argumentsLength
+     i32.const 1
+     i32.sub
+     br_table $1of2 $1of2 $2of2 $outOfRange
+    end
+    unreachable
+   end
+   call $~lib/near-sdk-bindgen/index/JSONEncoder#constructor
+   local.set $1
+  end
+  local.get $0
+  call $~lib/util/number/utoa64
+  local.set $2
+  local.get $1
+  i32.const 1088
+  call $~lib/assemblyscript-json/encoder/JSONEncoder#writeKey
+  local.get $1
+  local.get $2
+  call $~lib/assemblyscript-json/encoder/JSONEncoder#writeString
+  local.get $1
+  call $~lib/assemblyscript-json/encoder/JSONEncoder#serialize
+ )
  (func $assembly/test_helper/index/__wrapper_get_log_block
   (local $0 i32)
   (local $1 i32)
@@ -9016,22 +9047,41 @@
   i64.load offset=8
   i32.const 1
   global.set $~argumentsLength
-  call $~lib/near-sdk-bindgen/index/JSONEncoder#constructor
-  local.set $0
-  call $~lib/util/number/utoa64
-  local.set $1
-  local.get $0
-  i32.const 1088
-  call $~lib/assemblyscript-json/encoder/JSONEncoder#writeKey
-  local.get $0
-  local.get $1
-  call $~lib/assemblyscript-json/encoder/JSONEncoder#writeString
-  local.get $0
-  call $~lib/assemblyscript-json/encoder/JSONEncoder#serialize
+  call $~lib/near-sdk-bindgen/index/encode<u64,~lib/typedarray/Uint8Array>@varargs
   local.tee $0
   i32.load offset=8
   i64.extend_i32_s
   local.get $0
+  i32.load offset=4
+  i64.extend_i32_u
+  call $~lib/near-sdk-core/env/env/env.value_return
+ )
+ (func $assembly/test_helper/index/__wrapper_get_block_timestamp
+  (local $0 i64)
+  (local $1 i32)
+  call $~lib/near-sdk-core/env/env/env.block_timestamp
+  i32.const 1
+  global.set $~argumentsLength
+  call $~lib/near-sdk-bindgen/index/encode<u64,~lib/typedarray/Uint8Array>@varargs
+  local.tee $1
+  i32.load offset=8
+  i64.extend_i32_s
+  local.get $1
+  i32.load offset=4
+  i64.extend_i32_u
+  call $~lib/near-sdk-core/env/env/env.value_return
+ )
+ (func $assembly/test_helper/index/__wrapper_get_block_index
+  (local $0 i64)
+  (local $1 i32)
+  call $~lib/near-sdk-core/env/env/env.block_index
+  i32.const 1
+  global.set $~argumentsLength
+  call $~lib/near-sdk-bindgen/index/encode<u64,~lib/typedarray/Uint8Array>@varargs
+  local.tee $1
+  i32.load offset=8
+  i64.extend_i32_s
+  local.get $1
   i32.load offset=4
   i64.extend_i32_u
   call $~lib/near-sdk-core/env/env/env.value_return
