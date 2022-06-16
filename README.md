@@ -15,7 +15,7 @@ bundle cross-contract calls for powerful DAO proposals
     ```
 6. Initialize the contract:
     ```bash
-    near call $CONTRACT_ADDRESS init '{"admin_accounts":["$YOUR_ACCOUNT"],"croncat_manager":"$CRONCAT_MANAGER","job_bond":"100000000000000000000000"}' --amount 0.1 --accountId $YOUR_ADDRESS
+    near call $CONTRACT_ADDRESS init '{"admin_accounts":["$YOUR_ACCOUNT"],"croncat_manager":"$CRONCAT_MANAGER","job_bond":"100000000000000000000000"}' --amount 0.1 --accountId $YOUR_ACCOUNT
     ```
 
 where 
