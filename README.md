@@ -9,7 +9,8 @@ bundle cross-contract calls for powerful DAO proposals
 1. Setup [near-cli](https://docs.near.org/docs/tools/near-cli).
 2. Install dependencies: `yarn`
 3. Compile: `yarn build:release`
-4. Deploy:  
+4. Test: `yarn test`
+5. Deploy:  
     ```bash
     near deploy $CONTRACT_ADDRESS ./build/multicall_release.wasm
     ```
@@ -21,7 +22,21 @@ bundle cross-contract calls for powerful DAO proposals
 where 
 * `$YOUR_ACCOUNT` is the account you're using to interact with the contract 
 * `$CONTRACT_ADDRESS` is the address you want to deploy the contract at 
-* `$CRONCAT_MANAGER` is the address for croncat's manager contract, can be found [here](https://docs.cron.cat/docs/deployed-contracts/#manager).
+* `$CRONCAT_MANAGER` is the address for croncat's manager contract, can be found [here](https://docs.cron.cat/docs/deployed-contracts/#manager).  
+
+## Networks  
+
+### NEAR Mainnet  
+
+| Contract             | Address                                      | Code hash                              |
+|----------------------|----------------------------------------------|----------------------------------------|
+| Factory              | [`v1.multicall.near`](https://explorer.near.org/accounts/v1.multicall.near) | `2Y3VuVZTPaXGBnRj6Av9ymKM17iSGv1b1xJTsdkrmSFh` |  
+
+### NEAR Testnet  
+
+| Contract             | Address                                      | Code hash                              |
+|----------------------|----------------------------------------------|----------------------------------------|
+| Factory              | [`v1_03.multicall.testnet`](https://explorer.testnet.near.org/accounts/v1_03.multicall.testnet) | `2Y3VuVZTPaXGBnRj6Av9ymKM17iSGv1b1xJTsdkrmSFh` |  
 
 ## Architecture
 
